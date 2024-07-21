@@ -1,0 +1,5 @@
+# Ignore .env file
+.env
+
+# Ignore static directory and its subdirectories
+static/

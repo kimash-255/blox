@@ -1,0 +1,5 @@
+{% load account %}
+
+Subject: Activate your account at 
+Message:
+

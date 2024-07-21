@@ -1,0 +1,10 @@
+/env
+/blox.egg-info
+
+# Ignore all __pycache__ directories and their contents anywhere in the project
+**/__pycache__/
+
+# Optionally, if you want to also ignore __pycache__ files (though usually it's only directories)
+**/__pycache__/*.pyc
+**/__pycache__/*.pyo
+**/__pycache__/*.pyd

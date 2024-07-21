@@ -1,0 +1,4 @@
+# List of modules for right
+right
+posts
+auth

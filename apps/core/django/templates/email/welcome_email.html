@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Our Newsletter</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333333;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .message {
+        font-size: 18px;
+        color: #666666;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .profile-icon {
+        display: block;
+        margin: 0 auto 20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        background-color: #007bff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-icon svg {
+        width: 50%;
+        height: 50%;
+        fill: white;
+      }
+
+      .social-icons {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .social-icon {
+        display: inline-block;
+        margin-right: 15px;
+        transition: transform 0.3s ease-in-out;
+        border-radius: 50%;
+        overflow: hidden;
+        width: 40px;
+        height: 40px;
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+
+      .social-icon-facebook {
+        background-image: url("https://www.arifahub.com/icons/arifahub-facebook.svg");
+      }
+
+      .social-icon-twitter {
+        background-image: url("https://www.arifahub.com/icons/arifahub-twitter.svg");
+      }
+
+      .social-icon-linkedin {
+        background-image: url("https://www.arifahub.com/icons/arifahub-linkedin.svg");
+      }
+
+      .social-icon-github {
+        background-image: url("https://www.arifahub.com/icons/arifahub-github.svg");
+      }
+
+      .social-icon-instagram {
+        background-image: url("https://www.arifahub.com/icons/arifahub-instagram.svg");
+      }
+
+      .social-icon:hover {
+        transform: scale(1.1);
+      }
+
+      .footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #888888;
+        font-size: 14px;
+      }
+
+      .additional-content {
+        margin-top: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="profile-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="M14.31 8a4 4 0 0 1 0 8" />
+          <path d="M9.69 8a4 4 0 1 1 0 8" />
+        </svg>
+      </div>
+      <h1 class="title">Welcome to Our Newsletter, {{ name }}!</h1>
+      <p class="message">
+        Thank you for subscribing to our newsletter! We're excited to have you
+        on board.
+      </p>
+
+      <div class="additional-content">
+        <p>
+          At Arifahub, we are dedicated to bringing you the latest tech news,
+          tutorials, and updates. Stay tuned for exclusive content, special
+          offers, and much more.
+        </p>
+        <p>
+          If you have any questions or feedback, feel free to reach out to us at
+          any time. We're here to help you make the most of your tech journey.
+        </p>
+      </div>
+
+      <div class="social-icons">
+        <a
+          href="https://www.facebook.com/arifahub"
+          target="_blank"
+          class="social-icon social-icon-facebook"
+        ></a>
+        <a
+          href="https://www.twitter.com/arifahub"
+          target="_blank"
+          class="social-icon social-icon-twitter"
+        ></a>
+        <a
+          href="https://www.linkedin.com/company/arifahub"
+          target="_blank"
+          class="social-icon social-icon-linkedin"
+        ></a>
+        <a
+          href="https://www.github.com/arifahub"
+          target="_blank"
+          class="social-icon social-icon-github"
+        ></a>
+        <a
+          href="https://www.instagram.com/arifahub"
+          target="_blank"
+          class="social-icon social-icon-instagram"
+        ></a>
+      </div>
+
+      <div class="footer">
+        <p>&copy; 2024 Arifahub. All rights reserved.</p>
+        <p>123 Main Street, Nairobi, Kenya</p>
+      </div>
+    </div>
+  </body>
+</html>
