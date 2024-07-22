@@ -23,6 +23,38 @@ git clone https://github.com/Softleek/blox.git
 cd blox
 ```
 
+#### Create a Virtual Environment
+
+It's a good practice to use a virtual environment to isolate your project dependencies from other Python projects.
+
+**Using venv:**
+
+- **Windows:**
+
+  ```bash
+  python -m venv env
+  ```
+
+- **Unix or MacOS:**
+
+  ```bash
+  python3 -m venv env
+  ```
+
+Activate the virtual environment:
+
+- **Windows:**
+
+  ```bash
+  env\Scripts\activate
+  ```
+
+- **Unix or MacOS:**
+
+  ```bash
+  source env/bin/activate
+  ```
+
 ### Install Blox CLI
 
 Install Blox CLI in editable mode using pip. This allows you to make changes to the code and have them immediately available without reinstallation:

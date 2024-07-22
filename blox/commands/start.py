@@ -86,11 +86,11 @@ def start():
         django_stdout_thread = threading.Thread(
             target=stream_reader, args=(django_process.stdout, 'white'))
         django_stderr_thread = threading.Thread(target=stream_reader, args=(
-            django_process.stderr, 'bright_black', 'Django error: ', True))
+            django_process.stderr, 'bright_black', 'Django warning: ', True))
         nextjs_stdout_thread = threading.Thread(
             target=stream_reader, args=(nextjs_process.stdout, 'white'))
         nextjs_stderr_thread = threading.Thread(target=stream_reader, args=(
-            nextjs_process.stderr, 'bright_black', 'Next.js error: ', True))
+            nextjs_process.stderr, 'bright_black', 'Next.js warning: ', True))
 
         django_stdout_thread.start()
         django_stderr_thread.start()
