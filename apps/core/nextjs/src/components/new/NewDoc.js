@@ -43,9 +43,9 @@ const NewDoc = ({ config, initialData }) => {
 
   const addModule = async (data) => {
     try {
-      await postData(data, "startapp");
+      await postData(data, "addmodule");
     } catch (error) {
-      console.error("Error starting app:", error);
+      console.error("Error starting module:", error);
     }
   };
   const startApp = async (data) => {

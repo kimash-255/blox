@@ -100,6 +100,7 @@ class CreateModuleAPIView(APIView):
         modulename = request.data.get('modulename')
 
         module = Module.objects.get(pk=modulename)
+        print(module.app.id, module.id)
 
         if not modulename:
             return Response({"error": "Missing 'modulename' parameter"}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,1 +1,0 @@
-from .david import *

@@ -3,6 +3,10 @@ import random
 from django.db import models
 from .template import BaseModel
 
+# Define a list of reserved key names
+# Add other reserved names here
+RESERVED_KEYNAMES = ['core', 'admin', 'system']
+
 
 def generate_random_slug(length=10):
     characters = string.ascii_lowercase + string.digits
@@ -24,18 +28,19 @@ class AbstractApp(BaseModel):
         abstract = True
 
     def __str__(self):
-        return f"{self.name}: {self.status}"
+        return f"{self.name}"
 
     def save(self, *args, **kwargs):
         if not self.id:
-
             base_id = self.name.lower().replace(' ', '_')[:10]
             unique_id = base_id
             num = 1
-            while self.__class__.objects.filter(id=unique_id).exists():
 
+            # Check if the generated ID is in the reserved key names
+            while unique_id in RESERVED_KEYNAMES or self.__class__.objects.filter(id=unique_id).exists():
                 unique_id = f"{base_id[:9]}{num}"
                 num += 1
+
             self.id = unique_id
         super(AbstractApp, self).save(*args, **kwargs)
 

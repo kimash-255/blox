@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PrimaryButton from "../buttons/Primary";
 import DocForm from "../new/DocForm";
+import DeleteButton from "../buttons/Delete";
 
 const DocDetail = ({ config }) => {
   const { data, setData } = useData();
@@ -41,8 +42,14 @@ const DocDetail = ({ config }) => {
       }
     };
 
-    fetchData1();
-  }, [endpoint, setData]);
+    // Set up a timeout to delay the fetchData1 call
+    const timer = setTimeout(() => {
+      fetchData1();
+    }, 2000); // 5000 milliseconds = 5 seconds
+
+    // Cleanup function to clear the timeout if the component unmounts or endpoint changes
+    return () => clearTimeout(timer);
+  }, [endpoint]);
 
   const handleTabClick = (tabName) => {
     setSelectedTab(tabName);
@@ -184,13 +191,7 @@ const DocDetail = ({ config }) => {
                       />
                     </div>
                     <div onClick={handleDelete}>
-                      <PrimaryButton
-                        text="Delete"
-                        className="flex items-center justify-center p-1"
-                      >
-                        <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                        Delete
-                      </PrimaryButton>
+                      <DeleteButton />
                     </div>
                   </>
                 )}

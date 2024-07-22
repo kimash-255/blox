@@ -84,15 +84,8 @@ def startapp(app_name):
         package_file.write("{\n    \"name\": \"" + app_name +
                            "\",\n    \"version\": \"1.0.0\",\n    \"main\": \"index.js\",\n    \"scripts\": {\n        \"start\": \"\"\n    }\n}\n")
 
-    # Run makemigrations and migrate
     django_process = subprocess.Popen(
-        ['python3', 'manage.py', 'makemigrations'],
-        cwd=BASE_PATH
-    )
-    django_process.communicate()
-
-    django_process = subprocess.Popen(
-        ['python3', 'manage.py', 'migrate'],
+        ['blox', 'migrate'],
         cwd=BASE_PATH
     )
     django_process.communicate()
