@@ -14,7 +14,7 @@ Before installing Blox CLI, ensure you have the following installed on your syst
 
 ### Setup Environment
 
-#### 1. Clone the Repository
+#### Clone the Repository
 
 Clone your Blox project repository from GitHub:
 
@@ -22,36 +22,6 @@ Clone your Blox project repository from GitHub:
 git clone https://github.com/Softleek/blox.git
 cd blox
 ```
-
-#### 2. Create a Virtual Environment
-
-It's a good practice to use a virtual environment to isolate your project dependencies from other Python projects.
-
-**Using venv:**
-
-```bash
-python -m venv env
-```
-
-or
-
-```bash
-python3 -m venv env
-```
-
-Activate the virtual environment:
-
-- **Windows:**
-
-  ```bash
-  env\Scripts\activate
-  ```
-
-- **Unix or MacOS:**
-
-  ```bash
-  source env/bin/activate
-  ```
 
 ### Install Blox CLI
 
@@ -68,7 +38,7 @@ After installing Blox CLI, setup your project dependencies and configurations.
 #### Install Dependencies
 
 ```bash
-blox install
+blox setup
 ```
 
 #### Apply Migrations
@@ -115,6 +85,44 @@ Install dependencies or packages.
 
 ```bash
 blox install
+```
+
+Install node dependencies.
+
+```bash
+blox npm install dep1 dep2
+```
+
+Install node dependencies for a custom app.
+
+```bash
+blox npm install --app appname dep1 dep2
+```
+
+or
+
+```bash
+blox npm install dep1 dep2
+blox npm i --app appname dep1 dep2
+```
+
+Install python packages.
+
+```bash
+blox pip install package1 package1
+```
+
+Install python packages for a custom app..
+
+```bash
+blox pip install --app appname  package1 package1
+```
+
+or
+
+```bash
+blox pip i package1 package1
+blox pip i --app appname  package1 package1
 ```
 
 ### Command: blox startapp
