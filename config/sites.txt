@@ -1,2 +1,2 @@
 Django PORT: 8000
-NextJS PORT: 3000
+NextJS PORT: 3001

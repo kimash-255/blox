@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django_crontab",
 
     'core',
+    'arifa',
 ]
 
 MIDDLEWARE = [

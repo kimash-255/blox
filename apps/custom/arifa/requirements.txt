@@ -1,0 +1,3 @@
+# List of requirements
+requests
+django

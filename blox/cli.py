@@ -1,12 +1,5 @@
 import click
-from .commands.blox import migrate
-from .commands.blox import start
-from .commands.blox import setup
-from .commands.blox import install
-from .commands.blox import startapp
-from .commands.blox import deleteapp
-from .commands.blox import addmodule
-from .commands.blox import deletemodule
+from .commands.blox import *
 
 
 @click.group()
@@ -22,6 +15,8 @@ cli.add_command(startapp)
 cli.add_command(deleteapp)
 cli.add_command(addmodule)
 cli.add_command(deletemodule)
+cli.add_command(npm)
+cli.add_command(pip)
 
 if __name__ == '__main__':
     cli()
