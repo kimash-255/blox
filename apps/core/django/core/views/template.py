@@ -53,8 +53,8 @@ def custom_list(self, request):
         total + page_length - 1
     ) // page_length  # Calculate the total number of pages
 
-    if page > total_pages or page < 1:
-        return {"error": "Page out of range"}
+    # if page > total_pages or page < 1:
+    #     return {"error": "Page out of range"}
 
     start_index = (page - 1) * page_length
     end_index = start_index + page_length

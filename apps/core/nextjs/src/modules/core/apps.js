@@ -65,7 +65,7 @@ export const appFilters = {
 // Configurations for DocDetail
 export const appDetailConfig = {
   endpoint: "apps",
-  fields: commonFields,
+  fields: commonFields.filter((field) => field.title !== "ID"),
 };
 
 // Configurations for ListTable

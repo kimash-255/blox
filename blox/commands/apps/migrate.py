@@ -21,26 +21,47 @@ def add_init_files(folder_path):
             init_file.write(f"from .{file} import *\n")
 
 
-@click.command()
-def migrate():
-    # Read apps.txt to get the list of apps
+def update_apps_txt(app_name, remove=False):
+    # Read the current apps from apps.txt
     with open(APPS_TXT_PATH, 'r') as apps_file:
         apps = [app.strip() for app in apps_file.readlines()
                 if not app.strip().startswith('#')]
 
-    for app_name in apps:
+    # Remove the specified app if needed
+    if remove and app_name in apps:
+        apps.remove(app_name)
+
+    # Write the updated list back to apps.txt
+    with open(APPS_TXT_PATH, 'w') as apps_file:
+        for app in apps:
+            apps_file.write(f"{app}\n")
+
+
+@click.command()
+def migrate():
+    # Read apps.txt to get the list of apps
+    with open(APPS_TXT_PATH, 'r') as apps_file:
+        valid_apps = [app.strip() for app in apps_file.readlines()
+                      if not app.strip().startswith('#')]
+
+    # Process each app listed in apps.txt
+    for app_name in valid_apps:
         click.echo(f"Processing app '{app_name}'...")
 
         # Check if there's a corresponding folder in CUSTOM_APPS_PATH
         custom_app_path = os.path.join(CUSTOM_APPS_PATH, app_name)
         if not os.path.exists(custom_app_path):
-            click.echo(f"No custom folder found for '{app_name}'. Skipping.")
+            click.echo(f"No custom folder found for '{
+                       app_name}'. Removing from apps.txt.")
+            update_apps_txt(app_name, remove=True)
             continue
 
         # Check modules.txt for modules associated with the app
         modules_file_path = os.path.join(custom_app_path, 'modules.txt')
         if not os.path.exists(modules_file_path):
-            click.echo(f"No modules.txt found for '{app_name}'. Skipping.")
+            click.echo(f"No modules.txt found for '{
+                       app_name}'. Removing from apps.txt.")
+            update_apps_txt(app_name, remove=True)
             continue
 
         # Read modules from modules.txt
@@ -53,14 +74,20 @@ def migrate():
             module_folder_path = os.path.join(BASE_PATH, app_name, folder)
             module_file_path = os.path.join(
                 BASE_PATH, app_name, f'{folder}.py')
+
             if os.path.exists(module_file_path):
                 os.remove(module_file_path)
+
             if os.path.exists(module_folder_path):
                 # Delete existing files in the folder
                 for filename in os.listdir(module_folder_path):
                     file_path = os.path.join(module_folder_path, filename)
                     if os.path.isfile(file_path) and not filename.startswith('__init__.py'):
                         os.remove(file_path)
+
+                # Remove the folder if it's empty
+                if not os.listdir(module_folder_path):
+                    os.rmdir(module_folder_path)
             else:
                 os.makedirs(module_folder_path, exist_ok=True)
 

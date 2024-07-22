@@ -62,6 +62,7 @@ const Sidebar = () => {
           <SidebarList icon={faTable} text="Documents" link="/documents" />
 
           <SidebarList icon={faMobileAndroid} text="Apps" link="/apps" />
+          <SidebarList icon={faMobileAndroid} text="Modules" link="/modules" />
 
           <SidebarList icon={faMoneyBill} text="Billing" link="/" />
 

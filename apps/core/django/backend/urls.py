@@ -37,8 +37,5 @@ urlpatterns = [
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [
-    path('right/', include('right.urls')),
-]
-urlpatterns += [
-    path('TestApp/', include('TestApp.urls')),
+    path('david/', include('david.urls')),
 ]

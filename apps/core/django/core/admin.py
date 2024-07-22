@@ -4,7 +4,7 @@ from core.models import *
 
 admin.site.register(
     [
-        App
+        App, Module
     ]
 )
 # Register your models here.

@@ -1,5 +1,6 @@
 import NewDoc from "@/components/new/NewDoc";
 import { useNavbar } from "@/contexts/NavbarContext";
+import { newAppConfig } from "@/modules/core/apps";
 import React, { useEffect } from "react";
 
 const NewApp = () => {
@@ -8,39 +9,9 @@ const NewApp = () => {
   useEffect(() => {
     updateDashboardText("Apps");
     updatePagesText("Core");
-    updateTextColor("text-gray-900");
+    updateTextColor("text-gray-200");
   }, []);
-  const config = {
-    endpoint: "apps",
-    title: "App",
-    fields: [
-      { title: "Name", type: "text", data: "name", required: true },
-      {
-        title: "Status",
-        type: "select",
-        data: "status",
-        options: [
-          {
-            label: "Active",
-            value: "Active",
-          },
-          {
-            label: "Disabled",
-            value: "Disabled",
-          },
-        ],
-        required: true,
-      },
-      {
-        title: "Description",
-        type: "textarea",
-        data: "description",
-        required: true,
-      },
-    ],
-    data: [],
-  };
-  return <NewDoc config={config} />;
+  return <NewDoc config={newAppConfig} />;
 };
 
 export default NewApp;

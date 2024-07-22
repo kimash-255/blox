@@ -142,7 +142,7 @@ const deleteData = async (endpoint) => {
   try {
     const headers = {
       "Content-Type": "application/json",
-      Authorization: `Token ${token}`,
+      // Authorization: `Token ${token}`,
     };
 
     const response = await axios.delete(deleteUrl, { headers });

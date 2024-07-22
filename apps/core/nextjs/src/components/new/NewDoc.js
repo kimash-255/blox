@@ -1,97 +1,110 @@
-import React, { useState } from "react";
-import PrimaryButton from "../buttons/Primary";
-import { postData } from "@/utils/Api";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+import DocForm from "./DocForm";
+import { postData } from "@/utils/Api";
+import PrimaryButton from "../buttons/Primary";
 
-const NewDoc = ({ config }) => {
+const NewDoc = ({ config, initialData }) => {
   const router = useRouter();
-  const currentPath = router.pathname.replace("/new", "");
-  const [formData, setFormData] = useState({}); // State to hold form data
+  const formRef = useRef(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (initialData && initialData.id) {
+      setIsEditing(true);
+    }
+  }, [initialData]);
+
+  const handleSubmit = async (formData) => {
     try {
+      // Create new document
       const response = await postData(formData, config.endpoint);
-
-      if (response?.data) {
-        router.push(`${currentPath}/${response?.data.id}`);
+      console.log(response);
+      if (
+        response.data.additional &&
+        response.data.additional.type === "startapp"
+      ) {
+        const appname = response.data.id;
+        await startApp({ appname });
+        router.push(`${router.pathname.replace("/new", "")}/${appname}`);
+      } else if (
+        response.data.additional &&
+        response.data.additional.type === "addmodule"
+      ) {
+        const modulename = response.data.id;
+        await addModule({ modulename });
+        router.push(`${router.pathname.replace("/new", "")}/${modulename}`);
       }
     } catch (error) {
-      console.error("Error creating/updating post:", error);
+      console.error("Error submitting form:", error);
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const addModule = async (data) => {
+    try {
+      await postData(data, "startapp");
+    } catch (error) {
+      console.error("Error starting app:", error);
+    }
+  };
+  const startApp = async (data) => {
+    try {
+      await postData(data, "startapp");
+    } catch (error) {
+      console.error("Error starting app:", error);
+    }
+  };
+
+  // Handle save button click
+  const handleSaveClick = () => {
+    if (formRef.current) {
+      formRef.current.submit(); // Trigger form submission from DocForm
+    }
   };
 
   return (
-    <div className="bg-white border border-4 rounded-lg shadow relative m-10">
-      <form onSubmit={handleSubmit}>
-        <div className="flex items-start justify-between p-5 border-b rounded-t">
-          <h3 className="text-xl font-semibold">{config.title}</h3>
-          <button type="submit">
-            <PrimaryButton text={"Save"} />
-          </button>
-        </div>
+    <div className="mx-4 -mt-32">
+      <div
+        className="relative flex items-center p-0 mt-6 overflow-hidden bg-center bg-cover min-h-75 rounded-2xl"
+        style={{
+          backgroundImage: `url('/img/curved-images/curved0.jpg')`,
+          backgroundPositionY: "50%",
+        }}
+      >
+        <span className="absolute inset-y-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-purple-700 to-pink-500 opacity-60"></span>
+      </div>
 
-        <div className="p-6 space-y-6">
-          <div className="grid grid-cols-6 gap-6">
-            {config.fields.map((field, index) => (
-              <div key={index} className="col-span-6 sm:col-span-3">
-                <label
-                  htmlFor={field.data}
-                  className="text-sm font-medium text-gray-900 block mb-2"
-                >
-                  {field.title}
-                </label>
-                {field.type === "textarea" ? (
-                  <textarea
-                    id={field.data}
-                    name={field.data}
-                    rows="6"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-4"
-                    placeholder={field.title}
-                    required={field.required}
-                    onChange={handleInputChange}
-                  ></textarea>
-                ) : field.type === "select" ? (
-                  <select
-                    id={field.data}
-                    name={field.data}
-                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
-                    required={field.required}
-                    onChange={handleInputChange}
-                  >
-                    <option key={-1} value="">
-                      Select {field.title}
-                    </option>
-                    {field.options.map((option, idx) => (
-                      <option key={idx} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={field.type}
-                    id={field.data}
-                    name={field.data}
-                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
-                    placeholder={field.title}
-                    required={field.required}
-                    onChange={handleInputChange}
-                  />
-                )}
-              </div>
-            ))}
+      <div className="relative flex flex-col flex-auto min-w-0 p-4 mx-6 -mt-16 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border backdrop-blur-2xl backdrop-saturate-200">
+        <div className="flex flex-wrap -mx-3">
+          <div className="flex-none w-auto max-w-full px-3">
+            <div className="text-base ease-soft-in-out h-18.5 w-18.5 relative inline-flex items-center justify-center rounded-xl text-white transition-all duration-200">
+              <img
+                src="/img/favicon.png"
+                alt="profile_image"
+                className="w-full shadow-soft-sm rounded-xl"
+              />
+            </div>
+          </div>
+          <div className="flex-none w-auto max-w-full px-3 my-auto">
+            <div className="h-full">
+              <h5 className="mb-1"> New {config.title}</h5>
+            </div>
+          </div>
+          <div className="w-fit max-w-full px-3 mx-auto mt-4 sm:my-auto sm:mr-0">
+            <button type="button" onClick={handleSaveClick}>
+              <PrimaryButton text={"Save"} />
+            </button>
           </div>
         </div>
-      </form>
+      </div>
+
+      <DocForm
+        ref={formRef} // Pass the ref to DocForm
+        config={config}
+        initialData={initialData}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 };

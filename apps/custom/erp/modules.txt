@@ -1,0 +1,3 @@
+# List of modules for erp
+erp
+arifahub

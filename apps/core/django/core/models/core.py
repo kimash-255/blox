@@ -1,16 +1,15 @@
 import string
 import random
 from django.db import models
-from django.utils.text import slugify
-from .template import BaseModel  # Assuming BaseModel is defined in template.py
+from .template import BaseModel
 
 
 def generate_random_slug(length=10):
-    characters = string.ascii_letters + string.digits
+    characters = string.ascii_lowercase + string.digits
     return ''.join(random.choices(characters, k=length))
 
 
-class App(BaseModel):
+class AbstractApp(BaseModel):
     status = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
@@ -21,26 +20,33 @@ class App(BaseModel):
         editable=False
     )
 
+    class Meta:
+        abstract = True
+
     def __str__(self):
         return f"{self.name}: {self.status}"
 
     def save(self, *args, **kwargs):
         if not self.id:
-            base_slug = slugify(self.name)
-            # Ensure the slug is within 10 characters
-            unique_slug = base_slug[:10]
+
+            base_id = self.name.lower().replace(' ', '_')[:10]
+            unique_id = base_id
             num = 1
-            while App.objects.filter(id=unique_slug).exists():
-                # Adjust length to fit 10 characters
-                unique_slug = f"{base_slug[:9]}{num}"
+            while self.__class__.objects.filter(id=unique_id).exists():
+
+                unique_id = f"{base_id[:9]}{num}"
                 num += 1
-            self.id = unique_slug
-        super(App, self).save(*args, **kwargs)
+            self.id = unique_id
+        super(AbstractApp, self).save(*args, **kwargs)
 
 
-class Module(App):
+class App(AbstractApp):
+    pass
+
+
+class Module(AbstractApp):
     app = models.ForeignKey(
         App, on_delete=models.CASCADE, related_name='modules')
 
     def __str__(self):
-        return f"{self.name}: {self.app}"
+        return f"{self.name} {self.app}"
