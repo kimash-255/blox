@@ -63,6 +63,12 @@ The server will start and typically be accessible at `http://localhost:3000`.
 
 Blox CLI commands start with `blox`. Here are the available commands:
 
+#### Setup environment
+
+```bash
+blox setup
+```
+
 ### Command: blox migrate
 
 Migrate database schema changes.
@@ -102,7 +108,7 @@ blox npm install --app appname dep1 dep2
 or
 
 ```bash
-blox npm install dep1 dep2
+blox npm i dep1 dep2
 blox npm i --app appname dep1 dep2
 ```
 
@@ -130,13 +136,55 @@ blox pip i --app appname  package1 package1
 Create and start a new application.
 
 ```bash
-blox startapp [options]
+blox startapp [appname]
 ```
 
 Example:
 
 ```bash
 blox startapp myapp
+```
+
+### Command: blox deleteapp
+
+Delete an application.
+
+```bash
+blox deleteapp [appname]
+```
+
+Example:
+
+```bash
+blox deleteapp myapp
+```
+
+### Command: blox addmodule
+
+Create and start a new module.
+
+```bash
+blox addmodule [appname] [modulename]
+```
+
+Example:
+
+```bash
+blox addmodule myapp mymodule
+```
+
+### Command: blox deletemodule
+
+Delete a module.
+
+```bash
+blox deletemodule [appname] [modulename]
+```
+
+Example:
+
+```bash
+blox deletemodule myapp mymodule
 ```
 
 ## Development
