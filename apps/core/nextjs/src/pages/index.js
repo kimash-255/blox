@@ -9,8 +9,8 @@ export default function Home() {
   const { updateDashboardText, updatePagesText, updateTextColor } = useNavbar();
 
   useEffect(() => {
-    updateDashboardText("Blox");
-    updatePagesText("Dashboard");
+    updateDashboardText("Dashboard");
+    updatePagesText("Blox");
     updateTextColor("text-gray-900");
   }, []);
   return (

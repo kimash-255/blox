@@ -37,7 +37,7 @@ export default function App({ Component, pageProps }) {
               </div>
               {!isAuthPage && <Footer />}
             </main>
-            {!isAuthPage && <FixedPlugin />}
+            {/* {!isAuthPage && <FixedPlugin />} */}
           </DataProvider>
         </NavbarProvider>
       </SidebarProvider>

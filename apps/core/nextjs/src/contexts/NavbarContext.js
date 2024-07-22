@@ -10,8 +10,8 @@ export const useNavbar = () => {
 
 // Context provider component
 export const NavbarProvider = ({ children }) => {
-  const [dashboardText, setDashboardText] = useState("Dashboard");
-  const [pagesText, setPagesText] = useState("Pages");
+  const [dashboardText, setDashboardText] = useState("Blox");
+  const [pagesText, setPagesText] = useState("Dashboard");
   const [textColor, setTextColor] = useState("text-gray-800"); // Initial text color
 
   const updateDashboardText = (newText) => {

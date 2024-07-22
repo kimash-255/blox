@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const Row2 = () => {
   return (
@@ -9,20 +11,27 @@ const Row2 = () => {
             <div className="flex flex-wrap -mx-3">
               <div className="max-w-full px-3 lg:w-1/2 lg:flex-none">
                 <div className="flex flex-col h-full">
-                  <p className="pt-2 mb-1 font-semibold">Built by developers</p>
-                  <h5 className="font-bold">Soft UI Dashboard</h5>
-                  <p className="mb-12">
-                    From colors, cards, typography to complex elements, you will
-                    find the full documentation.
+                  <p className="pt-2 mb-1 font-semibold">
+                    Streamline Operations
+                  </p>
+                  <h5 className="font-bold">Blox ERP Overview</h5>
+                  <p className="mb-4 text-sm">
+                    Blox ERP integrates all your business processes into a
+                    single platform. From accounting and HR to sales and
+                    inventory management, discover how Blox ERP can enhance your
+                    operational efficiency.
                   </p>
                   <a className="mt-auto mb-0 text-sm font-semibold leading-normal group text-slate-500">
-                    Read More
-                    <i className="fas fa-arrow-right ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"></i>
+                    Learn More
+                    <FontAwesomeIcon
+                      icon={faArrowRight}
+                      className="ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"
+                    />
                   </a>
                 </div>
               </div>
               <div className="max-w-full px-3 mt-12 ml-auto text-center lg:mt-0 lg:w-5/12 lg:flex-none">
-                <div className="h-full bg-gradient-to-tl from-purple-700 to-pink-500 rounded-xl">
+                <div className="h-full bg-gradient-to-tl from-blue-700 to-teal-500 rounded-xl">
                   <img
                     src="/img/shapes/waves-white.svg"
                     className="absolute top-0 hidden w-1/2 h-full lg:block"
@@ -32,7 +41,7 @@ const Row2 = () => {
                     <img
                       className="relative z-20 w-full pt-6"
                       src="/img/illustrations/rocket-white.png"
-                      alt="rocket"
+                      alt="erp-dashboard"
                     />
                   </div>
                 </div>
@@ -47,15 +56,19 @@ const Row2 = () => {
             <span className="absolute top-0 left-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-gray-900 to-slate-800 opacity-80"></span>
             <div className="relative z-10 flex flex-col flex-auto h-full p-4">
               <h5 className="pt-2 mb-6 font-bold text-white">
-                Work with the rockets
+                Optimize Your Business
               </h5>
               <p className="text-white">
-                Wealth creation is an evolutionarily recent positive-sum game.
-                It is all about who take the opportunity first.
+                Experience the power of Blox ERP. Automate tasks, improve
+                decision-making, and enhance productivity across your entire
+                organization.
               </p>
               <a className="mt-auto mb-0 text-sm font-semibold leading-normal text-white group">
-                Read More
-                <i className="fas fa-arrow-right ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"></i>
+                Discover More
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  className="ease-bounce text-sm group-hover:translate-x-1.25 ml-1 leading-normal transition-all duration-200"
+                />
               </a>
             </div>
           </div>

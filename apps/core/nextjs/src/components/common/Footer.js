@@ -9,11 +9,11 @@ const Footer = () => {
             <div className="text-sm leading-normal text-center text-slate-500 lg:text-left">
               made with <i className="fa fa-heart"></i> by
               <a
-                href="softleek.com"
+                href="https://softleek.com/"
                 className="font-semibold text-slate-700"
                 target="_blank"
               >
-                Softleek
+                &nbsp;Softleek &nbsp;
               </a>
               for a better web.
             </div>
@@ -22,7 +22,7 @@ const Footer = () => {
             <ul className="flex flex-wrap justify-center pl-0 mb-0 list-none lg:justify-end">
               <li className="nav-item">
                 <a
-                  href="softleek.com"
+                  href="https://softleek.com/"
                   className="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-soft-in-out text-slate-500"
                   target="_blank"
                 >
@@ -31,7 +31,7 @@ const Footer = () => {
               </li>
               <li className="nav-item">
                 <a
-                  href="softleek.com"
+                  href="https://softleek.com/"
                   className="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-soft-in-out text-slate-500"
                   target="_blank"
                 >
@@ -40,7 +40,7 @@ const Footer = () => {
               </li>
               <li className="nav-item">
                 <a
-                  href="arifahub.com"
+                  href="https://arifahub.com"
                   className="block px-4 pt-0 pb-1 text-sm font-normal transition-colors ease-soft-in-out text-slate-500"
                   target="_blank"
                 >
