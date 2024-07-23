@@ -1,46 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ListTable from "@/components/list/Table";
+import { documentFilters, documentListConfig } from "@/modules/core/documents";
+import { useNavbar } from "@/contexts/NavbarContext";
 
-const DocumentList = () => {
-  const tableConfig = {
-    title: "Documents",
-    fields: [
-      { title: "Author", type: "image", data: "image" },
-      { title: "Function", type: "text", data: "function" },
-      { title: "Status", type: "text", data: "status" },
-      { title: "Employed", type: "text", data: "employed" },
-    ],
-    data: [],
-  };
+const documentList = () => {
+  const { updateDashboardText, updatePagesText, updateTextColor } = useNavbar();
 
-  const filters = {
-    status: [
-      { value: "", label: "All" },
-      { value: "Online", label: "Online" },
-      { value: "Offline", label: "Offline" },
-    ],
-    department: [
-      { value: "", label: "All" },
-      { value: "Organization", label: "Organization" },
-      { value: "Engineering", label: "Engineering" },
-      { value: "Creative", label: "Creative" },
-      { value: "Development", label: "Development" },
-      { value: "Tech", label: "Tech" },
-      { value: "Design", label: "Design" },
-      { value: "Business", label: "Business" },
-      { value: "Consulting", label: "Consulting" },
-      { value: "Analytics", label: "Analytics" },
-      { value: "Marketing", label: "Marketing" },
-    ],
-  };
-
+  useEffect(() => {
+    updateDashboardText("Documents");
+    updatePagesText("Core");
+    updateTextColor("text-gray-900");
+  }, []);
   return (
     <ListTable
-      tableConfig={tableConfig}
-      filters={filters}
+      tableConfig={documentListConfig}
+      filters={documentFilters}
       endpoint={"documents"}
     />
   );
 };
 
-export default DocumentList;
+export default documentList;

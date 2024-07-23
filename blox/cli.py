@@ -17,6 +17,7 @@ cli.add_command(addmodule)
 cli.add_command(deletemodule)
 cli.add_command(npm)
 cli.add_command(pip)
+cli.add_command(doc)
 
 if __name__ == '__main__':
     cli()

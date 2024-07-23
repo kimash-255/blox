@@ -5,3 +5,4 @@ from .deletemodule import deletemodule
 from .migrate import migrate
 from .npm import npm
 from .pip import pip
+from .doc import doc

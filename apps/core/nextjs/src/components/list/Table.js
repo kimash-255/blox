@@ -23,7 +23,6 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
           page_length: itemsPerPage,
         };
         const response = await fetchData(extendedFilters, endpoint);
-        console.log(response);
         if (response?.data?.list) {
           setData(response?.data?.list);
           setFilteredData(response?.data?.list);
@@ -72,7 +71,7 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
   };
 
   const handleEdit = (item) => {
-    console.log("Edit item:", item);
+    // console.log("Edit item:", item);
   };
 
   const currentItems = filteredData;

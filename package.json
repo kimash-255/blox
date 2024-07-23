@@ -1,0 +1,12 @@
+{
+  "name": "blox",
+  "version": "1.0.0",
+  "description": "Blox CLI is a command-line interface tool designed to streamline development tasks for projects using the Blox framework, which integrates seamlessly with Django and Next.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

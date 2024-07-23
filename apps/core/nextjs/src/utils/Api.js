@@ -22,9 +22,9 @@ const handle401Error = () => {
 const fetchData = async (params = {}, endpoint) => {
   const { token } = parseCookies();
   const getUrl = formatUrl(`${apiUrl}/${endpoint}`);
-  if (!token) {
-    handle401Error();
-  }
+  // if (!token) {
+  //   handle401Error();
+  // }
   try {
     const headers = {
       "Content-Type": "application/json",

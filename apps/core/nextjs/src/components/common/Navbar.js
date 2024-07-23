@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { useNavbar } from "@/contexts/NavbarContext";
 import { useSidebar } from "@/contexts/SidebarContext";
+
+const slugify = (text) => {
+  const lowerText = text.toString().toLowerCase();
+  if (["core", "dashboard", "blox"].includes(lowerText)) {
+    return "";
+  }
+  return lowerText
+    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+    .replace(/\-\-+/g, "-") // Replace multiple - with single -
+    .replace(/^-+/, "") // Trim - from start of text
+    .replace(/-+$/, ""); // Trim - from end of text
+};
 
 const Navbar = () => {
   const { dashboardText, pagesText, textColor } = useNavbar();
@@ -34,20 +48,24 @@ const Navbar = () => {
     >
       <div className="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
         <nav>
-          <ol className="flex flex-wrap pt-1 mr-12 bg-transparent rounded-lg sm:mr-16">
+          <ol className="flex flex-wrap pt-1 bg-transparent rounded-lg sm:mr-16">
             <li
               className={`text-sm leading-normal ${
                 isScrolled ? "text-gray-900" : textColor
               }`}
             >
-              <a className="opacity-90">{pagesText}</a>
+              <Link href={`/${slugify(pagesText)}`}>
+                <div className="opacity-90">{pagesText}</div>
+              </Link>
             </li>
             <li
-              className={`text-sm pl-2 capitalize leading-normal ${
+              className={`flex flex-row text-sm pl-2 capitalize leading-normal ${
                 isScrolled ? "text-gray-900" : textColor
               } before:float-left before:pr-2 before:text-gray-600 before:content-['/']`}
             >
-              {dashboardText}
+              <Link href={`/${slugify(dashboardText)}`}>
+                <div>{dashboardText}</div>
+              </Link>
             </li>
           </ol>
           <h6
@@ -74,15 +92,16 @@ const Navbar = () => {
           </div>
           <ul className="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
             <li className="flex items-center">
-              <a
-                href="/login"
-                className={`block px-0 py-2 text-sm font-semibold transition-all ease-nav-brand ${
-                  isScrolled ? "text-gray-900" : textColor
-                }`}
-              >
-                <i className="fa fa-user sm:mr-1"></i>
-                <span className="hidden sm:inline">Sign In</span>
-              </a>
+              <Link href="/login">
+                <div
+                  className={`block px-0 py-2 text-sm font-semibold transition-all ease-nav-brand ${
+                    isScrolled ? "text-gray-900" : textColor
+                  }`}
+                >
+                  <i className="fa fa-user sm:mr-1"></i>
+                  <span className="hidden sm:inline">Sign In</span>
+                </div>
+              </Link>
             </li>
             <li className="flex items-center pl-4 xl:hidden">
               <a

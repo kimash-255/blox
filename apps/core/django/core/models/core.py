@@ -14,7 +14,7 @@ def generate_random_slug(length=10):
 
 
 class AbstractApp(BaseModel):
-    status = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, default="Active")
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     id = models.CharField(
@@ -55,3 +55,23 @@ class Module(AbstractApp):
 
     def __str__(self):
         return f"{self.name} {self.app}"
+    
+    
+class Document(AbstractApp):
+    TYPE_CHOICES = [
+        ('single', 'Single'),
+        ('list', 'List'),
+        ('dynamic', 'Dynamic'),
+    ]
+    
+    module = models.ForeignKey(
+        Module, on_delete=models.CASCADE, related_name='modules'
+    )
+    type = models.CharField(
+        max_length=10,
+        choices=TYPE_CHOICES,
+        default='list'
+    )
+
+    def __str__(self):
+        return f"{self.name} {self.module}"

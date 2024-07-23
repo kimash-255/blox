@@ -20,7 +20,7 @@ const TableTemplate = ({ tableConfig, onEdit, data }) => {
             </div>
           </div>
           <div className="flex-auto px-0 pt-0 pb-2">
-            <div className="p-0 overflow-x-auto">
+            <div className="p-4 overflow-x-auto">
               <table className="items-center w-full mb-2 px-4 align-top border-gray-200 text-slate-500">
                 <thead className="align-bottom">
                   <tr>
@@ -64,16 +64,18 @@ const TableTemplate = ({ tableConfig, onEdit, data }) => {
                                 </p>
                               </div>
                             </div>
-                          ) : field.type === "link" ? (
+                          ) : field.type === "linkselect" ? (
                             <a
-                              href={item[field.data]}
-                              className="text-xs font-semibold leading-tight text-slate-400"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              href={`/${field.endpoint}/${item[field.data]}`}
+                              className="font-semibold leading-tight text-slate-400"
                             >
                               {item[field.data]}
                             </a>
                           ) : field.type === "select" ? (
                             <span
-                              className={`text-xs font-semibold leading-tight bg-gradient-to-tl px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white ${
+                              className={`font-semibold leading-tight bg-gradient-to-tl px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white ${
                                 field.options.find(
                                   (option) => option.value === item[field.data]
                                 )?.style

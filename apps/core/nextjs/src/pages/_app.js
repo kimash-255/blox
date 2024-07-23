@@ -1,11 +1,6 @@
 import { useRouter } from "next/router";
 import Sidebar from "@/components/common/Sidebar";
 import "@/styles/globals.css";
-import "@/styles/tooltips.css";
-import "@/styles/perfect-scrollbar.css";
-import "@/styles/nucleo-svg.css";
-import "@/styles/nucleo-icons.css";
-import "@/styles/soft-ui-dashboard-tailwind.css";
 import Navbar from "@/components/common/Navbar";
 import FixedPlugin from "@/components/common/FixedPlugin";
 import Footer from "@/components/common/Footer";

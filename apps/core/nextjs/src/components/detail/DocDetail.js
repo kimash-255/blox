@@ -13,6 +13,8 @@ import {
 import PrimaryButton from "../buttons/Primary";
 import DocForm from "../new/DocForm";
 import DeleteButton from "../buttons/Delete";
+import ConfirmationModal from "../modal/ConfirmationModal";
+import Link from "next/link";
 
 const DocDetail = ({ config }) => {
   const { data, setData } = useData();
@@ -96,15 +98,20 @@ const DocDetail = ({ config }) => {
     handleUpdate(formData);
   };
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this document?")) {
-      try {
-        await deleteData(endpoint);
-        toast.success("Document deleted successfully!");
-        router.back();
-      } catch (error) {
-        toast.error(`Failed to delete document, ${error.message || error}`);
-      }
+    setIsModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    setIsModalOpen(false);
+    try {
+      await deleteData(endpoint);
+      toast.success("Document deleted successfully!");
+      router.back();
+    } catch (error) {
+      toast.error(`Failed to delete document, ${error.message || error}`);
     }
   };
 
@@ -123,6 +130,11 @@ const DocDetail = ({ config }) => {
           backgroundPositionY: "50%",
         }}
       >
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          onRequestClose={() => setIsModalOpen(false)}
+          onConfirm={confirmDelete}
+        />
         <span className="absolute inset-y-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-purple-700 to-pink-500 opacity-60"></span>
       </div>
       <div className="relative flex flex-col flex-auto min-w-0 p-4 mx-6 -mt-16 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border backdrop-blur-2xl backdrop-saturate-200">
@@ -219,7 +231,20 @@ const DocDetail = ({ config }) => {
                         <p className="mb-0 font-sans text-sm font-semibold leading-normal">
                           {item.title}
                         </p>
-                        <h5 className="mb-0 font-bold">{data[item.data]}</h5>
+
+                        {item.type === "linkselect" ? (
+                          <a
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={`/${item.endpoint}/${data[item.data]}`}
+                          >
+                            <h5 className="mb-0 font-bold">
+                              {data[item.data]}
+                            </h5>
+                          </a>
+                        ) : (
+                          <h5 className="mb-0 font-bold">{data[item.data]}</h5>
+                        )}
                       </div>
                     </div>
                     <div className="px-3 text-right flex justify-end">
