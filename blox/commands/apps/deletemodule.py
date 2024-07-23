@@ -50,8 +50,7 @@ def deletemodule(app_name, module_name):
 
     # Remove the module folder
     if remove_module_folder(app_path, module_name):
-        click.echo(f"Removed module folder '{
-                   module_name}' from app '{app_name}'.")
+        click.echo(f"Removed module folder '{module_name}' from app '{app_name}'.")
     else:
         click.echo(f"The module '{module_name}' does not exist.")
         sys.exit(1)
@@ -66,8 +65,7 @@ def deletemodule(app_name, module_name):
     click.echo("Running migrations...")
     try:
         run_migrations()
-        click.echo(f"The module '{
-                   module_name}' has been removed successfully.")
+        click.echo(f"The module '{module_name}' has been removed successfully.")
     except subprocess.CalledProcessError:
         click.echo("Failed to apply migrations.")
         sys.exit(1)

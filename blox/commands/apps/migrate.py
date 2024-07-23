@@ -51,16 +51,14 @@ def migrate():
         # Check if there's a corresponding folder in CUSTOM_APPS_PATH
         custom_app_path = os.path.join(CUSTOM_APPS_PATH, app_name)
         if not os.path.exists(custom_app_path):
-            click.echo(f"No custom folder found for '{
-                       app_name}'. Removing from apps.txt.")
+            click.echo(f"No custom folder found for '{app_name}'. Removing from apps.txt.")
             update_apps_txt(app_name, remove=True)
             continue
 
         # Check modules.txt for modules associated with the app
         modules_file_path = os.path.join(custom_app_path, 'modules.txt')
         if not os.path.exists(modules_file_path):
-            click.echo(f"No modules.txt found for '{
-                       app_name}'. Removing from apps.txt.")
+            click.echo(f"No modules.txt found for '{app_name}'. Removing from apps.txt.")
             update_apps_txt(app_name, remove=True)
             continue
 

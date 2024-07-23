@@ -73,10 +73,10 @@ def start():
             text=True
         )
 
-        click.echo(click.style(f"Running Django server on port {
-                   django_port}", fg='green'))
-        click.echo(click.style(f"Running Next.js server on port {
-                   nextjs_port}", fg='green'))
+        click.echo(click.style(
+            f"Running Django server on port {django_port}", fg='green'))
+        click.echo(click.style(
+            f"Running Next.js server on port {nextjs_port}", fg='green'))
         click.echo(click.style(
             f"Open Next.js at: http://localhost:{nextjs_port}", fg='green'))
 

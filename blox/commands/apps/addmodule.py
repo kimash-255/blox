@@ -43,8 +43,7 @@ def addmodule(app_name, module_name):
 
     # Create the module folder
     if create_module_folder(app_path, module_name):
-        click.echo(f"Created module folder '{
-                   module_name}' in app '{app_name}'.")
+        click.echo(f"Created module folder '{module_name}' in app '{app_name}'.")
     else:
         click.echo(f"The module '{module_name}' already exists.")
         sys.exit(1)
