@@ -4,38 +4,17 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import Field from "@/components/studio/Field";
 import Canvas from "@/components/studio/Canvas";
 import fieldsData from "@/data/fields";
-import layoutFieldsData from "@/data/layoutFields";
 
 const DocStudio = () => {
   const [fields] = useState(fieldsData);
-  const [layoutFields] = useState(layoutFieldsData);
-  const [canvasItems, setCanvasItems] = useState([
-    {
-      id: "tab-1",
-      name: "Details",
-      type: "tab",
-      sections: [
-        {
-          id: "section-1",
-          name: "Section 1",
-          type: "section",
-          columns: [
-            {
-              id: "column-1",
-              name: "Column 1",
-              type: "column",
-              fields: [],
-            },
-          ],
-        },
-      ],
-    },
-  ]);
+  const [canvasItems, setCanvasItems] = useState([]);
   const lastAddedFieldRef = useRef(null);
   const fieldCountsRef = useRef({});
 
-  const addToCanvas = (field, parentId, parentType) => {
+  const addToCanvas = (field) => {
     const currentTime = Date.now();
+    console.log(field);
+
     if (
       lastAddedFieldRef.current &&
       lastAddedFieldRef.current.id === field.id &&
@@ -46,6 +25,7 @@ const DocStudio = () => {
 
     lastAddedFieldRef.current = { id: field.id, timestamp: currentTime };
 
+    // Increment field type count and update field name
     const fieldType = field.name;
     fieldCountsRef.current[fieldType] =
       (fieldCountsRef.current[fieldType] || 0) + 1;
@@ -57,52 +37,7 @@ const DocStudio = () => {
       name: newFieldName,
     };
 
-    setCanvasItems((prevItems) => {
-      const newItems = [...prevItems];
-      const parent = findItemById(newItems, parentId, parentType);
-      if (parentType === "column") {
-        parent.fields.push(newField);
-      } else if (parentType === "section") {
-        parent.columns.push({
-          id: `column-${currentTime}`,
-          name: `Column ${fieldCountsRef.current["Column"]}`,
-          type: "column",
-          fields: [newField],
-        });
-      } else if (parentType === "tab") {
-        parent.sections.push({
-          id: `section-${currentTime}`,
-          name: `Section ${fieldCountsRef.current["Section"]}`,
-          type: "section",
-          columns: [
-            {
-              id: `column-${currentTime}`,
-              name: `Column ${fieldCountsRef.current["Column"]}`,
-              type: "column",
-              fields: [newField],
-            },
-          ],
-        });
-      }
-      return newItems;
-    });
-  };
-
-  const findItemById = (items, id, type) => {
-    if (type === "tab") {
-      return items.find((item) => item.id === id);
-    }
-    for (const tab of items) {
-      if (type === "section") {
-        const section = tab.sections.find((item) => item.id === id);
-        if (section) return section;
-      } else if (type === "column") {
-        for (const section of tab.sections) {
-          const column = section.columns.find((item) => item.id === id);
-          if (column) return column;
-        }
-      }
-    }
+    setCanvasItems((prevItems) => [...prevItems, newField]);
   };
 
   const updateCanvasItem = (index, updatedItem) => {
@@ -114,12 +49,10 @@ const DocStudio = () => {
   };
 
   const moveItem = (dragIndex, hoverIndex) => {
-    setCanvasItems((prevItems) => {
-      const updatedItems = [...prevItems];
-      const [draggedItem] = updatedItems.splice(dragIndex, 1);
-      updatedItems.splice(hoverIndex, 0, draggedItem);
-      return updatedItems;
-    });
+    const updatedItems = [...canvasItems];
+    const [draggedItem] = updatedItems.splice(dragIndex, 1);
+    updatedItems.splice(hoverIndex, 0, draggedItem);
+    setCanvasItems(updatedItems);
   };
 
   const saveCanvas = () => {

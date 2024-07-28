@@ -1,6 +1,7 @@
 import React from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons"; // Import the desired icon
 
 const ItemType = "FIELD";
 
@@ -29,7 +30,6 @@ const DraggableItem = ({
         draggedItem.index = index;
       }
     },
-    drop: () => ({ type: item.type, id: item.id }),
   });
 
   drag(drop(ref));
@@ -38,8 +38,6 @@ const DraggableItem = ({
     console.error(`Item at index ${index} is undefined`);
     return null;
   }
-
-  const isLayout = item.type === "layout";
 
   return (
     <div
@@ -51,7 +49,10 @@ const DraggableItem = ({
     >
       <div className="flex flex-row items-center w-full">
         <div className="flex items-center justify-center w-12 h-12 text-center rounded-lg bg-gradient-to-tl from-purple-700 to-pink-500 mr-4">
-          <FontAwesomeIcon icon={item.icon} className="text-white h-8 w-8" />
+          <FontAwesomeIcon
+            icon={item.icon ? item.icon : faCoffee}
+            className="text-white h-8 w-8"
+          />
         </div>
         <div className="w-full">
           {selectedFieldId === item.id && (
@@ -68,7 +69,7 @@ const DraggableItem = ({
           />
         </div>
       </div>
-      {selectedFieldId === item.id && !isLayout && (
+      {selectedFieldId === item.id && (
         <div className="mt-2">
           <p className="mb-0 font-sans text-sm font-semibold leading-normal">
             ID
@@ -94,13 +95,6 @@ const DraggableItem = ({
             <option value="email">Email</option>
             {/* Add more options as needed */}
           </select>
-        </div>
-      )}
-      {isLayout && (
-        <div className="mt-2">
-          <p className="mb-0 font-sans text-sm font-semibold leading-normal">
-            Layout Element
-          </p>
         </div>
       )}
     </div>
