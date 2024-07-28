@@ -15,6 +15,7 @@ import DocForm from "../new/DocForm";
 import DeleteButton from "../buttons/Delete";
 import ConfirmationModal from "../modal/ConfirmationModal";
 import Link from "next/link";
+import { timeAgo } from "@/utils/DateFormat";
 
 const DocDetail = ({ config }) => {
   const { data, setData } = useData();
@@ -36,6 +37,7 @@ const DocDetail = ({ config }) => {
       if (!endpoint) return;
       try {
         const response = await fetchData({}, endpoint);
+        console.log(response);
         if (response?.data) {
           setData(response.data);
         }
@@ -47,7 +49,7 @@ const DocDetail = ({ config }) => {
     // Set up a timeout to delay the fetchData1 call
     const timer = setTimeout(() => {
       fetchData1();
-    }, 2000); // 5000 milliseconds = 5 seconds
+    }, 500); // 5000 milliseconds = 5 seconds
 
     // Cleanup function to clear the timeout if the component unmounts or endpoint changes
     return () => clearTimeout(timer);
@@ -124,7 +126,7 @@ const DocDetail = ({ config }) => {
   return (
     <div className="mx-4 -mt-32">
       <div
-        className="relative flex items-center p-0 mt-6 overflow-hidden bg-center bg-cover min-h-75 rounded-2xl"
+        className="relative flex items-center p-0 mt-6 overflow-hidden bg-center bg-cover min-h-32 rounded-2xl"
         style={{
           backgroundImage: `url('/img/curved-images/curved0.jpg')`,
           backgroundPositionY: "50%",
@@ -137,10 +139,10 @@ const DocDetail = ({ config }) => {
         />
         <span className="absolute inset-y-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-purple-700 to-pink-500 opacity-60"></span>
       </div>
-      <div className="relative flex flex-col flex-auto min-w-0 p-4 mx-6 -mt-16 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border backdrop-blur-2xl backdrop-saturate-200">
+      <div className="relative flex flex-col flex-auto min-w-0 p-4 mx-6 -mt-12 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border backdrop-blur-2xl backdrop-saturate-200">
         <div className="flex flex-wrap -mx-3">
           <div className="flex-none w-auto max-w-full px-3">
-            <div className="text-base ease-soft-in-out h-18.5 w-18.5 relative inline-flex items-center justify-center rounded-xl text-white transition-all duration-200">
+            <div className="text-base ease-soft-in-out h-8.5 w-8.5 relative inline-flex items-center justify-center rounded-xl text-white transition-all duration-200">
               <img
                 src="/img/favicon.png"
                 alt="profile_image"
@@ -262,6 +264,16 @@ const DocDetail = ({ config }) => {
           ))}
         </div>
       )}
+
+      <td className="p-2 align-middle bg-transparent border-t flex items-center text-xs whitespace-nowrap shadow-transparent">
+        <span className="inline-block w-1 h-1 rounded-full bg-green-600 mr-1"></span>
+        {data?.modified_at ? timeAgo(data?.modified_at) : ""}&nbsp; since last
+        edit
+      </td>
+      <td className="p-2 align-middle bg-transparent flex items-center text-xs whitespace-nowrap shadow-transparent">
+        <span className="inline-block w-1 h-1 rounded-full bg-orange-600 mr-1"></span>
+        {data?.created_at ? timeAgo(data?.created_at) : ""}&nbsp; since creation
+      </td>
     </div>
   );
 };

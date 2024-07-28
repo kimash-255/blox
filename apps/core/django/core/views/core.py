@@ -132,21 +132,14 @@ class ModuleViewSet(GenericViewSet):
 class CreateDocumentAPIView(APIView):
     def post(self, request, *args, **kwargs):
         documentname = request.data.get('documentname')
-        module_id = request.data.get('module_id')
-        type = request.data.get('type')
+        app = request.data.get('app')
+        module = request.data.get('module')
 
-        if not documentname or not module_id or not type:
-            return Response({"error": "Missing 'documentname', 'module_id', or 'type' parameter"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            module = Module.objects.get(id=module_id)
-        except Module.DoesNotExist:
-            return Response({"error": "Module does not exist"}, status=status.HTTP_400_BAD_REQUEST)
-
-        document = Document(name=documentname, module=module, type=type)
-        document.save()
-
-        return Response({"message": "Document created successfully"}, status=status.HTTP_201_CREATED)
+        return run_subprocess(
+            ['blox', 'doc', 'new', '--app', app, '--module', module, documentname],
+            "Document created successfully",
+            "Failed to create document"
+        )
 
 class DocumentViewSet(GenericViewSet):
     queryset = Document.objects.all()
@@ -154,30 +147,47 @@ class DocumentViewSet(GenericViewSet):
     filterset_class = DocumentFilter
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        try:
+            data = request.data
 
-        response_data = serializer.data
-        response_data["additional"] = {
-            "type": "newdoc",
-            "info": {"message": "Document created and ready to be used."}
-        }
+            module_id = request.data.get('module')
+            if module_id:
+                try:
+                    module = Module.objects.get(pk=module_id)
+                    data['app'] = module.app.id
+                except Module.DoesNotExist:
+                    return Response({"detail": "Invalid module ID."}, status=status.HTTP_400_BAD_REQUEST)
 
-        headers = self.get_success_headers(serializer.data)
-        return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
+            
+            serializer = self.get_serializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
 
+            response_data = serializer.data
+            response_data["additional"] = {
+                "type": "newdoc",
+                "info": {"message": "Document created and ready to be used."}
+            }
+
+            headers = self.get_success_headers(serializer.data)
+            return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
+        
+        except Exception as e:
+            print(e)
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
     def destroy(self, request, *args, **kwargs):
         document = self.get_object()
         document_name = document.id
-        module_name = document.module.id
+        app = document.app.id
+        module = document.module.id
 
         if not document_name:
             return Response({"error": "Missing document name"}, status=status.HTTP_400_BAD_REQUEST)
 
         document.delete()
         return run_subprocess(
-            ['blox', 'deletedoc', module_name, document_name],
+            ['blox', 'doc', 'delete', '--app', app, '--module', module, document_name],
             "Document deleted successfully",
             "Failed to delete document"
         )

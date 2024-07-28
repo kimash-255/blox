@@ -12,10 +12,10 @@ def create_folder_structure(app_path, module_name, doc_name):
 
         # Define file names and their default content
         files = {
-            'fields.js': '''// Description: List all document fields including types, config, etc. for Next.js.\n\n''',
-            'list.js': '''// Description: Override document list in Next.js.\n\n''',
-            'detail.js': '''// Description: View document details in Next.js.\n\n''',
-            'backend.py': '''# Description: Backend code for handling data operations.\n\n'''
+            f'{doc_name}_fields.js': '''// Description: List all document fields including types, config, etc. for Next.js.\n\n''',
+            f'{doc_name}_list.js': '''// Description: Override document list in Next.js.\n\n''',
+            f'{doc_name}_detail.js': '''// Description: View document details in Next.js.\n\n''',
+            f'{doc_name}.py': '''# Description: Backend code for handling data operations.\n\n'''
         }
 
         for file_name, content in files.items():
@@ -43,16 +43,16 @@ def new(app, module, doc_name):
 
     # Create the folder structure and files
     if create_folder_structure(app_path, module, doc_name):
-        click.echo(f"Created folder '{doc_name}' with files inside '{module}' in app '{app}'.")
+        click.echo(f"Created document '{doc_name}' for module '{module}' in app '{app}'.")
     else:
-        click.echo(f"The folder '{doc_name}' already exists.")
+        click.echo(f"The document '{doc_name}' already exists.")
         sys.exit(1)
 
     # Run migrations
     click.echo("Running migrations...")
     try:
         run_migrations()
-        click.echo(f"The folder '{doc_name}' with files has been created successfully.")
+        click.echo(f"The document '{doc_name}' has been created successfully.")
     except subprocess.CalledProcessError:
         click.echo("Failed to apply migrations.")
         sys.exit(1)

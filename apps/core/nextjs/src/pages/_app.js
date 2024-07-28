@@ -7,8 +7,18 @@ import Footer from "@/components/common/Footer";
 import { DataProvider } from "@/contexts/DataContext";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import { NavbarProvider } from "@/contexts/NavbarContext";
+import { useEffect, useState } from "react";
 
 export default function App({ Component, pageProps }) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
   const router = useRouter();
   const isAuthPage =
     router.pathname === "/login" || router.pathname === "/signup";
@@ -18,19 +28,22 @@ export default function App({ Component, pageProps }) {
       <SidebarProvider>
         <NavbarProvider>
           <DataProvider>
-            {!isAuthPage && <Sidebar />}
             <main
               className={`ease-soft-in-out ${
-                !isAuthPage ? "xl:ml-68.5" : ""
-              } flex flex-col relative rounded-xl transition-all duration-200`}
+                !isAuthPage ? "" : ""
+              } flex flex-row relative rounded-xl transition-all duration-200`}
             >
-              {!isAuthPage && <Navbar />}
-              <div className="flex flex-col h-full min-h-screen">
-                <div className="relative flex-grow">
-                  <Component {...pageProps} />
+              {!isAuthPage && <Sidebar />}
+              <div className="relative flex flex-col h-full min-h-screen "></div>
+              <div className="relative flex flex-col h-full min-h-screen w-full">
+                {!isAuthPage && <Navbar />}
+                <div className="flex flex-col h-full min-h-screen">
+                  <div className="relative flex-grow">
+                    <Component {...pageProps} />
+                  </div>
                 </div>
+                {!isAuthPage && <Footer />}
               </div>
-              {!isAuthPage && <Footer />}
             </main>
             {/* {!isAuthPage && <FixedPlugin />} */}
           </DataProvider>

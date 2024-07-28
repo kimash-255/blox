@@ -20,7 +20,7 @@ const NewDoc = ({ config, initialData }) => {
     try {
       // Create new document
       const response = await postData(formData, config.endpoint);
-      console.log(response);
+      // console.log(response);
       if (
         response.data.additional &&
         response.data.additional.type === "startapp"
@@ -35,9 +35,26 @@ const NewDoc = ({ config, initialData }) => {
         const modulename = response.data.id;
         await addModule({ modulename });
         router.push(`${router.pathname.replace("/new", "")}/${modulename}`);
+      } else if (
+        response.data.additional &&
+        response.data.additional.type === "newdoc"
+      ) {
+        const documentname = response.data.id;
+        const app = response.data.app;
+        const module = response.data.module;
+        await addDoc({ documentname, app, module });
+        router.push(`${router.pathname.replace("/new", "")}/${documentname}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+    }
+  };
+
+  const startApp = async (data) => {
+    try {
+      await postData(data, "startapp");
+    } catch (error) {
+      console.error("Error starting app:", error);
     }
   };
 
@@ -48,11 +65,12 @@ const NewDoc = ({ config, initialData }) => {
       console.error("Error starting module:", error);
     }
   };
-  const startApp = async (data) => {
+
+  const addDoc = async (data) => {
     try {
-      await postData(data, "startapp");
+      await postData(data, "newdoc");
     } catch (error) {
-      console.error("Error starting app:", error);
+      console.error("Error starting module:", error);
     }
   };
 
@@ -66,7 +84,7 @@ const NewDoc = ({ config, initialData }) => {
   return (
     <div className="mx-4 -mt-32">
       <div
-        className="relative flex items-center p-0 mt-6 overflow-hidden bg-center bg-cover min-h-75 rounded-2xl"
+        className="relative flex items-center p-0 mt-6 overflow-hidden bg-center bg-cover min-h-32 rounded-2xl"
         style={{
           backgroundImage: `url('/img/curved-images/curved0.jpg')`,
           backgroundPositionY: "50%",
@@ -75,10 +93,10 @@ const NewDoc = ({ config, initialData }) => {
         <span className="absolute inset-y-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-purple-700 to-pink-500 opacity-60"></span>
       </div>
 
-      <div className="relative flex flex-col flex-auto min-w-0 p-4 mx-6 -mt-16 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border backdrop-blur-2xl backdrop-saturate-200">
+      <div className="relative flex flex-col flex-auto min-w-0 p-4 mx-6 -mt-12 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border backdrop-blur-2xl backdrop-saturate-200">
         <div className="flex flex-wrap -mx-3">
           <div className="flex-none w-auto max-w-full px-3">
-            <div className="text-base ease-soft-in-out h-18.5 w-18.5 relative inline-flex items-center justify-center rounded-xl text-white transition-all duration-200">
+            <div className="text-base ease-soft-in-out h-8.5 w-8.5 relative inline-flex items-center justify-center rounded-xl text-white transition-all duration-200">
               <img
                 src="/img/favicon.png"
                 alt="profile_image"

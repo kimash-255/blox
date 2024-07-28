@@ -1,13 +1,12 @@
 from django.db import models
+from django.conf import settings
 from django.utils.text import slugify
 import string
 import random
 
-
 def generate_random_slug(length=10):
     characters = string.ascii_letters + string.digits
     return ''.join(random.choices(characters, k=length))
-
 
 class BaseModel(models.Model):
     id = models.CharField(

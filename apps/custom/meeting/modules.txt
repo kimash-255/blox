@@ -1,3 +1,0 @@
-# List of modules for meeting
-meeting
-core_app

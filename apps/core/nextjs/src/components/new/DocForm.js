@@ -36,7 +36,7 @@ const DocForm = forwardRef(({ config, initialData, onSubmit }, ref) => {
   }));
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} className="p-6 space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="p-2 space-y-6">
       <div className="bg-white border border-4 my-8 p-8 rounded-lg shadow relative">
         <div className="grid grid-cols-6 gap-6">
           {config.fields.map((field, index) => (

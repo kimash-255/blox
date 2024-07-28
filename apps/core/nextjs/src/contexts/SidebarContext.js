@@ -3,11 +3,12 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const SidebarContext = createContext();
 
 export const SidebarProvider = ({ children }) => {
-  const [sidebarWidth, setSidebarWidth] = useState(250); // Default width set here
+  const [sidebarWidth, setSidebarWidth] = useState(350); // Default width set here
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [sidebarHidden, setSidebarHidden] = useState(false);
 
   const toggleSidebarWidth = () => {
-    setSidebarWidth((prevWidth) => (prevWidth === 250 ? 10 : 250));
+    setSidebarWidth((prevWidth) => (prevWidth === 350 ? 10 : 350));
   };
 
   const updateWidth = (width) => {
@@ -29,7 +30,13 @@ export const SidebarProvider = ({ children }) => {
 
   return (
     <SidebarContext.Provider
-      value={{ sidebarWidth, setSidebarWidth: updateWidth, toggleSidebarWidth }}
+      value={{
+        sidebarWidth,
+        setSidebarWidth: updateWidth,
+        toggleSidebarWidth,
+        sidebarHidden,
+        setSidebarHidden,
+      }}
     >
       {children}
     </SidebarContext.Provider>

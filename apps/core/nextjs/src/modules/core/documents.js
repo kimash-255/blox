@@ -14,10 +14,10 @@ const commonFields = [
     bgColor: "green",
   },
   {
-    title: "App",
+    title: "Module",
     type: "linkselect",
-    data: "app",
-    endpoint: "apps",
+    data: "module",
+    endpoint: "modules",
     icon: faBox,
     bgColor: "green",
   },

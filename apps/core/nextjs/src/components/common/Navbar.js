@@ -36,18 +36,21 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`relative items-center justify-between z-50 transition-all duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start ${
+      className={`relative flex flex-wrap items-center justify-between z-50 transition-all duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start ${
         isScrolled
           ? "fixed top-0 right-0 w-full my-6 mx-4 py-2 z-50 bg-transparent border-[1px] border-purple-700 shadow-xl shadow-purple-900 backdrop-blur-lg"
-          : "relative flex flex-wrap px-0 py-8 mx-6"
-      }`}
+          : "relative  px-0 py-8 mx-6"
+      }
+      `}
       style={{
         position: isScrolled ? "fixed" : "",
-        width: isScrolled ? `calc(100% - ${sidebarWidth + 50}px)` : "",
+        width: isScrolled
+          ? `calc(100% - ${sidebarWidth > 20 ? sidebarWidth - 60 : 40}px)`
+          : "",
       }}
     >
       <div className="flex items-center justify-between w-full px-4 py-1 mx-auto flex-wrap-inherit">
-        <nav>
+        <nav className="flex flex-row md:flex-col gap-x-4">
           <ol className="flex flex-wrap pt-1 bg-transparent rounded-lg sm:mr-16">
             <li
               className={`text-sm leading-normal ${
@@ -102,19 +105,6 @@ const Navbar = () => {
                   <span className="hidden sm:inline">Sign In</span>
                 </div>
               </Link>
-            </li>
-            <li className="flex items-center pl-4 xl:hidden">
-              <a
-                className={`block p-0 text-sm transition-all ease-nav-brand ${
-                  isScrolled ? "text-gray-900" : textColor
-                }`}
-              >
-                <div className="w-4.5 overflow-hidden">
-                  <i className="ease-soft mb-0.75 relative block h-0.5 rounded-sm bg-slate-500 transition-all"></i>
-                  <i className="ease-soft mb-0.75 relative block h-0.5 rounded-sm bg-slate-500 transition-all"></i>
-                  <i className="ease-soft relative block h-0.5 rounded-sm bg-slate-500 transition-all"></i>
-                </div>
-              </a>
             </li>
             <li className="flex items-center px-4">
               <a

@@ -3,8 +3,7 @@ import random
 from django.db import models
 from .template import BaseModel
 
-# Define a list of reserved key names
-# Add other reserved names here
+
 RESERVED_KEYNAMES = ['core', 'admin', 'system']
 
 
@@ -29,6 +28,7 @@ class AbstractApp(BaseModel):
 
     def __str__(self):
         return f"{self.name}"
+    
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -63,7 +63,9 @@ class Document(AbstractApp):
         ('list', 'List'),
         ('dynamic', 'Dynamic'),
     ]
-    
+    app = models.ForeignKey(
+        App, on_delete=models.CASCADE, related_name='app')
+
     module = models.ForeignKey(
         Module, on_delete=models.CASCADE, related_name='modules'
     )
@@ -74,4 +76,4 @@ class Document(AbstractApp):
     )
 
     def __str__(self):
-        return f"{self.name} {self.module}"
+        return f"{self.name} - {self.module}"
