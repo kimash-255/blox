@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Sidebar from "@/components/common/Sidebar";
 import "@/styles/globals.css";
@@ -7,10 +8,10 @@ import Footer from "@/components/common/Footer";
 import { DataProvider } from "@/contexts/DataContext";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import { NavbarProvider } from "@/contexts/NavbarContext";
-import { useEffect, useState } from "react";
 
 export default function App({ Component, pageProps }) {
   const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
@@ -19,7 +20,6 @@ export default function App({ Component, pageProps }) {
   if (!isClient) {
     return null;
   }
-  const router = useRouter();
   const isAuthPage =
     router.pathname === "/login" || router.pathname === "/signup";
 

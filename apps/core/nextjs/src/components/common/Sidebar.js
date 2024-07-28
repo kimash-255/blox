@@ -55,7 +55,7 @@ const Sidebar = () => {
           onClick={toggleSidebar}
           className="fixed top-8 -left-2 w-fit z-100 text-slate-700 bg-white py-4 px-2 rounded shadow-lg"
         >
-          <FontAwesomeIcon icon={faAngleDoubleRight} size="md" />
+          <FontAwesomeIcon icon={faAngleDoubleRight} size="sm" />
         </button>
       )}
       <div
