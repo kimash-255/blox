@@ -1,19 +1,40 @@
 import React, { useState, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import Field from "@/components/studio/Field";
-import Canvas from "@/components/studio/Canvas";
-import fieldsData from "@/data/fields";
+import Field from "./Field"; // Update path according to your structure
+import Canvas from "./Canvas"; // Update path according to your structure
+import fieldsData from "@/data/fields"; // Update path according to your structure
 
 const DocStudio = () => {
   const [fields] = useState(fieldsData);
-  const [canvasItems, setCanvasItems] = useState([]);
-  const lastAddedFieldRef = useRef(null);
+  const lastAddedFieldRef = useRef({ id: null, timestamp: 0 });
   const fieldCountsRef = useRef({});
+  const [canvasItems, setCanvasItems] = useState([
+    {
+      id: "tab-1",
+      name: "Details",
+      type: "tab",
+      sections: [
+        {
+          id: "section-1",
+          name: "Section 1",
+          type: "section",
+          columns: [
+            {
+              id: "column-1",
+              name: "Column 1",
+              type: "column",
+              fields: [],
+            },
+          ],
+        },
+      ],
+    },
+  ]);
 
-  const addToCanvas = (field) => {
+  const addToCanvas = (field, parentId, parentType) => {
     const currentTime = Date.now();
-    console.log(field);
+    console.log(currentTime, field, parentId, parentType);
 
     if (
       lastAddedFieldRef.current &&
@@ -25,7 +46,6 @@ const DocStudio = () => {
 
     lastAddedFieldRef.current = { id: field.id, timestamp: currentTime };
 
-    // Increment field type count and update field name
     const fieldType = field.name;
     fieldCountsRef.current[fieldType] =
       (fieldCountsRef.current[fieldType] || 0) + 1;
@@ -37,7 +57,19 @@ const DocStudio = () => {
       name: newFieldName,
     };
 
-    setCanvasItems((prevItems) => [...prevItems, newField]);
+    setCanvasItems((prevItems) => {
+      const newItems = [...prevItems];
+      const parent = findItemById(newItems, parentId, parentType);
+      if (parent && parent.fields) {
+        parent.fields.push(newField);
+      } else {
+        console.error("Parent not found or parent.fields is undefined", {
+          parentId,
+          parentType,
+        });
+      }
+      return newItems;
+    });
   };
 
   const updateCanvasItem = (index, updatedItem) => {
@@ -48,11 +80,34 @@ const DocStudio = () => {
     });
   };
 
-  const moveItem = (dragIndex, hoverIndex) => {
-    const updatedItems = [...canvasItems];
-    const [draggedItem] = updatedItems.splice(dragIndex, 1);
-    updatedItems.splice(hoverIndex, 0, draggedItem);
-    setCanvasItems(updatedItems);
+  const moveItem = (dragIndex, hoverIndex, parentType) => {
+    setCanvasItems((prevItems) => {
+      const newItems = [...prevItems];
+      const parent = findItemById(newItems, dragIndex, parentType);
+      const [movedItem] = parent.fields.splice(dragIndex, 1);
+      parent.fields.splice(hoverIndex, 0, movedItem);
+      return newItems;
+    });
+  };
+
+  const findItemById = (items, id, type) => {
+    console.log("Finding item by ID:", id, "of type:", type);
+    if (type === "tab") {
+      return items.find((item) => item.id === id);
+    }
+    for (const tab of items) {
+      if (type === "section") {
+        const section = tab.sections.find((item) => item.id === id);
+        if (section) return section;
+      } else if (type === "column") {
+        for (const section of tab.sections) {
+          const column = section.columns.find((item) => item.id === id);
+          if (column) return column;
+        }
+      }
+    }
+    console.error(`Item not found: ${id} of type ${type}`);
+    return null;
   };
 
   const saveCanvas = () => {
@@ -74,6 +129,7 @@ const DocStudio = () => {
             updateItem={updateCanvasItem}
             addToCanvas={addToCanvas}
             moveItem={moveItem}
+            setCanvasItems={setCanvasItems}
           />
         </div>
       </div>

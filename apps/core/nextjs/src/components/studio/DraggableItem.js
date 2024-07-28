@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons"; // Import the desired icon
 
 const ItemType = "FIELD";
 
@@ -12,11 +11,13 @@ const DraggableItem = ({
   handleFocus,
   handleInputChange,
   moveItem,
+  parentId, // Column ID
 }) => {
-  const ref = React.useRef(null);
+  const ref = useRef(null);
+
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
-    item: { type: ItemType, index, fromCanvas: true },
+    item: { type: ItemType, index, parentId, id: item.id },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -25,8 +26,9 @@ const DraggableItem = ({
   const [, drop] = useDrop({
     accept: ItemType,
     hover: (draggedItem) => {
-      if (draggedItem.index !== index) {
-        moveItem(draggedItem.index, index);
+      if (draggedItem.index !== index && draggedItem.parentId === parentId) {
+        console.log(draggedItem.index, index, parentId);
+        moveItem(draggedItem.index, index, parentId);
         draggedItem.index = index;
       }
     },
@@ -39,6 +41,8 @@ const DraggableItem = ({
     return null;
   }
 
+  const isLayout = item.type === "layout";
+
   return (
     <div
       ref={ref}
@@ -49,10 +53,7 @@ const DraggableItem = ({
     >
       <div className="flex flex-row items-center w-full">
         <div className="flex items-center justify-center w-12 h-12 text-center rounded-lg bg-gradient-to-tl from-purple-700 to-pink-500 mr-4">
-          <FontAwesomeIcon
-            icon={item.icon ? item.icon : faCoffee}
-            className="text-white h-8 w-8"
-          />
+          <FontAwesomeIcon icon={item.icon} className="text-white h-8 w-8" />
         </div>
         <div className="w-full">
           {selectedFieldId === item.id && (
@@ -69,7 +70,7 @@ const DraggableItem = ({
           />
         </div>
       </div>
-      {selectedFieldId === item.id && (
+      {selectedFieldId === item.id && !isLayout && (
         <div className="mt-2">
           <p className="mb-0 font-sans text-sm font-semibold leading-normal">
             ID
