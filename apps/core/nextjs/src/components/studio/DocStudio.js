@@ -4,6 +4,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import Field from "./Field";
 import Canvas from "./Canvas";
 import fieldsData from "@/data/fields";
+import SecondaryButton from "../buttons/Secondary";
 
 const DocStudio = () => {
   const [fields] = useState(fieldsData);
@@ -33,33 +34,32 @@ const DocStudio = () => {
   ]);
 
   const addToCanvas = (field, parentId, parentType, from) => {
-    const currentTime = Date.now();
-    // console.log(currentTime, field, parentId, parentType, from);
-
-    if (
-      lastAddedFieldRef.current &&
-      field &&
-      lastAddedFieldRef.current.id === field.id &&
-      currentTime - lastAddedFieldRef.current.timestamp < 1000
-    ) {
-      return;
-    }
-
-    lastAddedFieldRef.current = { id: field.id, timestamp: currentTime };
-
     const fieldType = field.name;
     fieldCountsRef.current[fieldType] =
       (fieldCountsRef.current[fieldType] || 0) + 1;
     const newFieldName = `${fieldType} ${fieldCountsRef.current[fieldType]}`;
+    const time = Date.now();
 
     const newField = {
       ...field,
-      id: `${field.id}-${currentTime}`,
+      id: `${field.id}-${time}`,
       name: newFieldName,
     };
 
     setCanvasItems((prevItems) => {
+      const currentTime = Date.now();
       const newItems = [...prevItems];
+
+      if (
+        lastAddedFieldRef.current &&
+        field &&
+        lastAddedFieldRef.current.id === field.id &&
+        currentTime - lastAddedFieldRef.current.timestamp < 1000
+      ) {
+        return newItems;
+      }
+
+      lastAddedFieldRef.current = { id: field.id, timestamp: currentTime };
       const parent = findItemById(newItems, parentId, parentType);
       if (parent && parent.fields) {
         parent.fields.push(newField);
@@ -89,7 +89,7 @@ const DocStudio = () => {
 
       if (parent1 && parent2 && parent1.fields && parent2.fields) {
         const draggedIndex = parent1.fields.findIndex(
-          (field) => field.id === draggedItem.id
+          (field) => field.id === draggedItem?.id
         );
         const targetIndex = parent2.fields.findIndex(
           (field) => field.id === targetItem.id
@@ -135,13 +135,22 @@ const DocStudio = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="px-6 flex">
-        <div className="w-1/4 p-4 bg-gray-100 rounded mr-4">
+        <div className="w-1/5 p-4 bg-white rounded mr-4">
           <h2 className="text-xl font-semibold mb-4">Fields</h2>
           {fields.map((field) => (
             <Field key={field.id} field={field} addToCanvas={addToCanvas} />
           ))}
         </div>
-        <div className="w-3/4 p-4 bg-gray-200 rounded flex flex-col items-center">
+        <div className="w-4/5  flex flex-col">
+          <div
+            onClick={saveCanvas}
+            className="flex cursor-pointer bg-white p-2 mb-2 rounded items-end justify-end"
+          >
+            <SecondaryButton
+              text="Save"
+              className="flex items-center justify-center px-6"
+            />
+          </div>
           <Canvas
             items={canvasItems}
             updateItem={updateCanvasItem}
@@ -150,14 +159,6 @@ const DocStudio = () => {
             setCanvasItems={setCanvasItems}
           />
         </div>
-      </div>
-      <div className="m-6">
-        <button
-          onClick={saveCanvas}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Save
-        </button>
       </div>
     </DndProvider>
   );
