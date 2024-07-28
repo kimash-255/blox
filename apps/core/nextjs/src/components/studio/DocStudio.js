@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import Field from "./Field"; // Update path according to your structure
-import Canvas from "./Canvas"; // Update path according to your structure
-import fieldsData from "@/data/fields"; // Update path according to your structure
+import Field from "./Field";
+import Canvas from "./Canvas";
+import fieldsData from "@/data/fields";
 
 const DocStudio = () => {
   const [fields] = useState(fieldsData);
@@ -32,12 +32,13 @@ const DocStudio = () => {
     },
   ]);
 
-  const addToCanvas = (field, parentId, parentType) => {
+  const addToCanvas = (field, parentId, parentType, from) => {
     const currentTime = Date.now();
-    console.log(currentTime, field, parentId, parentType);
+    // console.log(currentTime, field, parentId, parentType, from);
 
     if (
       lastAddedFieldRef.current &&
+      field &&
       lastAddedFieldRef.current.id === field.id &&
       currentTime - lastAddedFieldRef.current.timestamp < 1000
     ) {
@@ -80,18 +81,35 @@ const DocStudio = () => {
     });
   };
 
-  const moveItem = (dragIndex, hoverIndex, parentType) => {
+  const moveItem = (draggedItem, targetItem, parent1Id, parent2Id) => {
     setCanvasItems((prevItems) => {
       const newItems = [...prevItems];
-      const parent = findItemById(newItems, dragIndex, parentType);
-      const [movedItem] = parent.fields.splice(dragIndex, 1);
-      parent.fields.splice(hoverIndex, 0, movedItem);
+      const parent1 = findItemById(newItems, parent1Id, "column");
+      const parent2 = findItemById(newItems, parent2Id, "column");
+
+      if (parent1 && parent2 && parent1.fields && parent2.fields) {
+        const draggedIndex = parent1.fields.findIndex(
+          (field) => field.id === draggedItem.id
+        );
+        const targetIndex = parent2.fields.findIndex(
+          (field) => field.id === targetItem.id
+        );
+
+        if (draggedIndex !== -1) {
+          const [movedItem] = parent1.fields.splice(draggedIndex, 1);
+
+          parent2.fields.splice(targetIndex, 0, movedItem);
+        } else {
+          console.error("Dragged item not found in the original parent");
+        }
+      } else {
+        console.error("Parent not found or parent.fields is undefined");
+      }
       return newItems;
     });
   };
 
   const findItemById = (items, id, type) => {
-    console.log("Finding item by ID:", id, "of type:", type);
     if (type === "tab") {
       return items.find((item) => item.id === id);
     }

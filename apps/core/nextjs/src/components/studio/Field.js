@@ -17,10 +17,7 @@ const Field = ({ field, addToCanvas }) => {
       ref={drag}
       style={{ opacity: isDragging ? 0.5 : 1 }}
       className="p-2 mb-2 border border-gray-300 rounded cursor-pointer"
-      onClick={() => {
-        console.log(8888);
-        addToCanvas(field);
-      }}
+      onClick={() => addToCanvas(field, "section-1", "section", "item")}
     >
       {field.name}
     </div>

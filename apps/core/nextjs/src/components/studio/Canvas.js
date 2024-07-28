@@ -17,7 +17,9 @@ const Canvas = ({
     accept: ItemType,
     drop: (item, monitor) => {
       const dropResult = monitor.getDropResult();
-      addToCanvas(item.field, dropResult.id, dropResult.type);
+      if (!item.id) {
+        addToCanvas(item.field, dropResult.id, dropResult.type, "canvas");
+      }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -33,8 +35,12 @@ const Canvas = ({
     setSelectedFieldId(id);
   };
 
-  const handleMoveItem = (dragIndex, hoverIndex, parentType) => {
-    moveItem(dragIndex, hoverIndex, parentType);
+  const handleBlur = () => {
+    setSelectedFieldId("");
+  };
+
+  const handleMoveItem = (draggedItem, targetItem, parent2Id, parent1Id) => {
+    moveItem(draggedItem, targetItem, parent2Id, parent1Id);
   };
 
   const addColumn = (sectionId) => {
@@ -169,6 +175,7 @@ const Canvas = ({
                     sectionId={section.id}
                     selectedFieldId={selectedFieldId}
                     handleFocus={handleFocus}
+                    handleBlur={handleBlur}
                     handleInputChange={handleInputChange}
                     handleMoveItem={handleMoveItem}
                   />
@@ -187,6 +194,7 @@ const ColumnDropZone = ({
   sectionId,
   selectedFieldId,
   handleFocus,
+  handleBlur,
   handleInputChange,
   handleMoveItem,
 }) => {
@@ -203,8 +211,10 @@ const ColumnDropZone = ({
           key={field.id}
           item={field}
           index={index}
+          column={column}
           selectedFieldId={selectedFieldId}
           handleFocus={handleFocus}
+          handleBlur={handleBlur}
           handleInputChange={handleInputChange}
           moveItem={handleMoveItem}
           parentId={column.id}

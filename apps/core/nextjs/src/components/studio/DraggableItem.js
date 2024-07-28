@@ -6,18 +6,20 @@ const ItemType = "FIELD";
 
 const DraggableItem = ({
   item,
+  column,
   index,
   selectedFieldId,
   handleFocus,
+  handleBlur,
   handleInputChange,
   moveItem,
-  parentId, // Column ID
+  parentId, // Section ID
 }) => {
   const ref = useRef(null);
 
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
-    item: { type: ItemType, index, parentId, id: item.id },
+    item: { type: ItemType, index, parentId, id: item.id, item: item },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -27,9 +29,7 @@ const DraggableItem = ({
     accept: ItemType,
     hover: (draggedItem) => {
       if (draggedItem.index !== index && draggedItem.parentId === parentId) {
-        console.log(draggedItem.index, index, parentId);
-        moveItem(draggedItem.index, index, parentId);
-        draggedItem.index = index;
+        moveItem(draggedItem.item, item, parentId, draggedItem.parentId);
       }
     },
   });
@@ -65,6 +65,7 @@ const DraggableItem = ({
             type="text"
             value={item.name}
             onFocus={() => handleFocus(item.id)}
+            onBlur={handleBlur}
             onChange={(e) => handleInputChange(index, "name", e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
           />
@@ -79,6 +80,7 @@ const DraggableItem = ({
             type="text"
             value={item.id}
             onFocus={() => handleFocus(item.id)}
+            onBlur={handleBlur}
             onChange={(e) => handleInputChange(index, "id", e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
           />
