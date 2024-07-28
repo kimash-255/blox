@@ -26,10 +26,14 @@ const Sidebar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (sidebarRef.current) {
-        const width = window.innerWidth >= 1150 && !isCollapsed ? 350 : 10;
-        setSidebarWidth(width);
-        setIsCollapsed(window.innerWidth < 1150);
+      if (sidebarHidden) {
+        setSidebarWidth(10);
+      } else {
+        if (sidebarRef.current) {
+          const width = window.innerWidth >= 1150 && !isCollapsed ? 350 : 10;
+          setSidebarWidth(width);
+          setIsCollapsed(window.innerWidth < 1150);
+        }
       }
     };
 

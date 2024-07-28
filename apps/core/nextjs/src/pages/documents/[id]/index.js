@@ -6,13 +6,14 @@ import { useSidebar } from "@/contexts/SidebarContext";
 
 const documentDetail = () => {
   const { updateDashboardText, updatePagesText, updateTextColor } = useNavbar();
-  const { setSidebarHidden } = useSidebar();
+  const { setSidebarHidden, setSidebarWidth } = useSidebar();
 
   useEffect(() => {
     updateDashboardText("Documents");
     updatePagesText("Core");
     updateTextColor("text-gray-100");
     setSidebarHidden(false);
+    setSidebarWidth(350);
   }, []);
   return (
     <div>

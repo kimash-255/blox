@@ -9,7 +9,7 @@ const slugify = (text) => {
     return "";
   }
   return lowerText
-    .replace(/\s+/g, "-") // Replace spaces with -
+    .replace(/\s+/g, "_") // Replace spaces with -
     .replace(/[^\w\-]+/g, "") // Remove all non-word chars
     .replace(/\-\-+/g, "-") // Replace multiple - with single -
     .replace(/^-+/, "") // Trim - from start of text
@@ -66,7 +66,7 @@ const Navbar = () => {
                 isScrolled ? "text-gray-900" : textColor
               } before:float-left before:pr-2 before:text-gray-600 before:content-['/']`}
             >
-              <Link href={`/${slugify(dashboardText)}`}>
+              <Link href={`/${slugify(pagesText)}/${slugify(dashboardText)}`}>
                 <div>{dashboardText}</div>
               </Link>
             </li>

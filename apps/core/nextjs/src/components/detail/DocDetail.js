@@ -8,7 +8,7 @@ import {
   faEnvelope,
   faCog,
   faInfoCircle,
-  faTrash, // Import the trash icon for deletion
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import PrimaryButton from "../buttons/Primary";
 import DocForm from "../new/DocForm";
@@ -26,6 +26,8 @@ const DocDetail = ({ config }) => {
   const [isEditing, setIsEditing] = useState(false);
   const formRef = useRef(null);
 
+  const currentPath = router.pathname;
+
   useEffect(() => {
     if (id) {
       setEndpoint(`${config.endpoint}/${id}`);
@@ -37,7 +39,6 @@ const DocDetail = ({ config }) => {
       if (!endpoint) return;
       try {
         const response = await fetchData({}, endpoint);
-        console.log(response);
         if (response?.data) {
           setData(response.data);
         }
@@ -46,12 +47,10 @@ const DocDetail = ({ config }) => {
       }
     };
 
-    // Set up a timeout to delay the fetchData1 call
     const timer = setTimeout(() => {
       fetchData1();
-    }, 500); // 5000 milliseconds = 5 seconds
+    }, 500);
 
-    // Cleanup function to clear the timeout if the component unmounts or endpoint changes
     return () => clearTimeout(timer);
   }, [endpoint]);
 
@@ -198,6 +197,14 @@ const DocDetail = ({ config }) => {
                   </>
                 ) : (
                   <>
+                    {config?.customize && (
+                      <Link href={`/documents/${id}/edit`}>
+                        <PrimaryButton
+                          text="Customize"
+                          className="flex items-center justify-center p-1"
+                        />
+                      </Link>
+                    )}
                     <div onClick={handleEditClick}>
                       <PrimaryButton
                         text="Edit"

@@ -70,12 +70,14 @@ export const documentFilters = {
 // Configurations for DocDetail
 export const documentDetailConfig = {
   endpoint: "documents",
+  customize: true,
   fields: commonFields.filter((field) => field.title !== "ID"),
 };
 
 // Configurations for ListTable
 export const documentListConfig = {
   title: "documents",
+  customize: true,
   fields: commonFields,
   data: [],
 };
@@ -84,6 +86,7 @@ export const documentListConfig = {
 export const newdocumentConfig = {
   endpoint: "documents",
   title: "document",
+  customize: true,
   fields: commonFields.filter((field) => field.title !== "ID"),
   data: [],
 };

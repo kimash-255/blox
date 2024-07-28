@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Field from "./Field";
@@ -6,32 +6,17 @@ import Canvas from "./Canvas";
 import fieldsData from "@/data/fields";
 import SecondaryButton from "../buttons/Secondary";
 
-const DocStudio = () => {
+const DocStudio = ({ initialData, handleSave }) => {
   const [fields] = useState(fieldsData);
   const lastAddedFieldRef = useRef({ id: null, timestamp: 0 });
   const fieldCountsRef = useRef({});
-  const [canvasItems, setCanvasItems] = useState([
-    {
-      id: "tab-1",
-      name: "Details",
-      type: "tab",
-      sections: [
-        {
-          id: "section-1",
-          name: "Section 1",
-          type: "section",
-          columns: [
-            {
-              id: "column-1",
-              name: "Column 1",
-              type: "column",
-              fields: [],
-            },
-          ],
-        },
-      ],
-    },
-  ]);
+  const [canvasItems, setCanvasItems] = useState(initialData);
+
+  useEffect(() => {
+    if (initialData) {
+      setCanvasItems(initialData);
+    }
+  }, [initialData]);
 
   const addToCanvas = (field, parentId, parentType, from) => {
     const fieldType = field.name;
@@ -40,9 +25,15 @@ const DocStudio = () => {
     const newFieldName = `${fieldType} ${fieldCountsRef.current[fieldType]}`;
     const time = Date.now();
 
+    const toUnderscoreFormat = (name) => {
+      return name
+        .replace(/\s+/g, "_") // Replace spaces with underscores
+        .toLowerCase(); // Convert to lowercase
+    };
+
     const newField = {
       ...field,
-      id: `${field.id}-${time}`,
+      id: `${toUnderscoreFormat(newFieldName)}`, // Use underscore version of name for id
       name: newFieldName,
     };
 
@@ -129,7 +120,7 @@ const DocStudio = () => {
   };
 
   const saveCanvas = () => {
-    console.log("Canvas saved:", canvasItems);
+    handleSave(canvasItems);
   };
 
   return (
@@ -141,7 +132,7 @@ const DocStudio = () => {
             <Field key={field.id} field={field} addToCanvas={addToCanvas} />
           ))}
         </div>
-        <div className="w-4/5  flex flex-col">
+        <div className="w-4/5 flex flex-col">
           <div
             onClick={saveCanvas}
             className="flex cursor-pointer bg-white p-2 mb-2 rounded items-end justify-end"
@@ -151,13 +142,15 @@ const DocStudio = () => {
               className="flex items-center justify-center px-6"
             />
           </div>
-          <Canvas
-            items={canvasItems}
-            updateItem={updateCanvasItem}
-            addToCanvas={addToCanvas}
-            moveItem={moveItem}
-            setCanvasItems={setCanvasItems}
-          />
+          {canvasItems && (
+            <Canvas
+              items={canvasItems}
+              updateItem={updateCanvasItem}
+              addToCanvas={addToCanvas}
+              moveItem={moveItem}
+              setCanvasItems={setCanvasItems}
+            />
+          )}
         </div>
       </div>
     </DndProvider>
