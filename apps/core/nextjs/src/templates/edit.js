@@ -13,12 +13,23 @@ const toTitleCase = (str) => {
 const StudioEdit = () => {
   const { sidebarWidth, setSidebarWidth, setSidebarHidden } = useSidebar();
   const { updateDashboardText, updatePagesText, updateTextColor } = useNavbar();
-  const router = useRouter();
-  const { id } = router.query;
-  const { data, setData } = useData();
   const [initialData, setInitialData] = useState(null);
+  const router = useRouter();
+  // const { id } = router.query;
+  const { data, setData } = useData();
 
   const endpoint = "documents";
+
+  const getPathSegmentBeforeEdit = (path) => {
+    const segments = path.split("/");
+    const editIndex = segments.indexOf("edit");
+    if (editIndex > 0) {
+      return segments[editIndex - 1];
+    }
+    return "";
+  };
+
+  const id = getPathSegmentBeforeEdit(router.pathname);
 
   const handleSave = async (canvasItems) => {
     try {
@@ -76,47 +87,33 @@ const StudioEdit = () => {
   }, [endpoint, id]);
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const fieldsModule = await import(
-          `../../../../../../custom/${data.app}/${data.module}/doc/${id}/fields.js`
-        );
-        if (fieldsModule && fieldsModule.fields) {
-          setInitialData(fieldsModule.fields);
-        } else {
-          setInitialData([
+    if (fields) {
+      setInitialData(fields);
+    } else {
+      setInitialData([
+        {
+          id: "tab-1",
+          name: "Details",
+          type: "tab",
+          sections: [
             {
-              id: "tab-1",
-              name: "Details",
-              type: "tab",
-              sections: [
+              id: "section-1",
+              name: "Section 1",
+              type: "section",
+              columns: [
                 {
-                  id: "section-1",
-                  name: "Section 1",
-                  type: "section",
-                  columns: [
-                    {
-                      id: "column-1",
-                      name: "Column 1",
-                      type: "column",
-                      fields: [],
-                    },
-                  ],
+                  id: "column-1",
+                  name: "Column 1",
+                  type: "column",
+                  fields: [],
                 },
               ],
             },
-          ]);
-        }
-      } catch (error) {
-        console.error(
-          `Failed to load fields module, ${error.message || error}`
-        );
-      }
-    };
-    if (data) {
-      fetchInitialData();
+          ],
+        },
+      ]);
     }
-  }, [data]);
+  }, [fields]);
 
   return (
     <>

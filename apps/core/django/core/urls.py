@@ -1,7 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
-    AppViewSet, ModuleViewSet, CreateAppAPIView, CreateModuleAPIView, CreateDocumentAPIView, DocumentViewSet
+    AppViewSet, ModuleViewSet, CreateAppAPIView, CreateModuleAPIView, 
+    CreateDocumentAPIView, DocumentViewSet, MigrateAPIView
 )
 
 router = DefaultRouter()
@@ -14,4 +15,5 @@ urlpatterns = [
     path('addmodule/', CreateModuleAPIView.as_view(), name='create-module'),
     path('startapp/', CreateAppAPIView.as_view(), name='create-app'),
     path('newdoc/', CreateDocumentAPIView.as_view(), name='create-document'), 
+    path('migrate/', MigrateAPIView.as_view(), name='migrate'), 
 ]

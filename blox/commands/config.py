@@ -59,3 +59,28 @@ BASE_PATH = os.path.join(PROJECT_ROOT, 'apps/core/django')
 NEXTJS_PATH = os.path.join(PROJECT_ROOT, 'apps/core/nextjs')
 APPS_TXT_PATH = os.path.join(PROJECT_ROOT, 'config', 'apps.txt')
 CUSTOM_APPS_PATH = os.path.join(PROJECT_ROOT, 'apps/custom')
+FIELD_TYPE_MAP = {
+    "TextField": {"type": "models.TextField"},
+    "CharField": {"type": "models.CharField", "max_length": 255},
+    "NumberField": {"type": "models.IntegerField"},
+    "FloatField": {"type": "models.FloatField"},
+    "DecimalField": {"type": "models.DecimalField", "max_digits": 10, "decimal_places": 2},
+    "BooleanField": {"type": "models.BooleanField"},
+    "DateField": {"type": "models.DateField"},
+    "DateTimeField": {"type": "models.DateTimeField"},
+    "TimeField": {"type": "models.TimeField"},
+    "EmailField": {"type": "models.EmailField", "max_length": 254},
+    "URLField": {"type": "models.URLField"},
+    "SlugField": {"type": "models.SlugField", "max_length": 50},
+    "UUIDField": {"type": "models.UUIDField"},
+    "IPAddressField": {"type": "models.GenericIPAddressField"},
+    "FileField": {"type": "models.FileField", "upload_to": "'uploads/'"},
+    "ImageField": {"type": "models.ImageField", "upload_to": "'images/'"},
+    "PasswordField": {"type": "models.CharField", "max_length": 128},
+    "PhoneField": {"type": "models.CharField", "max_length": 15},
+    "NameField": {"type": "models.CharField", "max_length": 255},
+    "AddressField": {"type": "models.TextField"},
+    "ForeignKey": {"type": "models.ForeignKey", "to": "'self'", "on_delete": "models.CASCADE"},
+    "OneToOneField": {"type": "models.OneToOneField", "to": "'self'", "on_delete": "models.CASCADE"},
+    "ManyToManyField": {"type": "models.ManyToManyField", "to": "'self'"}
+}

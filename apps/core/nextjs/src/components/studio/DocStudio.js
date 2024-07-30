@@ -35,6 +35,7 @@ const DocStudio = ({ initialData, handleSave }) => {
       ...field,
       id: `${toUnderscoreFormat(newFieldName)}`, // Use underscore version of name for id
       name: newFieldName,
+      type: fieldType,
     };
 
     setCanvasItems((prevItems) => {
@@ -126,12 +127,13 @@ const DocStudio = ({ initialData, handleSave }) => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="px-6 flex">
-        <div className="w-1/5 p-4 bg-white rounded mr-4">
+        <div className="w-1/5 p-4 bg-white rounded mr-4 max-h-[75vh] overflow-y-auto">
           <h2 className="text-xl font-semibold mb-4">Fields</h2>
           {fields.map((field) => (
             <Field key={field.id} field={field} addToCanvas={addToCanvas} />
           ))}
         </div>
+
         <div className="w-4/5 flex flex-col">
           <div
             onClick={saveCanvas}

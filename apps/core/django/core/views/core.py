@@ -191,3 +191,14 @@ class DocumentViewSet(GenericViewSet):
             "Document deleted successfully",
             "Failed to delete document"
         )
+
+
+
+
+class MigrateAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        return run_subprocess(
+            ['blox', 'migrate'],
+            "successful",
+            "Failed"
+        )

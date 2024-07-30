@@ -20,13 +20,19 @@ import { timeAgo } from "@/utils/DateFormat";
 const DocDetail = ({ config }) => {
   const { data, setData } = useData();
   const router = useRouter();
-  const { id } = router.query;
+  // const { id } = router.query;
   const [endpoint, setEndpoint] = useState("");
   const [selectedTab, setSelectedTab] = useState("Details");
   const [isEditing, setIsEditing] = useState(false);
   const formRef = useRef(null);
 
   const currentPath = router.pathname;
+  const getId = (path) => {
+    const segments = path.split("/");
+    return segments[segments.length - 1];
+  };
+
+  const id = router.query.id || getId(currentPath);
 
   useEffect(() => {
     if (id) {
