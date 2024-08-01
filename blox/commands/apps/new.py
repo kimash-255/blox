@@ -2,7 +2,7 @@ import os
 import subprocess
 import click
 from ..config import PROJECT_ROOT, BASE_PATH, APPS_TXT_PATH, CUSTOM_APPS_PATH
-
+import platform
 
 @click.command()
 @click.argument('app_name')
@@ -20,8 +20,9 @@ def startapp(app_name):
         return
 
     # Create the new Django app
+    python_command = 'python' if platform.system() == 'Windows' else 'python3'
     django_process = subprocess.Popen(
-        ['python3', 'manage.py', 'startapp', app_name],
+        [python_command, 'manage.py', 'startapp', app_name],
         cwd=BASE_PATH
     )
     try:

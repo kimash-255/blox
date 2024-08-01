@@ -1,0 +1,17 @@
+[
+  {
+    "id": "charfield_1",
+    "name": "CharField 1",
+    "type": "CharField"
+  },
+  {
+    "id": "numberfield_1",
+    "name": "NumberField 1",
+    "type": "NumberField"
+  },
+  {
+    "id": "decimalfield_1",
+    "name": "DecimalField 1",
+    "type": "DecimalField"
+  }
+]

@@ -2,7 +2,7 @@ import os
 import subprocess
 import click
 from ..config import BASE_PATH, APPS_TXT_PATH, CUSTOM_APPS_PATH
-
+import platform
 
 @click.command()
 @click.argument('app_name')
@@ -74,14 +74,15 @@ def deleteapp(app_name):
         subprocess.call(['rm', '-rf', custom_app_path])
 
     # Run makemigrations and migrate
+    python_command = 'python' if platform.system() == 'Windows' else 'python3'
     django_process = subprocess.Popen(
-        ['python3', 'manage.py', 'makemigrations'],
+        [python_command, 'manage.py', 'makemigrations'],
         cwd=BASE_PATH
     )
     django_process.communicate()
 
     django_process = subprocess.Popen(
-        ['python3', 'manage.py', 'migrate'],
+        [python_command, 'manage.py', 'migrate'],
         cwd=BASE_PATH
     )
     django_process.communicate()
