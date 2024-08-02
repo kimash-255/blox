@@ -40,8 +40,12 @@ export default async function handler(req, res) {
           } else if (typeof item === "object") {
             if (item.fields) {
               fieldsList = fieldsList.concat(
-                item.fields.map(({ icon, ...rest }) => rest)
-              ); // Remove icons
+                item.fields.map(({ id, id1, icon, ...rest }) => ({
+                  ...rest,
+                  id: id1 !== undefined ? id1 : id, // Ensure id has the same value as id1, if id1 exists
+                  id1: id1, // Include id1 if it exists
+                }))
+              );
             }
             Object.values(item).forEach(extract);
           }

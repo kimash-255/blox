@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import fields from "@/data/fields";
+import { faTimes } from "@fortawesome/free-solid-svg-icons"; // Import the "x" icon
 
 const ItemType = "FIELD";
 
@@ -15,6 +17,7 @@ const DraggableItem = ({
   moveItem,
   parentId,
   placeholder = false,
+  deleteField,
 }) => {
   const ref = useRef(null);
 
@@ -50,7 +53,7 @@ const DraggableItem = ({
     <div
       ref={ref}
       className={`flex flex-col min-w-0 break-words shadow-soft-xl rounded-sm bg-clip-border p-2 mb-1 ${
-        selectedFieldId === item.id ? "bg-white" : "bg-gray-50"
+        selectedFieldId === item ? "bg-white" : "bg-gray-50"
       }`}
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
@@ -68,56 +71,52 @@ const DraggableItem = ({
               />
             </div>
             <div className="w-full">
-              {/* {selectedFieldId === item.id && (
-                <p className="mb-0 font-sans text-xs font-semibold leading-normal">
-                  Name
-                </p>
-              )} */}
               <input
                 type="text"
                 value={item.name}
-                onFocus={() => handleFocus(item.id)}
-                // onBlur={handleBlur}
+                onFocus={() => handleFocus(item)}
                 onChange={(e) =>
-                  handleInputChange(index, "name", e.target.value)
+                  handleInputChange("name", e.target.value, item, "field")
                 }
                 className="block w-full p-1 text-sm border border-gray-300 rounded"
               />
             </div>
+            {selectedFieldId === item && (
+              <button
+                onClick={() => deleteField(item, "field")}
+                className="ml-2 text-red-500 hover:text-red-700"
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            )}
           </div>
-          {selectedFieldId === item.id && !isLayout && (
+          {selectedFieldId === item && (
             <div className="mt-2 grid grid-cols-2 gap-x-2">
               <div className="">
-                {/* <p className="mb-0 font-sans text-xs font-semibold leading-normal">
-                  ID
-                </p> */}
                 <input
                   type="text"
-                  value={item.id}
-                  onFocus={() => handleFocus(item.id)}
-                  // onBlur={handleBlur}
-                  onChange={(e) =>
-                    handleInputChange(index, "id", e.target.value)
-                  }
+                  value={item.id1}
+                  onChange={(e) => {
+                    handleInputChange("id1", e.target.value, item, "field");
+                  }}
                   className="mt-1 block w-full text-sm p-1 border border-gray-300 rounded"
                 />
               </div>
               <div className="">
-                {/* <p className="mb-0 font-sans text-xs font-semibold leading-normal">
-                  Type
-                </p> */}
                 <select
                   value={item.type}
+                  onFocus={() => handleFocus(item)}
                   onChange={(e) =>
-                    handleInputChange(index, "type", e.target.value)
+                    handleInputChange("type", e.target.value, item, "field")
                   }
                   className="mt-1 block w-full p-1 text-sm border border-gray-300 rounded"
                 >
-                  <option value="text">Text</option>
-                  <option value="number">Number</option>
-                  <option value="date">Date</option>
-                  <option value="email">Email</option>
-                  {/* Add more options as needed */}
+                  {fields.map((field) => (
+                    <option key={field.id} value={field.name}>
+                      <FontAwesomeIcon icon={field.icon} className="mr-2" />
+                      {field.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

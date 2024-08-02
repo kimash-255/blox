@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 import click
-from ..config import CUSTOM_APPS_PATH
+from ..config import CUSTOM_APPS_PATH, NEXTJS_PATH
 
 
 def remove_module_folder(app_path, module_name):
@@ -16,14 +16,14 @@ def remove_module_folder(app_path, module_name):
 
 def update_modules_txt(app_path, module_name):
     """Remove the module name from the modules.txt file if it exists."""
-    modules_txt_path = os.path.join(app_path, 'modules.txt')
+    modules_txt_path = os.path.join(app_path, "modules.txt")
     lines = []
     removed = False
 
-    with open(modules_txt_path, 'r') as modules_file:
+    with open(modules_txt_path, "r") as modules_file:
         lines = modules_file.readlines()
 
-    with open(modules_txt_path, 'w') as modules_file:
+    with open(modules_txt_path, "w") as modules_file:
         for line in lines:
             if line.strip() != module_name:
                 modules_file.write(line)
@@ -35,12 +35,12 @@ def update_modules_txt(app_path, module_name):
 
 def run_migrations():
     """Run migrations."""
-    subprocess.run(['blox', 'migrate'], check=True)
+    subprocess.run(["blox", "migrate"], check=True)
 
 
 @click.command()
-@click.argument('app_name')
-@click.argument('module_name')
+@click.argument("app_name")
+@click.argument("module_name")
 def deletemodule(app_name, module_name):
     """Remove a module from a Django app and update the configuration."""
     app_path = os.path.join(CUSTOM_APPS_PATH, app_name)

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useDrop } from "react-dnd";
 import DraggableItem from "./DraggableItem";
 import PrimaryButton from "../buttons/Primary";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const ItemType = "FIELD";
 
@@ -37,9 +39,66 @@ const Canvas = ({
     return `${prefix} ${index}`;
   };
 
-  const handleInputChange = (index, field, value) => {
-    const updatedItem = { ...items[index], [field]: value };
-    updateItem(index, updatedItem);
+  const handleInputChange = (key, value, item, type) => {
+    // Find and update the item
+    const updatedItems = updateItemById(items, item.id, type, key, value);
+
+    if (updatedItems) {
+      // Set the updated items state to trigger a re-render
+      setCanvasItems([...updatedItems]);
+    }
+  };
+
+  const updateItemById = (items, id, type, key, value) => {
+    const updateInNestedStructures = (items, id, key, value) => {
+      if (!Array.isArray(items)) {
+        console.error("Expected items to be an array but got:", items);
+        return null;
+      }
+
+      for (const tab of items) {
+        if (type === "section") {
+          const section = tab.sections.find((item) => item.id === id);
+          if (section) {
+            section[key] = value;
+            return items;
+          }
+        } else if (type === "column") {
+          for (const section of tab.sections) {
+            const column = section.columns.find((item) => item.id === id);
+            if (column) {
+              column[key] = value;
+              return items;
+            }
+          }
+        } else if (type === "field") {
+          for (const section of tab.sections) {
+            for (const column of section.columns) {
+              const field = column.fields.find((item) => item.id === id);
+              if (field) {
+                field[key] = value;
+                return items;
+              }
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    // Search and update the item based on the type
+    if (type === "tab") {
+      const tab = items.find((item) => item.id === id);
+      if (tab) {
+        tab[key] = value;
+        return items;
+      }
+    } else if (type === "section" || type === "column" || type === "field") {
+      return updateInNestedStructures(items, id, key, value);
+    }
+
+    console.error(`Invalid type specified: ${type}`);
+    return null;
   };
 
   const handleFocus = (id) => {
@@ -161,6 +220,49 @@ const Canvas = ({
     setSelectedTab(tabName);
   };
 
+  const deleteItemById = (items, id, type) => {
+    const deleteInNestedStructures = (items, id, type) => {
+      if (!Array.isArray(items)) {
+        console.error("Expected items to be an array but got:", items);
+        return null;
+      }
+
+      for (const tab of items) {
+        if (type === "section") {
+          tab.sections = tab.sections.filter((item) => item.id !== id);
+          return items;
+        } else if (type === "column") {
+          for (const section of tab.sections) {
+            section.columns = section.columns.filter((item) => item.id !== id);
+            return items;
+          }
+        } else if (type === "field") {
+          for (const section of tab.sections) {
+            for (const column of section.columns) {
+              column.fields = column.fields.filter((item) => item.id !== id);
+              return items;
+            }
+          }
+        }
+      }
+      return null;
+    };
+
+    if (type === "tab") {
+      return items.filter((item) => item.id !== id);
+    } else if (type === "section" || type === "column" || type === "field") {
+      return deleteInNestedStructures(items, id, type);
+    }
+
+    console.error(`Invalid type specified: ${type}`);
+    return null;
+  };
+
+  const deleteField = (item, type) => {
+    const updatedItems = deleteItemById(items, item.id, type);
+    setCanvasItems([...updatedItems]);
+  };
+
   const findItemById = (items, id, type) => {
     if (type === "tab") {
       return items.find((item) => item.id === id);
@@ -185,7 +287,10 @@ const Canvas = ({
       <div className="relative right-0 flex flex-row items-center mb-1">
         <ul className="relative flex flex-wrap p-1 gap-x-2 list-none bg-transparent">
           {tabs.map((tab) => (
-            <li key={tab.id} className="z-30 flex-auto text-center">
+            <li
+              key={tab.id}
+              className="z-30 flex flex-row text-center cursor-pointer"
+            >
               <a
                 onClick={() => handleTabClick(tab.name)}
                 className={`z-30 block w-full px-4 py-1 mb-0 transition-all border-0 rounded-lg ease-soft-in-out ${
@@ -196,6 +301,12 @@ const Canvas = ({
               >
                 <span className="ml-1">{tab.name}</span>
               </a>
+              <button
+                onClick={() => deleteField(tab, "tab")}
+                className="flex items-center justify-center z-40 -mt-2 shadow shadow-lg bg-white rounded-full h-4 w-4 shadow-black text-red-500 hover:text-red-700"
+              >
+                <FontAwesomeIcon icon={faTimes} className="w-3 h-3 " />
+              </button>
             </li>
           ))}
           <li className="z-30 ml-4 flex-auto text-center">
@@ -215,8 +326,17 @@ const Canvas = ({
               {/* <h3 className="text-lg font-semibold mb-2">{tab.name}</h3> */}
               {tab.sections.map((section) => (
                 <div key={section.id} className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-md font-semibold">{section.name}</h4>
+                  <div className="flex items-center justify-between my-2">
+                    <div className="flex items-center justify-start">
+                      <h4 className="text-md font-semibold">{section.name}</h4>
+
+                      <button
+                        onClick={() => deleteField(section, "section")}
+                        className="flex items-center justify-center z-40 -mt-2 shadow shadow-lg bg-white rounded-full h-4 w-4 shadow-black text-red-500 hover:text-red-700"
+                      >
+                        <FontAwesomeIcon icon={faTimes} className="w-3 h-3 " />
+                      </button>
+                    </div>
                     <div>
                       <button
                         className="text-xs px-2 py-1 align-middle transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in text-xs bg-150 active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25 border-fuchsia-500 text-fuchsia-500 hover:opacity-75 mr-2"
@@ -240,16 +360,29 @@ const Canvas = ({
                   </div>
                   <div className="flex space-x-2">
                     {section.columns.map((column) => (
-                      <ColumnDropZone
-                        key={column.id}
-                        column={column}
-                        sectionId={section.id}
-                        selectedFieldId={selectedFieldId}
-                        handleFocus={handleFocus}
-                        handleBlur={handleBlur}
-                        handleInputChange={handleInputChange}
-                        handleMoveItem={handleMoveItem}
-                      />
+                      <>
+                        <ColumnDropZone
+                          key={column.id}
+                          column={column}
+                          sectionId={section.id}
+                          selectedFieldId={selectedFieldId}
+                          handleFocus={handleFocus}
+                          handleBlur={handleBlur}
+                          handleInputChange={handleInputChange}
+                          handleMoveItem={handleMoveItem}
+                          deleteField={deleteField}
+                        />
+
+                        <button
+                          onClick={() => deleteField(column, "column")}
+                          className="flex items-center justify-center z-40 -ml-12 shadow shadow-lg bg-white rounded-full h-4 w-4 shadow-black text-red-500 hover:text-red-700"
+                        >
+                          <FontAwesomeIcon
+                            icon={faTimes}
+                            className="w-3 h-3 "
+                          />
+                        </button>
+                      </>
                     ))}
                   </div>
                 </div>
@@ -269,6 +402,7 @@ const ColumnDropZone = ({
   handleBlur,
   handleInputChange,
   handleMoveItem,
+  deleteField,
 }) => {
   const [, drop] = useDrop({
     accept: ItemType,
@@ -306,6 +440,7 @@ const ColumnDropZone = ({
             handleInputChange={handleInputChange}
             moveItem={handleMoveItem}
             parentId={column.id}
+            deleteField={deleteField}
           />
         ))
       )}

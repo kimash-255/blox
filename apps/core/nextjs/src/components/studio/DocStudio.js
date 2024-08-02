@@ -33,7 +33,8 @@ const DocStudio = ({ initialData, handleSave }) => {
 
     const newField = {
       ...field,
-      id: `${toUnderscoreFormat(newFieldName)}`, // Use underscore version of name for id
+      id: `${toUnderscoreFormat(newFieldName)}`,
+      id1: `${toUnderscoreFormat(newFieldName)}`,
       name: newFieldName,
       type: fieldType,
     };
@@ -65,12 +66,10 @@ const DocStudio = ({ initialData, handleSave }) => {
     });
   };
 
-  const updateCanvasItem = (index, updatedItem) => {
-    setCanvasItems((prevItems) => {
-      const newCanvasItems = [...prevItems];
-      newCanvasItems[index] = updatedItem;
-      return newCanvasItems;
-    });
+  const updateCanvasItem = (updatedItem) => {
+    console.log(updatedItem);
+
+    setCanvasItems(updatedItem);
   };
 
   const moveItem = (draggedItem, targetItem, parent1Id, parent2Id) => {
