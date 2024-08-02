@@ -1,4 +1,4 @@
-import { fields } from "../../../../../../custom/arifahub/arifahub/doc/meeting/fields.js";
+import { fields } from "../../../../../../custom/arifahub/snoop/doc/doggy/fields.js";
 
 import DocStudio from "@/components/studio/DocStudio";
 import { useData } from "@/contexts/DataContext";

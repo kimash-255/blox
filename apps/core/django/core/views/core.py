@@ -12,38 +12,49 @@ from core.filters import AppFilter, ModuleFilter, DocumentFilter
 from core.serializers import AppSerializer, ModuleSerializer, DocumentSerializer
 from .template import GenericViewSet
 
-APPS_TXT_PATH = os.path.join(settings.PROJECT_PATH, 'config', 'apps.txt')
+APPS_TXT_PATH = os.path.join(settings.PROJECT_PATH, "config", "apps.txt")
 
 
 def clean_apps():
-    with open(APPS_TXT_PATH, 'r') as apps_file:
-        valid_apps = [app.strip() for app in apps_file.readlines()
-                      if app.strip() and not app.strip().startswith('#')]
+    with open(APPS_TXT_PATH, "r") as apps_file:
+        valid_apps = [
+            app.strip()
+            for app in apps_file.readlines()
+            if app.strip() and not app.strip().startswith("#")
+        ]
 
     apps = App.objects.all()
     for app in apps:
         if app.id not in valid_apps:
             app.delete()
 
+
 def run_subprocess(command, success_message, error_message):
     try:
         subprocess.run(command, check=True)
-        return Response({"message": success_message}, status=status.HTTP_201_CREATED)
+        return Response({"message": success_message}, status=status.HTTP_200_OK)
     except subprocess.CalledProcessError:
-        return Response({"error": error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(
+            {"error": error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
 
 class CreateAppAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        appname = request.data.get('appname')
+        appname = request.data.get("appname")
 
         if not appname:
-            return Response({"error": "Missing 'appname' parameter"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Missing 'appname' parameter"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         return run_subprocess(
-            ['blox', 'startapp', appname],
+            ["blox", "startapp", appname],
             "App created successfully",
-            "Failed to create app"
+            "Failed to create app",
         )
+
 
 class AppViewSet(GenericViewSet):
     queryset = App.objects.all()
@@ -56,13 +67,13 @@ class AppViewSet(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        app = App.objects.get(pk=serializer.data['id'])
+        app = App.objects.get(pk=serializer.data["id"])
         Module.objects.create(**request.data, app=app)
 
         response_data = serializer.data
         response_data["additional"] = {
             "type": "startapp",
-            "info": {"message": "App created and ready to be used."}
+            "info": {"message": "App created and ready to be used."},
         }
 
         headers = self.get_success_headers(serializer.data)
@@ -72,28 +83,35 @@ class AppViewSet(GenericViewSet):
         app_name = self.get_object().id
 
         if not app_name:
-            return Response({"error": "Missing app name"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Missing app name"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         self.get_object().delete()
         return run_subprocess(
-            ['blox', 'deleteapp', app_name],
+            ["blox", "deleteapp", app_name],
             "App deleted successfully",
-            "Failed to delete app"
+            "Failed to delete app",
         )
+
 
 class CreateModuleAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        modulename = request.data.get('modulename')
+        modulename = request.data.get("modulename")
 
         if not modulename:
-            return Response({"error": "Missing 'modulename' parameter"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Missing 'modulename' parameter"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         module = Module.objects.get(pk=modulename)
         return run_subprocess(
-            ['blox', 'addmodule', module.app.id, module.id],
+            ["blox", "addmodule", module.app.id, module.id],
             "Module created successfully",
-            "Failed to create module"
+            "Failed to create module",
         )
+
 
 class ModuleViewSet(GenericViewSet):
     queryset = Module.objects.all()
@@ -108,7 +126,7 @@ class ModuleViewSet(GenericViewSet):
         response_data = serializer.data
         response_data["additional"] = {
             "type": "addmodule",
-            "info": {"message": "Module created and ready to be used."}
+            "info": {"message": "Module created and ready to be used."},
         }
 
         headers = self.get_success_headers(serializer.data)
@@ -120,26 +138,30 @@ class ModuleViewSet(GenericViewSet):
         app_name = module.app.id
 
         if not module_name:
-            return Response({"error": "Missing module name"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Missing module name"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         module.delete()
         return run_subprocess(
-            ['blox', 'deletemodule', app_name, module_name],
+            ["blox", "deletemodule", app_name, module_name],
             "Module deleted successfully",
-            "Failed to delete module"
+            "Failed to delete module",
         )
+
 
 class CreateDocumentAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        documentname = request.data.get('documentname')
-        app = request.data.get('app')
-        module = request.data.get('module')
+        documentname = request.data.get("documentname")
+        app = request.data.get("app")
+        module = request.data.get("module")
 
         return run_subprocess(
-            ['blox', 'doc', 'new', '--app', app, '--module', module, documentname],
+            ["blox", "doc", "new", "--app", app, "--module", module, documentname],
             "Document created successfully",
-            "Failed to create document"
+            "Failed to create document",
         )
+
 
 class DocumentViewSet(GenericViewSet):
     queryset = Document.objects.all()
@@ -150,15 +172,17 @@ class DocumentViewSet(GenericViewSet):
         try:
             data = request.data
 
-            module_id = request.data.get('module')
+            module_id = request.data.get("module")
             if module_id:
                 try:
                     module = Module.objects.get(pk=module_id)
-                    data['app'] = module.app.id
+                    data["app"] = module.app.id
                 except Module.DoesNotExist:
-                    return Response({"detail": "Invalid module ID."}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(
+                        {"detail": "Invalid module ID."},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
-            
             serializer = self.get_serializer(data=data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
@@ -166,16 +190,18 @@ class DocumentViewSet(GenericViewSet):
             response_data = serializer.data
             response_data["additional"] = {
                 "type": "newdoc",
-                "info": {"message": "Document created and ready to be used."}
+                "info": {"message": "Document created and ready to be used."},
             }
 
             headers = self.get_success_headers(serializer.data)
-            return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
-        
+            return Response(
+                response_data, status=status.HTTP_201_CREATED, headers=headers
+            )
+
         except Exception as e:
             print(e)
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def destroy(self, request, *args, **kwargs):
         document = self.get_object()
         document_name = document.id
@@ -183,22 +209,41 @@ class DocumentViewSet(GenericViewSet):
         module = document.module.id
 
         if not document_name:
-            return Response({"error": "Missing document name"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Missing document name"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         document.delete()
         return run_subprocess(
-            ['blox', 'doc', 'delete', '--app', app, '--module', module, document_name],
+            ["blox", "doc", "delete", "--app", app, "--module", module, document_name],
             "Document deleted successfully",
-            "Failed to delete document"
+            "Failed to delete document",
         )
-
-
 
 
 class MigrateAPIView(APIView):
     def post(self, request, *args, **kwargs):
-        return run_subprocess(
-            ['blox', 'migrate'],
-            "successful",
-            "Failed"
-        )
+        app_name = request.data.get("app")
+        module_name = request.data.get("module")
+        doc_name = request.data.get("doc")
+
+        command = ["blox", "migrate"]
+        if doc_name:
+            doc = Document.objects.get(pk=doc_name)
+            command.append(f"--app")
+            command.append(doc.app.id)
+            command.append(f"--module")
+            command.append(doc.module.id)
+            command.append(f"--doc")
+            command.append(doc.id)
+        elif module_name:
+            module = Module.objects.get(pk=module_name)
+            command.append(f"--app")
+            command.append(module.app.id)
+            command.append(f"--module")
+            command.append(module.id)
+        elif app_name:
+            command.append(f"--app")
+            command.append(app_name)
+
+        return run_subprocess(command, "Migration successful", "Migration failed")

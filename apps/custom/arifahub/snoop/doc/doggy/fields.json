@@ -1,0 +1,37 @@
+[
+  {
+    "id": "textfield_1",
+    "name": "TextField 1",
+    "type": "TextField"
+  },
+  {
+    "id": "floatfield_1",
+    "name": "FloatField 1",
+    "type": "FloatField"
+  },
+  {
+    "id": "decimalfield_1",
+    "name": "DecimalField 1",
+    "type": "DecimalField"
+  },
+  {
+    "id": "booleanfield_1",
+    "name": "BooleanField 1",
+    "type": "BooleanField"
+  },
+  {
+    "id": "decimalfield_2",
+    "name": "DecimalField 2",
+    "type": "DecimalField"
+  },
+  {
+    "id": "datefield_1",
+    "name": "DateField 1",
+    "type": "DateField"
+  },
+  {
+    "id": "datetimefield_1",
+    "name": "DateTimeField 1",
+    "type": "DateTimeField"
+  }
+]

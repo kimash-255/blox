@@ -18,7 +18,12 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
     const fetchData1 = async () => {
       try {
         const extendedFilters = {
-          ...activeFilters,
+          ...Object.fromEntries(
+            Object.entries(activeFilters).map(([key, value]) => [
+              `${key}_icontains`,
+              value,
+            ])
+          ),
           page: currentPage,
           page_length: itemsPerPage,
         };
@@ -55,8 +60,7 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
   }, [contextData, activeFilters, currentPage, itemsPerPage]);
 
   const handleFilterChange = (name, value) => {
-    const filterName = name;
-    const newFilters = { ...activeFilters, [filterName]: value };
+    const newFilters = { ...activeFilters, [name]: value };
     setActiveFilters(newFilters);
     setCurrentPage(1);
   };
