@@ -62,6 +62,12 @@ export const documentFilters = {
   name: {
     type: "text",
   },
+  app: {
+    type: "text",
+  },
+  module: {
+    type: "text",
+  },
   id: {
     type: "text",
   },

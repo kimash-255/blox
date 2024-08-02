@@ -5,6 +5,16 @@
     "type": "TextField"
   },
   {
+    "id": "numberfield_1",
+    "name": "NumberField 1",
+    "type": "NumberField"
+  },
+  {
+    "id": "floatfield_1",
+    "name": "FloatField 1",
+    "type": "FloatField"
+  },
+  {
     "id": "floatfield_1",
     "name": "FloatField 1",
     "type": "FloatField"
@@ -13,6 +23,26 @@
     "id": "decimalfield_1",
     "name": "DecimalField 1",
     "type": "DecimalField"
+  },
+  {
+    "id": "charfield_1",
+    "name": "CharField 1",
+    "type": "CharField"
+  },
+  {
+    "id": "charfield_2",
+    "name": "CharField 2",
+    "type": "CharField"
+  },
+  {
+    "id": "decimalfield_1",
+    "name": "DecimalField 1",
+    "type": "DecimalField"
+  },
+  {
+    "id": "datefield_1",
+    "name": "DateField 1",
+    "type": "DateField"
   },
   {
     "id": "booleanfield_1",

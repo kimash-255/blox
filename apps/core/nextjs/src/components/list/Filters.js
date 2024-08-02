@@ -2,13 +2,13 @@ import React from "react";
 import FilterSelect from "./Select";
 import FilterText from "./FilterText";
 
-const Filters = ({ filters, onFilterChange }) => {
+const Filters = ({ filters, onFilterChange, onClearFilter }) => {
   const handleFilterChange = (name, value) => {
     onFilterChange(name, value);
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
+    <div className="flex gap-2 mb-2">
       {Object.keys(filters).map((filterKey) => {
         const filter = filters[filterKey];
         return (

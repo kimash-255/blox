@@ -62,6 +62,9 @@ export const moduleFilters = {
   name: {
     type: "text",
   },
+  app: {
+    type: "text",
+  },
   id: {
     type: "text",
   },

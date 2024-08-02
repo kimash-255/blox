@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchData, updateData, deleteData } from "@/utils/Api";
 import { toast } from "react-toastify";
 import { useData } from "@/contexts/DataContext";
@@ -9,18 +8,20 @@ import {
   faCog,
   faInfoCircle,
   faTrash,
+  faFileEdit,
 } from "@fortawesome/free-solid-svg-icons";
-import PrimaryButton from "../buttons/Primary";
 import DocForm from "../new/DocForm";
-import DeleteButton from "../buttons/Delete";
 import ConfirmationModal from "../modal/ConfirmationModal";
-import Link from "next/link";
-import { timeAgo } from "@/utils/DateFormat";
+import DocHeader from "./DocHeader";
+import DocFields from "./DocFields";
+import DocMessages from "./DocMessages"; // New import for Messages tab
+import DocSettings from "./DocSettings"; // New import for Settings tab
+import DocFooter from "./DocFooter";
+import DocEditFields from "./DocEditFields";
 
 const DocDetail = ({ config }) => {
   const { data, setData } = useData();
   const router = useRouter();
-  // const { id } = router.query;
   const [endpoint, setEndpoint] = useState("");
   const [selectedTab, setSelectedTab] = useState("Details");
   const [isEditing, setIsEditing] = useState(false);
@@ -124,109 +125,32 @@ const DocDetail = ({ config }) => {
 
   const tabs = [
     { name: "Details", icon: faInfoCircle, label: "Details" },
+    ...(config.endpoint === "documents"
+      ? [{ name: "Fields", icon: faFileEdit, label: "Fields" }]
+      : []),
     { name: "Messages", icon: faEnvelope, label: "Messages" },
     { name: "Settings", icon: faCog, label: "Settings" },
   ];
 
   return (
-    <div className="mx-4 -mt-32">
-      <div
-        className="relative flex items-center p-0 mt-6 overflow-hidden bg-center bg-cover min-h-32 rounded-2xl"
-        style={{
-          backgroundImage: `url('/img/curved-images/curved0.jpg')`,
-          backgroundPositionY: "50%",
-        }}
-      >
-        <ConfirmationModal
-          isOpen={isModalOpen}
-          onRequestClose={() => setIsModalOpen(false)}
-          onConfirm={confirmDelete}
-        />
-        <span className="absolute inset-y-0 w-full h-full bg-center bg-cover bg-gradient-to-tl from-purple-700 to-pink-500 opacity-60"></span>
-      </div>
-      <div className="relative flex flex-col flex-auto min-w-0 p-4 mx-6 -mt-12 overflow-hidden break-words border-0 shadow-blur rounded-2xl bg-white/80 bg-clip-border backdrop-blur-2xl backdrop-saturate-200">
-        <div className="flex flex-wrap -mx-3">
-          <div className="flex-none w-auto max-w-full px-3">
-            <div className="text-base ease-soft-in-out h-8.5 w-8.5 relative inline-flex items-center justify-center rounded-xl text-white transition-all duration-200">
-              <img
-                src="/img/favicon.png"
-                alt="profile_image"
-                className="w-full shadow-soft-sm rounded-xl"
-              />
-            </div>
-          </div>
-          <div className="flex-none w-auto max-w-full px-3 my-auto">
-            <div className="h-full">
-              <h5 className="mb-1"> Details Page</h5>
-              <p className="mb-0 font-semibold leading-normal text-sm">
-                {data?.id}
-              </p>
-            </div>
-          </div>
-          <div className="w-fit max-w-full px-3 mx-auto mt-4 sm:my-auto sm:mr-0">
-            <div className="relative right-0 flex flex-row items-center">
-              <ul className="relative flex flex-wrap p-1 list-none bg-transparent">
-                {tabs.map((tab) => (
-                  <li key={tab.name} className="z-30 flex-auto text-center">
-                    <a
-                      onClick={() => handleTabClick(tab.name)}
-                      className={`z-30 block w-full px-4 py-1 mb-0 transition-all border-0 rounded-lg ease-soft-in-out ${
-                        selectedTab === tab.name
-                          ? "bg-white text-slate-700"
-                          : "bg-inherit text-slate-700"
-                      }`}
-                    >
-                      <FontAwesomeIcon
-                        icon={tab.icon}
-                        className="text-slate-700"
-                      />
-                      <span className="ml-1">{tab.label}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              <div className="flex items-center space-x-2">
-                {isEditing ? (
-                  <>
-                    <div onClick={handleEditClick}>
-                      <PrimaryButton
-                        text="Close"
-                        className="flex items-center justify-center p-1"
-                      />
-                    </div>
-                    <button type="button" onClick={handleSaveClick}>
-                      <PrimaryButton
-                        text="Save"
-                        className="flex items-center justify-center p-1"
-                      />
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    {config?.customize && (
-                      <Link href={`/documents/${id}/edit`}>
-                        <PrimaryButton
-                          text="Customize"
-                          className="flex items-center justify-center p-1"
-                        />
-                      </Link>
-                    )}
-                    <div onClick={handleEditClick}>
-                      <PrimaryButton
-                        text="Edit"
-                        className="flex items-center justify-center p-1"
-                      />
-                    </div>
-                    <div onClick={handleDelete}>
-                      <DeleteButton />
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="mx-4 -mt-28">
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        onConfirm={confirmDelete}
+      />
+      <DocHeader
+        data={data}
+        tabs={tabs}
+        config={config}
+        selectedTab={selectedTab}
+        isEditing={isEditing}
+        id={id}
+        handleDelete={handleDelete}
+        handleEditClick={handleEditClick}
+        handleSaveClick={handleSaveClick}
+        handleTabClick={handleTabClick}
+      />
       {isEditing ? (
         <DocForm
           ref={formRef}
@@ -234,59 +158,16 @@ const DocDetail = ({ config }) => {
           initialData={data}
           onSubmit={handleFormSubmitSuccess}
         />
-      ) : (
-        <div className="grid grid-cols-2 gap-4 py-8">
-          {config.fields.map((item, index) => (
-            <div key={index} className="w-full px-3 mb-2">
-              <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
-                <div className="flex-auto p-4">
-                  <div className="flex flex-row justify-between -mx-3">
-                    <div className="flex-none w-2/3 max-w-full px-3">
-                      <div>
-                        <p className="mb-0 font-sans text-sm font-semibold leading-normal">
-                          {item.title}
-                        </p>
-
-                        {item.type === "linkselect" ? (
-                          <a
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={`/${item.endpoint}/${data[item.data]}`}
-                          >
-                            <h5 className="mb-0 font-bold">
-                              {data[item.data]}
-                            </h5>
-                          </a>
-                        ) : (
-                          <h5 className="mb-0 font-bold">{data[item.data]}</h5>
-                        )}
-                      </div>
-                    </div>
-                    <div className="px-3 text-right flex justify-end">
-                      <div className="flex items-center justify-center w-12 h-12 text-center rounded-lg bg-gradient-to-tl from-purple-700 to-pink-500">
-                        <FontAwesomeIcon
-                          icon={item.icon}
-                          className="h-8 w-8 text-white"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <td className="p-2 align-middle bg-transparent border-t flex items-center text-xs whitespace-nowrap shadow-transparent">
-        <span className="inline-block w-1 h-1 rounded-full bg-green-600 mr-1"></span>
-        {data?.modified_at ? timeAgo(data?.modified_at) : ""}&nbsp; since last
-        edit
-      </td>
-      <td className="p-2 align-middle bg-transparent flex items-center text-xs whitespace-nowrap shadow-transparent">
-        <span className="inline-block w-1 h-1 rounded-full bg-orange-600 mr-1"></span>
-        {data?.created_at ? timeAgo(data?.created_at) : ""}&nbsp; since creation
-      </td>
+      ) : selectedTab === "Details" ? (
+        <DocFields config={config} data={data} />
+      ) : selectedTab === "Fields" ? (
+        <DocEditFields config={config} data={data} />
+      ) : selectedTab === "Messages" ? (
+        <DocMessages config={config} data={data} />
+      ) : selectedTab === "Settings" ? (
+        <DocSettings config={config} data={data} />
+      ) : null}
+      <DocFooter data={data} />
     </div>
   );
 };

@@ -12,7 +12,12 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
-  const [activeFilters, setActiveFilters] = useState({});
+  const [activeFilters, setActiveFilters] = useState(() =>
+    Object.keys(filters).reduce((acc, key) => {
+      acc[key] = ""; // Initialize filters with empty values
+      return acc;
+    }, {})
+  );
 
   useEffect(() => {
     const fetchData1 = async () => {
@@ -65,6 +70,15 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
     setCurrentPage(1);
   };
 
+  const handleClearFilters = () => {
+    const clearedFilters = Object.keys(activeFilters).reduce((acc, key) => {
+      acc[key] = ""; // Reset each filter to an empty string
+      return acc;
+    }, {});
+    setActiveFilters(clearedFilters);
+    setCurrentPage(1);
+  };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -81,8 +95,23 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
   const currentItems = filteredData;
 
   return (
-    <div className="p-8">
-      <Filters filters={filters} onFilterChange={handleFilterChange} />
+    <div className="px-8">
+      <div className="flex flex-wrap justify-between items-center mb-2">
+        <Filters
+          filters={Object.keys(filters).reduce((acc, key) => {
+            acc[key] = { ...filters[key], value: activeFilters[key] };
+            return acc;
+          }, {})}
+          onFilterChange={handleFilterChange}
+          handleClearFilters={handleClearFilters}
+        />
+        <button
+          className="bg-red-500 text-white font-semibold py-2 px-2 rounded md:ml-2 align-middle transition-all border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in text-xs bg-150 active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25 bg-fuchsia-500 text-white hover:opacity-75"
+          onClick={handleClearFilters}
+        >
+          Clear Filters
+        </button>
+      </div>
       <TableTemplate
         tableConfig={tableConfig}
         data={currentItems}

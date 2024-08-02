@@ -21,7 +21,7 @@ const FilterSelect = ({
       options={options}
       isSearchable
       placeholder={placeholder}
-      className="text-xs text-gray-800 dark:text-gray-200"
+      className="text-xs text-gray-800 dark:text-gray-200 w-60"
     />
   );
 };
