@@ -11,23 +11,20 @@ const DocumentFieldList = ({ fields, data }) => {
   const renderFields = (fields) => {
     return fields.map((field, index) => (
       <div key={index} className="w-full mb-2 flex flex-col">
-        <p className="mb-1 font-sans text-sm font-semibold leading-normal">
-          {field.name}
-        </p>
+        <div className="flex flex-row justify-start m-1">
+          <div className="flex items-center justify-center w-5 h-5 text-center rounded-md bg-gradient-to-tl from-purple-700 to-pink-500">
+            <FontAwesomeIcon icon={field.icon} className="h-3 w-3 text-white" />
+          </div>
+          <p className="font-sans text-sm font-semibold ml-2 leading-normal">
+            {field.name}
+          </p>
+        </div>
         <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-md bg-clip-border">
           <div className="flex-auto p-3">
             <div className="flex flex-row justify-between -mx-3">
               <div className="flex-none w-2/3 max-w-full px-2">
                 <div>
                   <h5 className="mb-0 font-bold">{data[field.id1]}</h5>
-                </div>
-              </div>
-              <div className="px-2 text-right flex justify-end">
-                <div className="flex items-center justify-center w-6 h-6 text-center rounded-lg bg-gradient-to-tl from-purple-700 to-pink-500">
-                  <FontAwesomeIcon
-                    icon={field.icon}
-                    className="h-4 w-4 text-white"
-                  />
                 </div>
               </div>
             </div>

@@ -7,19 +7,12 @@ import {
   faEnvelope,
   faCog,
   faInfoCircle,
-  faTrash,
-  faFileEdit,
 } from "@fortawesome/free-solid-svg-icons";
-import DocForm from "../new/DocForm";
 import ConfirmationModal from "../modal/ConfirmationModal";
 import DocHeader from "./DocHeader";
-import DocFields from "./DocFields";
-import DocMessages from "./DocMessages"; // New import for Messages tab
-import DocSettings from "./DocSettings"; // New import for Settings tab
 import DocFooter from "./DocFooter";
-import DocEditFields from "./DocEditFields";
-import DocFieldList from "./DocFieldList";
 import DocumentFieldList from "./DocumentFieldList";
+import DocumentForm from "../new/DocumentForm";
 
 const DocumentDetail = ({ config }) => {
   const { data, setData } = useData();
@@ -79,28 +72,69 @@ const DocumentDetail = ({ config }) => {
 
   const handleUpdate = async (formData) => {
     try {
-      const changedFields = getChangedFields(formData);
-      if (Object.keys(changedFields).length) {
-        const response = await updateData(changedFields, endpoint);
-        if (response?.data) {
-          toast.success("Document updated successfully!");
-          setData(response.data);
-          setIsEditing(false);
+      const formDataToSubmit = new FormData();
+
+      // Parsing field data from formData
+      const parsedData = {};
+
+      Object.keys(formData).forEach((key) => {
+        const { type, value } = formData[key];
+
+        // Skip empty values for date and datetime types
+        if (value === "" && (type === "date" || type === "datetime-local")) {
+          parsedData[key] = null; // Set to null instead of empty string
+          return;
         }
+
+        switch (type) {
+          case "float":
+          case "decimal":
+            parsedData[key] = value === "" ? null : parseFloat(value);
+            break;
+          case "boolean":
+            parsedData[key] = value === "on"; // Assuming checkboxes send 'on' for checked
+            break;
+          case "date":
+            const date = new Date(value);
+            parsedData[key] = isNaN(date.getTime())
+              ? null
+              : date.toISOString().split("T")[0]; // Convert date to YYYY-MM-DD
+            break;
+          case "datetime-local":
+            const datetime = new Date(value);
+            parsedData[key] = isNaN(datetime.getTime())
+              ? null
+              : datetime.toISOString(); // Convert datetime to ISO format
+            break;
+          case "time":
+            parsedData[key] = value === "" ? null : value; // Handle time inputs, set to null if empty
+            break;
+          case "file":
+            // Append file to FormData for upload
+            if (value instanceof File) {
+              formDataToSubmit.append(key, value);
+            }
+            break;
+          default:
+            parsedData[key] = value === "" ? null : value; // Default case (text, email, etc.)
+        }
+      });
+
+      // Append non-file fields to FormData
+      Object.keys(parsedData).forEach((key) => {
+        if (parsedData[key] !== null) {
+          formDataToSubmit.append(key, parsedData[key]);
+        }
+      });
+      const response = await updateData(formDataToSubmit, endpoint);
+      if (response?.data) {
+        toast.success("Document updated successfully!");
+        setData(response.data);
+        setIsEditing(false);
       }
     } catch (error) {
       toast.error(`Failed to update document, ${error.message || error}`);
     }
-  };
-
-  const getChangedFields = (formData) => {
-    const changedFields = {};
-    Object.keys(formData).forEach((key) => {
-      if (data[key] !== formData[key]) {
-        changedFields[key] = formData[key];
-      }
-    });
-    return changedFields;
   };
 
   const handleFormSubmitSuccess = (formData) => {
@@ -150,7 +184,16 @@ const DocumentDetail = ({ config }) => {
         handleSaveClick={handleSaveClick}
         handleTabClick={handleTabClick}
       />
-      <DocumentFieldList fields={config.fields} data={data} />
+      {isEditing ? (
+        <DocumentForm
+          ref={formRef} // Pass the ref to DocumentForm
+          config={config}
+          initialData={data}
+          onSubmit={handleFormSubmitSuccess}
+        />
+      ) : (
+        <DocumentFieldList fields={config.fields} data={data} />
+      )}
       <DocFooter data={data} />
     </div>
   );

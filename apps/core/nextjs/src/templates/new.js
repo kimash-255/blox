@@ -38,7 +38,7 @@ const Newdocument = () => {
     name: "document",
     customize: true,
     isList: true,
-    tabs: fields,
+    fields: fields,
     data: [],
   };
 
