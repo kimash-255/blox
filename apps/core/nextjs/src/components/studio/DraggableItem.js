@@ -3,6 +3,8 @@ import { useDrag, useDrop } from "react-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import fields from "@/data/fields";
 import { faTimes } from "@fortawesome/free-solid-svg-icons"; // Import the "x" icon
+import LinkSelect from "../new/LinkSelect";
+import DocSelect from "../new/DocSelect";
 
 const ItemType = "FIELD";
 
@@ -20,6 +22,8 @@ const DraggableItem = ({
   deleteField,
 }) => {
   const ref = useRef(null);
+
+  // console.log(item);
 
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
@@ -119,6 +123,19 @@ const DraggableItem = ({
                   ))}
                 </select>
               </div>
+              {(item.type == "ForeignKey" ||
+                item.type == "OneToOneField" ||
+                item.type == "ManyToManyField") && (
+                <div className="mt-1">
+                  <DocSelect
+                    name={item.id}
+                    handleChange={(e) => {
+                      handleInputChange("doc", e.label, item, "field");
+                    }}
+                    placeholder={item.doc || `Select document`}
+                  />
+                </div>
+              )}
             </div>
           )}
         </>

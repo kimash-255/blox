@@ -82,52 +82,63 @@ def write_model_fields(module_file, model_file, folder_path):
         module_file.write(f"    pass\n\n")
         return
 
+    FIELD_TYPE_MAP = {
+        "TextField": {"type": "models.TextField"},
+        "CharField": {"type": "models.CharField", "max_length": 255},
+        "NumberField": {"type": "models.IntegerField"},
+        "FloatField": {"type": "models.FloatField"},
+        "DecimalField": {
+            "type": "models.DecimalField",
+            "max_digits": 10,
+            "decimal_places": 2,
+        },
+        "BooleanField": {"type": "models.BooleanField"},
+        "DateField": {"type": "models.DateField"},
+        "DateTimeField": {"type": "models.DateTimeField"},
+        "TimeField": {"type": "models.TimeField"},
+        "EmailField": {"type": "models.EmailField", "max_length": 254},
+        "URLField": {"type": "models.URLField"},
+        "SlugField": {"type": "models.SlugField", "max_length": 50},
+        "UUIDField": {"type": "models.UUIDField"},
+        "IPAddressField": {"type": "models.GenericIPAddressField"},
+        "FileField": {"type": "models.FileField", "upload_to": "'uploads/'"},
+        "ImageField": {"type": "models.ImageField", "upload_to": "'images/'"},
+        "PasswordField": {"type": "models.CharField", "max_length": 128},
+        "PhoneField": {"type": "models.CharField", "max_length": 15},
+        "NameField": {"type": "models.CharField", "max_length": 255},
+        "AddressField": {"type": "models.TextField"},
+        "ForeignKey": {
+            "type": "models.ForeignKey",
+            "on_delete": "models.CASCADE",
+        },
+        "OneToOneField": {
+            "type": "models.OneToOneField",
+            "on_delete": "models.CASCADE",
+        },
+        "ManyToManyField": {"type": "models.ManyToManyField"},
+    }
+
     for field in field_list:
-        FIELD_TYPE_MAP = {
-            "TextField": {"type": "models.TextField"},
-            "CharField": {"type": "models.CharField", "max_length": 255},
-            "NumberField": {"type": "models.IntegerField"},
-            "FloatField": {"type": "models.FloatField"},
-            "DecimalField": {
-                "type": "models.DecimalField",
-                "max_digits": 10,
-                "decimal_places": 2,
-            },
-            "BooleanField": {"type": "models.BooleanField"},
-            "DateField": {"type": "models.DateField"},
-            "DateTimeField": {"type": "models.DateTimeField"},
-            "TimeField": {"type": "models.TimeField"},
-            "EmailField": {"type": "models.EmailField", "max_length": 254},
-            "URLField": {"type": "models.URLField"},
-            "SlugField": {"type": "models.SlugField", "max_length": 50},
-            "UUIDField": {"type": "models.UUIDField"},
-            "IPAddressField": {"type": "models.GenericIPAddressField"},
-            "FileField": {"type": "models.FileField", "upload_to": "'uploads/'"},
-            "ImageField": {"type": "models.ImageField", "upload_to": "'images/'"},
-            "PasswordField": {"type": "models.CharField", "max_length": 128},
-            "PhoneField": {"type": "models.CharField", "max_length": 15},
-            "NameField": {"type": "models.CharField", "max_length": 255},
-            "AddressField": {"type": "models.TextField"},
-            "ForeignKey": {
-                "type": "models.ForeignKey",
-                "to": "'self'",
-                "on_delete": "models.CASCADE",
-            },
-            "OneToOneField": {
-                "type": "models.OneToOneField",
-                "to": "'self'",
-                "on_delete": "models.CASCADE",
-            },
-            "ManyToManyField": {"type": "models.ManyToManyField", "to": "'self'"},
-        }
         field_id = field.get("id", "")
         field_name = field.get("name", "")
         type = field["type"]
-        field_type_info = FIELD_TYPE_MAP[type]
-        module_file.write(
-            f"    {field_id} = {field_type_info['type']}(verbose_name='{field_name}', null=True, blank=True"
-        )
-        field_type_info.pop("type", None)
+        field_type_info = FIELD_TYPE_MAP[type].copy()
+
+        if type in ["ForeignKey", "OneToOneField", "ManyToManyField"]:
+            related_model = field.get("doc", "'self'")
+            field_type = field_type_info.pop("type")
+
+            # Write the field with the related model as the first argument
+            module_file.write(
+                f"    {field_id} = {field_type}('{related_model}', verbose_name='{field_name}', null=True, blank=True"
+            )
+        else:
+            # Write the field without the related model as the first argument
+            field_type = field_type_info.pop("type")
+            module_file.write(
+                f"    {field_id} = {field_type}(verbose_name='{field_name}', null=True, blank=True"
+            )
+
         field_params = ", ".join(
             [f"{key}={value}" for key, value in field_type_info.items()]
         )
