@@ -21,13 +21,15 @@ from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_PATH = BASE_DIR.parent.parent.parent
-CONFIG_PATH = os.path.join(PROJECT_PATH, 'config')
+CONFIG_PATH = os.path.join(PROJECT_PATH, "config")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config(
-    "SECRET_KEY", default="django-insecure-j7#rvr!*&u(2f*x28y2+m7qlgg6_dwryv%m1*a@yhp3u58qatp")
+    "SECRET_KEY",
+    default="django-insecure-j7#rvr!*&u(2f*x28y2+m7qlgg6_dwryv%m1*a@yhp3u58qatp",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,15 +46,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
     "django_filters",
     "django_crontab",
-
-    'core',
-    'meeting',
+    "core",
+    'arifahub',
 ]
 
 MIDDLEWARE = [
@@ -158,8 +158,8 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PARSER_CLASSES": [
         "rest_framework.parsers.JSONParser",
-        'rest_framework.parsers.FormParser',
-        'rest_framework.parsers.MultiPartParser',
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
@@ -182,8 +182,8 @@ CORS_ALLOW_HEADERS = ["Content-Type", "Authorization"]
 
 
 # URL configuration
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 REST_USE_JWT = True
 
@@ -191,7 +191,7 @@ REST_USE_JWT = True
 # Email settings (replace with your email configuration)
 # ----------------------------------------------------------------------
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST", default="smtp.example.com")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="user@example.com")
@@ -204,8 +204,7 @@ EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=10, cast=int)
 EMAIL_SSL_CAFILE = config("EMAIL_SSL_CAFILE", default=None)
 
 SERVER_EMAIL = config("SERVER_EMAIL", default="server@example.com")
-DEFAULT_FROM_EMAIL = config(
-    "DEFAULT_FROM_EMAIL", default="webmaster@example.com")
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="webmaster@example.com")
 
 
 # ----------------------------------------------------------------------
@@ -232,6 +231,4 @@ ACCOUNT_EMAIL_CONFIRMATION_SIGNUP_MESSAGE = "account/confirmation_signup_message
 
 # Ensure the logs directory exists
 # os.makedirs(LOGS_DIR, exist_ok=True)
-CRONJOBS = [
-
-]
+CRONJOBS = []

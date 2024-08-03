@@ -1,4 +1,4 @@
-import { fields } from "../../../../../../custom/meeting/meeting/doc/david/fields.js";
+import { fields } from "../../../../../../custom/arifahub/arifahub/doc/david/fields.js";
 
 import DocStudio from "@/components/studio/DocStudio";
 import { useData } from "@/contexts/DataContext";
@@ -51,7 +51,6 @@ const StudioEdit = () => {
 
       const result = await response.json();
       if (response.ok) {
-        console.log("Fields saved successfully");
         await postData({ doc: id }, `migrate`);
       } else {
         console.error("Error saving fields:", result.error);

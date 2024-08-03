@@ -10,16 +10,16 @@ import {
 // Common fields configuration
 const commonFields = [
   {
-    title: "ID",
+    name: "ID",
     type: "text",
-    data: "id",
+    id: "id",
     icon: faBox,
     bgColor: "green",
   },
   {
-    title: "Status",
+    name: "Status",
     type: "select",
-    data: "status",
+    id: "status",
     icon: faStoreSlash,
     options: [
       {
@@ -34,11 +34,11 @@ const commonFields = [
       },
     ],
   },
-  { title: "Name", type: "text", data: "name", icon: faNewspaper },
+  { name: "Name", type: "text", id: "name", icon: faNewspaper },
   {
-    title: "Description",
+    name: "Description",
     type: "textarea",
-    data: "description",
+    id: "description",
     required: true,
     icon: faInfoCircle,
   },
@@ -65,12 +65,12 @@ export const appFilters = {
 // Configurations for DocDetail
 export const appDetailConfig = {
   endpoint: "apps",
-  fields: commonFields.filter((field) => field.title !== "ID"),
+  fields: commonFields.filter((field) => field.name !== "ID"),
 };
 
 // Configurations for ListTable
 export const appListConfig = {
-  title: "Apps",
+  name: "Apps",
   fields: commonFields,
   data: [],
 };
@@ -78,7 +78,7 @@ export const appListConfig = {
 // Configurations for NewDoc
 export const newAppConfig = {
   endpoint: "apps",
-  title: "App",
-  fields: commonFields.filter((field) => field.title !== "ID"),
+  name: "App",
+  fields: commonFields.filter((field) => field.name !== "ID"),
   data: [],
 };

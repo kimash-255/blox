@@ -4,6 +4,7 @@ import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import PrimaryButton from "../buttons/Primary";
 import Link from "next/link";
 import DeleteButton from "../buttons/Delete";
+import PrimaryButton1 from "../buttons/Primary1";
 
 const DocHeader = ({
   config,
@@ -75,13 +76,13 @@ const DocHeader = ({
               {isEditing ? (
                 <>
                   <div onClick={handleEditClick}>
-                    <PrimaryButton
+                    <PrimaryButton1
                       text="Close"
                       className="flex items-center justify-center p-1"
                     />
                   </div>
                   <button type="button" onClick={handleSaveClick}>
-                    <PrimaryButton
+                    <PrimaryButton1
                       text="Save"
                       className="flex items-center justify-center p-1"
                     />
@@ -89,20 +90,29 @@ const DocHeader = ({
                 </>
               ) : (
                 <>
+                  {config?.isList && (
+                    <Link href={`/${data.app}/${data.id}`}>
+                      <PrimaryButton1
+                        text={`Go to ${data.name} list`}
+                        className="flex items-center justify-center p-1"
+                      />
+                    </Link>
+                  )}
                   {config?.customize && (
                     <Link href={`/documents/${id}/edit`}>
-                      <PrimaryButton
+                      <PrimaryButton1
                         text="Customize"
                         className="flex items-center justify-center p-1"
                       />
                     </Link>
                   )}
                   <div onClick={handleEditClick}>
-                    <PrimaryButton
+                    <PrimaryButton1
                       text="Edit"
                       className="flex items-center justify-center p-1"
                     />
                   </div>
+
                   <div onClick={handleDelete}>
                     <DeleteButton />
                   </div>

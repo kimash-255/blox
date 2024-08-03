@@ -31,8 +31,7 @@ def custom_list(self, request):
 
     # Create the filterset instance, without the page and page_length filters
     filter_class = self.filterset_class
-    filterset = filter_class(
-        data=query_params, queryset=queryset, request=request)
+    filterset = filter_class(data=query_params, queryset=queryset, request=request)
     try:
         filtered_queryset = filterset.qs
     except:
@@ -86,6 +85,7 @@ class GenericViewSet(viewsets.ModelViewSet):
 
     @handle_errors
     def create(self, request, *args, **kwargs):
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -95,8 +95,7 @@ class GenericViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop("partial", False)
         instance = self.get_object()
-        serializer = self.get_serializer(
-            instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
@@ -129,8 +128,7 @@ class SaveMixin:
                 if field_value in ["", None]:
                     continue  # Skip empty values
                 try:
-                    related_instance = related_model.objects.get(
-                        id=field_value)
+                    related_instance = related_model.objects.get(id=field_value)
                     instance_data[field] = related_instance
                 except related_model.DoesNotExist:
                     return Response(
@@ -225,8 +223,7 @@ class UpdateMixin:
                 if field_value in ["", None]:
                     continue  # Skip empty values
                 try:
-                    related_instance = related_model.objects.get(
-                        id=field_value)
+                    related_instance = related_model.objects.get(id=field_value)
                     instance_data[field] = related_instance
                 except related_model.DoesNotExist:
                     return Response(
@@ -276,8 +273,7 @@ class CreateMixin:
                 if field_value in ["", None]:
                     continue  # Skip empty values
                 try:
-                    related_instance = related_model.objects.get(
-                        id=field_value)
+                    related_instance = related_model.objects.get(id=field_value)
                     instance_data[field] = related_instance
                 except related_model.DoesNotExist:
                     return Response(

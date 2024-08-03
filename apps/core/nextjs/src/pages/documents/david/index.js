@@ -1,4 +1,4 @@
-import { fields } from "../../../../../../custom/meeting/meeting/doc/david/fields.js";
+import { fields } from "../../../../../../custom/arifahub/arifahub/doc/david/fields.js";
 
 import DocDetail from "@/components/detail/DocDetail";
 import { useNavbar } from "@/contexts/NavbarContext";

@@ -135,8 +135,6 @@ def write_model_fields(module_file, model_file, folder_path):
             module_file.write(f", {field_params}")
         module_file.write(")\n")
 
-    module_file.write(f"\n\n")
-
 
 def write_serializer_fields(serializer_file, model_name, fields):
     """Write serializer fields for a given model."""
@@ -463,14 +461,18 @@ def update_urls(app_name, module):
 def run_django_migrations():
     """Run Django makemigrations and migrate commands."""
     python_command = "python" if platform.system() == "Windows" else "python3"
+
     subprocess.run(
-        [python_command, "manage.py", "makemigrations"],
+        f'echo "y" | {python_command} manage.py makemigrations',
+        shell=True,
         cwd=os.path.join(PROJECT_ROOT, "apps/core/django"),
     )
+
     subprocess.run(
-        [python_command, "manage.py", "migrate"],
+        [python_command, "manage.py", "migrate", "--noinput"],
         cwd=os.path.join(PROJECT_ROOT, "apps/core/django"),
     )
+
     click.echo("Migration completed.")
 
 

@@ -29,18 +29,31 @@ const generatePageFiles = (routePath, importPath) => {
   });
 };
 
-const generatePageFiles1 = (routePath, importPath) => {
-  const files = ["new.js", "index.js", "[id].js"];
+const generatePageFiles1 = (routePath, importPath, importPath2) => {
+  const files = ["new.js", "list.js", "[id].js"];
   files.forEach((file) => {
-    const src = path.join(templatesFolder, file);
-    const dest = path.join(pagesFolder, routePath, file);
-    try {
-      let content = fs.readFileSync(src, "utf8");
-      const importStatement = `import { fields } from "${importPath}";\n\n`;
-      content = importStatement + content;
-      fs.outputFileSync(dest, content);
-    } catch (error) {
-      console.error(`Error processing ${file} for ${dest}:`, error);
+    if (file == "list.js") {
+      const src = path.join(templatesFolder, "list.js");
+      const dest = path.join(pagesFolder, routePath, "index.js");
+      try {
+        let content = fs.readFileSync(src, "utf8");
+        const importStatement = `import fields from "${importPath2}";\n\n`;
+        content = importStatement + content;
+        fs.outputFileSync(dest, content);
+      } catch (error) {
+        console.error(`Error processing ${"index.js"} for ${dest}:`, error);
+      }
+    } else {
+      const src = path.join(templatesFolder, file);
+      const dest = path.join(pagesFolder, routePath, file);
+      try {
+        let content = fs.readFileSync(src, "utf8");
+        const importStatement = `import { fields } from "${importPath}";\n\n`;
+        content = importStatement + content;
+        fs.outputFileSync(dest, content);
+      } catch (error) {
+        console.error(`Error processing ${file} for ${dest}:`, error);
+      }
     }
   });
 };
@@ -69,7 +82,13 @@ const updateRoutes = () => {
                 path.join(itemPath, docName, "fields.js")
               )
               .replace(/\\/g, "/");
-            generatePageFiles1(docRoutePath1, importPath1);
+            const importPath2 = path
+              .relative(
+                path.join(pagesFolder, docRoutePath1),
+                path.join(itemPath, docName, "fields.json")
+              )
+              .replace(/\\/g, "/");
+            generatePageFiles1(docRoutePath1, importPath1, importPath2);
           });
         } else {
           processDirectory(itemPath, itemRelativePath);

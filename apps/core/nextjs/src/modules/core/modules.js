@@ -7,24 +7,24 @@ import {
 
 const commonFields = [
   {
-    title: "ID",
+    name: "ID",
     type: "text",
-    data: "id",
+    id: "id",
     icon: faBox,
     bgColor: "green",
   },
   {
-    title: "App",
+    name: "App",
     type: "linkselect",
-    data: "app",
+    id: "app",
     endpoint: "apps",
     icon: faBox,
     bgColor: "green",
   },
   {
-    title: "Status",
+    name: "Status",
     type: "select",
-    data: "status",
+    id: "status",
     icon: faStoreSlash,
     options: [
       {
@@ -39,11 +39,11 @@ const commonFields = [
       },
     ],
   },
-  { title: "Name", type: "text", data: "name", icon: faNewspaper },
+  { name: "Name", type: "text", id: "name", icon: faNewspaper },
   {
-    title: "Description",
+    name: "Description",
     type: "textarea",
-    data: "description",
+    id: "description",
     required: true,
     icon: faInfoCircle,
   },
@@ -73,12 +73,12 @@ export const moduleFilters = {
 // Configurations for DocDetail
 export const moduleDetailConfig = {
   endpoint: "modules",
-  fields: commonFields.filter((field) => field.title !== "ID"),
+  fields: commonFields.filter((field) => field.name !== "ID"),
 };
 
 // Configurations for ListTable
 export const moduleListConfig = {
-  title: "modules",
+  name: "modules",
   fields: commonFields,
   data: [],
 };
@@ -86,7 +86,7 @@ export const moduleListConfig = {
 // Configurations for NewDoc
 export const newModuleConfig = {
   endpoint: "modules",
-  title: "module",
-  fields: commonFields.filter((field) => field.title !== "ID"),
+  name: "module",
+  fields: commonFields.filter((field) => field.name !== "ID"),
   data: [],
 };

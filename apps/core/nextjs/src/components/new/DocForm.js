@@ -42,37 +42,37 @@ const DocForm = forwardRef(({ config, initialData, onSubmit }, ref) => {
           {config.fields.map((field, index) => (
             <div key={index} className="col-span-6 sm:col-span-3">
               <label
-                htmlFor={field.data}
+                htmlFor={field.id}
                 className="text-sm font-medium text-gray-900 block mb-2"
               >
-                {field.title}
+                {field.name}
               </label>
               {field.type === "textarea" ? (
                 <textarea
-                  id={field.data}
-                  name={field.data}
+                  id={field.id}
+                  name={field.id}
                   rows="6"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-4"
-                  placeholder={field.title}
+                  placeholder={field.name}
                   required={field.required}
                   onChange={(e) =>
                     handleInputChange(e.target.name, e.target.value)
                   }
-                  value={formData[field.data] || ""}
+                  value={formData[field.id] || ""}
                 ></textarea>
               ) : field.type === "select" ? (
                 <select
-                  id={field.data}
-                  name={field.data}
+                  id={field.id}
+                  name={field.id}
                   className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
                   required={field.required}
                   onChange={(e) =>
                     handleInputChange(e.target.name, e.target.value)
                   }
-                  value={formData[field.data] || ""}
+                  value={formData[field.id] || ""}
                 >
                   <option key={-1} value="">
-                    Select {field.title}
+                    Select {field.name}
                   </option>
                   {field.options.map((option, idx) => (
                     <option key={idx} value={option.value}>
@@ -82,23 +82,23 @@ const DocForm = forwardRef(({ config, initialData, onSubmit }, ref) => {
                 </select>
               ) : field.type === "linkselect" ? (
                 <LinkSelect
-                  name={field.data}
+                  name={field.id}
                   handleChange={handleInputChange}
                   endpoint={field.endpoint} // Ensure 'endpoint' is part of field config
-                  placeholder={`Select ${field.title}`}
+                  placeholder={`Select ${field.name}`}
                 />
               ) : (
                 <input
                   type={field.type}
-                  id={field.data}
-                  name={field.data}
+                  id={field.id}
+                  name={field.id}
                   className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
-                  placeholder={field.title}
+                  placeholder={field.name}
                   required={field.required}
                   onChange={(e) =>
                     handleInputChange(e.target.name, e.target.value)
                   }
-                  value={formData[field.data] || ""}
+                  value={formData[field.id] || ""}
                 />
               )}
             </div>

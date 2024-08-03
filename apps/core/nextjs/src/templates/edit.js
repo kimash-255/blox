@@ -49,7 +49,6 @@ const StudioEdit = () => {
 
       const result = await response.json();
       if (response.ok) {
-        console.log("Fields saved successfully");
         await postData({ doc: id }, `migrate`);
       } else {
         console.error("Error saving fields:", result.error);

@@ -38,7 +38,7 @@ const Navbar = () => {
     <nav
       className={`relative flex flex-wrap items-center justify-between z-50 transition-all duration-250 ease-soft-in rounded-2xl lg:flex-nowrap lg:justify-start ${
         isScrolled
-          ? "fixed top-0 right-0 w-full my-1 mx-4 py-2 z-50 bg-transparent border-[1px] border-purple-700 shadow-xl shadow-purple-900 backdrop-blur-lg"
+          ? "fixed top-0 right-0 w-full my-2 mx-4 py-2 z-50 bg-transparent border-[1px] border-purple-400 shadow-md shadow-purple-200 backdrop-blur-lg"
           : "relative  px-0 py-4 mx-6"
       }
       `}

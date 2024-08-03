@@ -11,19 +11,19 @@ const DocFields = ({ config, data }) => (
               <div className="flex-none w-2/3 max-w-full px-3">
                 <div>
                   <p className="mb-0 font-sans text-sm font-semibold leading-normal">
-                    {item.title}
+                    {item.name}
                   </p>
 
                   {item.type === "linkselect" ? (
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={`/${item.endpoint}/${data[item.data]}`}
+                      href={`/${item.endpoint}/${data[item.id]}`}
                     >
-                      <h5 className="mb-0 font-bold">{data[item.data]}</h5>
+                      <h5 className="mb-0 font-bold">{data[item.id]}</h5>
                     </a>
                   ) : (
-                    <h5 className="mb-0 font-bold">{data[item.data]}</h5>
+                    <h5 className="mb-0 font-bold">{data[item.id]}</h5>
                   )}
                 </div>
               </div>

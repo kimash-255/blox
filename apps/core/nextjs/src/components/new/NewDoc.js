@@ -82,7 +82,7 @@ const NewDoc = ({ config, initialData }) => {
   };
 
   return (
-    <div className="mx-4 -mt-32">
+    <div className="mx-4 -mt-28">
       <div
         className="relative flex items-center p-0 mt-6 overflow-hidden bg-center bg-cover min-h-32 rounded-2xl"
         style={{
@@ -106,7 +106,7 @@ const NewDoc = ({ config, initialData }) => {
           </div>
           <div className="flex-none w-auto max-w-full px-3 my-auto">
             <div className="h-full">
-              <h5 className="mb-1"> New {config.title}</h5>
+              <h5 className="mb-1"> New {config.name}</h5>
             </div>
           </div>
           <div className="w-fit max-w-full px-3 mx-auto mt-4 sm:my-auto sm:mr-0">

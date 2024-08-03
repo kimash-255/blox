@@ -7,24 +7,24 @@ import {
 
 const commonFields = [
   {
-    title: "ID",
+    name: "ID",
     type: "text",
-    data: "id",
+    id: "id",
     icon: faBox,
     bgColor: "green",
   },
   {
-    title: "Module",
+    name: "Module",
     type: "linkselect",
-    data: "module",
+    id: "module",
     endpoint: "modules",
     icon: faBox,
     bgColor: "green",
   },
   {
-    title: "Status",
+    name: "Status",
     type: "select",
-    data: "status",
+    id: "status",
     icon: faStoreSlash,
     options: [
       {
@@ -39,11 +39,11 @@ const commonFields = [
       },
     ],
   },
-  { title: "Name", type: "text", data: "name", icon: faNewspaper },
+  { name: "Name", type: "text", id: "name", icon: faNewspaper },
   {
-    title: "Description",
+    name: "Description",
     type: "textarea",
-    data: "description",
+    id: "description",
     required: true,
     icon: faInfoCircle,
   },
@@ -77,13 +77,15 @@ export const documentFilters = {
 export const documentDetailConfig = {
   endpoint: "documents",
   customize: true,
-  fields: commonFields.filter((field) => field.title !== "ID"),
+  isList: true,
+  fields: commonFields.filter((field) => field.name !== "ID"),
 };
 
 // Configurations for ListTable
 export const documentListConfig = {
-  title: "documents",
+  name: "documents",
   customize: true,
+  isList: true,
   fields: commonFields,
   data: [],
 };
@@ -91,8 +93,9 @@ export const documentListConfig = {
 // Configurations for NewDoc
 export const newdocumentConfig = {
   endpoint: "documents",
-  title: "document",
+  name: "document",
   customize: true,
-  fields: commonFields.filter((field) => field.title !== "ID"),
+  isList: true,
+  fields: commonFields.filter((field) => field.name !== "ID"),
   data: [],
 };
