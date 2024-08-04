@@ -1,9 +1,9 @@
 {
   "idNamingRule": "",
-  "idNamingMethod": "randomNaming",
-  "fieldForIdNaming": "",
+  "idNamingMethod": "incrementalNaming",
+  "fieldForIdNaming": "opp",
   "functionForIdNaming": "",
-  "lengthForIncrementalNaming": "",
+  "lengthForIncrementalNaming": "6",
   "enableFeature": false,
   "thresholdValue": "",
   "notificationEmail": "",
