@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ColumnDropZone from "./ColumnDropZone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { addColumn, addSection } from "./AddFields";
 import { updateItemById } from "./utils";
 
@@ -15,6 +15,11 @@ const StudioTabs = ({
   moveItem,
 }) => {
   const [selectedFieldId, setSelectedFieldId] = useState(null);
+  const [editingSectionId, setEditingSectionId] = useState(null);
+  const [editingTabId, setEditingTabId] = useState(null);
+  const [sectionName, setSectionName] = useState("");
+  const [tabName, setTabName] = useState("");
+
   const handleInputChange = (key, value, item, type) => {
     const updatedItems = updateItemById(items, item.id, type, key, value);
     if (updatedItems) {
@@ -33,23 +38,183 @@ const StudioTabs = ({
   const handleMoveItem = (draggedItem, targetItem, parent1Id, parent2Id) => {
     moveItem(draggedItem, targetItem, parent1Id, parent2Id);
   };
+
+  const handleEditSectionName = (section) => {
+    setEditingSectionId(section.id);
+    setSectionName(section.name);
+  };
+
+  const handleEditTabName = (tab) => {
+    setEditingTabId(tab.id);
+    setTabName(tab.name);
+  };
+
+  const handleSectionNameChange = (event) => {
+    setSectionName(event.target.value);
+  };
+
+  const handleTabNameChange = (event) => {
+    setTabName(event.target.value);
+  };
+
+  const handleSaveSectionName = () => {
+    if (sectionName.trim() !== "") {
+      const updatedItems = updateItemById(
+        items,
+        editingSectionId,
+        "section",
+        "name",
+        sectionName
+      );
+      if (updatedItems) {
+        setCanvasItems([...updatedItems]);
+      }
+    }
+    setEditingSectionId(null);
+  };
+
+  const handleSaveTabName = () => {
+    if (tabName.trim() !== "") {
+      const updatedItems = updateItemById(
+        items,
+        editingTabId,
+        "tab",
+        "name",
+        tabName
+      );
+      if (updatedItems) {
+        setCanvasItems([...updatedItems]);
+        refreshPage();
+      }
+    }
+    setEditingTabId(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingSectionId(null);
+    setEditingTabId(null);
+  };
+
+  const simulateCtrlS = () => {
+    setTimeout(() => {
+      const event = new KeyboardEvent("keydown", {
+        key: "s",
+        code: "KeyS",
+        keyCode: 83,
+        ctrlKey: true,
+        bubbles: true,
+        cancelable: true,
+      });
+      window.dispatchEvent(event);
+    }, 400);
+  };
+
+  const refreshPage = () => {
+    simulateCtrlS();
+    setTimeout(() => {
+      window.location.reload();
+    }, 400); // Delay of 2000 milliseconds (2 seconds)
+  };
+
   return (
     <>
       {tabs.map(
         (tab) =>
           selectedTab === tab.name && (
-            <div key={tab.id} className="mb-4">
+            <div key={tab.id} className="mb-4 bg-slate-50">
+              <div className="flex items-center justify-start border-b border-gray-500 p-2">
+                {editingTabId === tab.id ? (
+                  <input
+                    type="text"
+                    value={tabName}
+                    onChange={handleTabNameChange}
+                    onBlur={handleSaveTabName}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSaveTabName();
+                      } else if (e.key === "Escape") {
+                        handleCancelEdit();
+                      }
+                    }}
+                    autoFocus
+                    className="text-md font-semibold p-1 border border-gray-300 rounded bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                ) : (
+                  <h4 className="text-md font-semibold">{tab.name}</h4>
+                )}
+                <button
+                  onClick={() => {
+                    if (editingTabId === tab.id) {
+                      handleSaveTabName();
+                    } else {
+                      handleEditTabName(tab);
+                    }
+                  }}
+                  className="ml-2 text-blue-500 hover:text-blue-700 transition-colors duration-150 ease-in-out"
+                  aria-label="Edit tab"
+                >
+                  <FontAwesomeIcon icon={faPencilAlt} className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => {
+                    deleteField(tab, "tab");
+                    refreshPage();
+                  }}
+                  className="ml-2 text-red-500 hover:text-red-700 transition-colors duration-150 ease-in-out"
+                  aria-label="Delete tab"
+                >
+                  <FontAwesomeIcon icon={faTimes} className="w-4 h-4" />
+                </button>
+              </div>
               {tab.sections.map((section) => (
-                <div key={section.id} className="mb-4">
+                <div key={section.id} className="border-b border-gray-500 p-2">
                   <div className="flex items-center justify-between my-2">
-                    <div className="flex items-center justify-start">
-                      <h4 className="text-md font-semibold">{section.name}</h4>
+                    <div className="flex items-center">
+                      {editingSectionId === section.id ? (
+                        <input
+                          type="text"
+                          value={sectionName}
+                          onChange={handleSectionNameChange}
+                          onBlur={handleSaveSectionName}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleSaveSectionName();
+                            } else if (e.key === "Escape") {
+                              handleCancelEdit();
+                            }
+                          }}
+                          autoFocus
+                          className="text-md font-semibold p-1 border border-gray-300 rounded bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      ) : (
+                        <h4 className="text-md font-semibold">
+                          {section.name}
+                        </h4>
+                      )}
+                      <button
+                        onClick={() => {
+                          if (editingSectionId === section.id) {
+                            handleSaveSectionName();
+                          } else {
+                            handleEditSectionName(section);
+                          }
+                        }}
+                        className="ml-2 text-blue-500 hover:text-blue-700 transition-colors duration-150 ease-in-out"
+                        aria-label="Edit section"
+                      >
+                        <FontAwesomeIcon
+                          icon={faPencilAlt}
+                          className="w-4 h-4"
+                        />
+                      </button>
 
                       <button
                         onClick={() => deleteField(section, "section")}
-                        className="flex items-center justify-center z-40 -mt-2 shadow shadow-lg bg-white rounded-full h-4 w-4 shadow-black text-red-500 hover:text-red-700"
+                        className="ml-2 text-red-500 hover:text-red-700 transition-colors duration-150 ease-in-out"
+                        aria-label="Delete section"
                       >
-                        <FontAwesomeIcon icon={faTimes} className="w-3 h-3 " />
+                        <FontAwesomeIcon icon={faTimes} className="w-4 h-4" />
                       </button>
                     </div>
                     <div>
@@ -89,9 +254,8 @@ const StudioTabs = ({
                   </div>
                   <div className="flex space-x-2">
                     {section.columns.map((column) => (
-                      <>
+                      <React.Fragment key={column.id}>
                         <ColumnDropZone
-                          key={column.id}
                           column={column}
                           sectionId={section.id}
                           selectedFieldId={selectedFieldId}
@@ -107,12 +271,9 @@ const StudioTabs = ({
                           onClick={() => deleteField(column, "column")}
                           className="flex items-center justify-center z-40 -ml-12 shadow shadow-lg bg-white rounded-full h-4 w-4 shadow-black text-red-500 hover:text-red-700"
                         >
-                          <FontAwesomeIcon
-                            icon={faTimes}
-                            className="w-3 h-3 "
-                          />
+                          <FontAwesomeIcon icon={faTimes} className="w-3 h-3" />
                         </button>
-                      </>
+                      </React.Fragment>
                     ))}
                   </div>
                 </div>

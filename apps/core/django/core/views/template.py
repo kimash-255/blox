@@ -22,7 +22,9 @@ def handle_errors(func):
 
 def custom_list(self, request):
     # Get the initial queryset
-    queryset = self.get_queryset().order_by("-id")  # Sort by id in descending order
+    queryset = self.get_queryset().order_by(
+        "-modified_at"
+    )  # Sort by id in descending order
 
     # Extract and remove 'page' and 'page_length' from request query params
     query_params = request.GET.copy()

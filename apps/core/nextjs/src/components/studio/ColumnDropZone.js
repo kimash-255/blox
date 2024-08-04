@@ -18,7 +18,7 @@ const ColumnDropZone = ({
   });
 
   return (
-    <div ref={drop} className="flex-1 bg-slate-50 p-3 rounded-lg">
+    <div ref={drop} className="flex-1 bg-white rounded-lg">
       {column.fields.length === 0 ? (
         <div>
           <DraggableItem

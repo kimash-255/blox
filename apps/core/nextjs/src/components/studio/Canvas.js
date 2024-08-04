@@ -60,12 +60,12 @@ const Canvas = ({
               >
                 <span className="ml-1">{tab.name}</span>
               </a>
-              <button
+              {/* <button
                 onClick={() => deleteField(tab, "tab")}
                 className="flex items-center justify-center z-40 -mt-2 shadow shadow-lg bg-white rounded-full h-4 w-4 shadow-black text-red-500 hover:text-red-700"
               >
                 <FontAwesomeIcon icon={faTimes} className="w-3 h-3 " />
-              </button>
+              </button> */}
             </li>
           ))}
           <li className="z-30 ml-4 flex-auto text-center">
