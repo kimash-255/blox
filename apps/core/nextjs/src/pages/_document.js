@@ -5,6 +5,10 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <link
+          href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css"
+          rel="stylesheet"
+        />
+        <link
           href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
           rel="stylesheet"
         />
@@ -24,6 +28,7 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
       </body>
     </Html>
   );

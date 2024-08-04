@@ -1,4 +1,5 @@
 import fields from "../../../../../../custom/logistics/logistics/doc/item/fields.json";
+
 import React, { useEffect } from "react";
 import ListTable from "@/components/list/Table";
 import { useNavbar } from "@/contexts/NavbarContext";

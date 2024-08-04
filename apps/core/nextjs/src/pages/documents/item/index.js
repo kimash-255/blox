@@ -1,4 +1,5 @@
 import { fields } from "../../../../../../custom/logistics/logistics/doc/item/fields.js";
+import settings from "../../../../../../custom/logistics/logistics/doc/item/settings.json";
 
 import DocDetail from "@/components/detail/DocDetail";
 import { useNavbar } from "@/contexts/NavbarContext";
@@ -17,9 +18,16 @@ const documentDetail = () => {
     setSidebarHidden(false);
     setSidebarWidth(350);
   }, []);
+  const saveSettings = (setting) => {
+    console.log(setting);
+  };
   return (
     <div>
-      <DocDetail config={documentDetailConfig} />
+      <DocDetail
+        config={documentDetailConfig}
+        setting={settings}
+        saveSettings={saveSettings}
+      />
     </div>
   );
 };

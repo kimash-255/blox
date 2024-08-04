@@ -20,7 +20,7 @@ import DocFooter from "./DocFooter";
 import DocEditFields from "./DocEditFields";
 import useKeySave from "@/hooks/useKeySave";
 
-const DocDetail = ({ config }) => {
+const DocDetail = ({ config, setting, saveSettings }) => {
   const { data, setData } = useData();
   const router = useRouter();
   const [endpoint, setEndpoint] = useState("");
@@ -169,7 +169,12 @@ const DocDetail = ({ config }) => {
       ) : selectedTab === "Messages" ? (
         <DocMessages config={config} data={data} />
       ) : selectedTab === "Settings" ? (
-        <DocSettings config={config} data={data} />
+        <DocSettings
+          config={config}
+          data={data}
+          setting={setting}
+          saveSettings={saveSettings}
+        />
       ) : null}
       <DocFooter data={data} />
     </div>
