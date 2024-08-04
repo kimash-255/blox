@@ -1,0 +1,15 @@
+[
+  {
+    "name": "FloatField 1",
+    "type": "FloatField",
+    "id": "floatfield_1",
+    "id1": "floatfield_1"
+  },
+  {
+    "name": "ForeignKey 1",
+    "type": "ForeignKey",
+    "doc": "Try",
+    "id": "foreignkey_1",
+    "id1": "foreignkey_1"
+  }
+]

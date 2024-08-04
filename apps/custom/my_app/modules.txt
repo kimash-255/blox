@@ -1,0 +1,2 @@
+# List of modules for my_app
+my_app

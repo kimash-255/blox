@@ -29,6 +29,8 @@ import {
   faKey,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
+import DocSelect from "./DocSelect";
+import DocLink from "./DocLink";
 
 const fieldIcons = {
   TextField: faFont,
@@ -77,9 +79,9 @@ const fieldTypes = {
   PhoneField: "tel",
   NameField: "text",
   AddressField: "textarea",
-  ForeignKey: "text",
-  OneToOneField: "text",
-  ManyToManyField: "text",
+  ForeignKey: "link",
+  OneToOneField: "link",
+  ManyToManyField: "table",
 };
 
 const DocumentForm = forwardRef(
@@ -88,8 +90,28 @@ const DocumentForm = forwardRef(
     const [activeTab, setActiveTab] = useState(config.fields[0]?.id || "");
     const formRef = useRef(null);
 
+    // useEffect(() => {
+    //   const initialFormData = {};
+    //   config.fields.forEach((tab) => {
+    //     tab.sections.forEach((section) => {
+    //       section.columns.forEach((column) => {
+    //         column.fields.forEach((field) => {
+    //           initialFormData[field.id1] = {
+    //             type: fieldTypes[field.type] || "text",
+    //             value: initialData?.[field.id1] || "",
+    //             key: field.id1,
+    //           };
+    //         });
+    //       });
+    //     });
+    //   });
+    //   setFormData(initialFormData);
+    // }, [config, initialData]);
+
     const handleInputChange = (name, value, type) => {
       let convertedValue = value;
+      console.log(name, value, type);
+
       switch (type) {
         case "number":
         case "float":
@@ -149,7 +171,7 @@ const DocumentForm = forwardRef(
           required: field.required,
           onChange: (e) =>
             handleInputChange(e.target.name, e.target.value, fieldType),
-          value: formData[field.id1]?.value || initialData[field.id1] || "",
+          value: formData[field.id1]?.value || "",
         };
 
         const fieldConfig = {
@@ -179,7 +201,26 @@ const DocumentForm = forwardRef(
             <LinkSelect
               name={field.id1}
               handleChange={handleInputChange}
-              endpoint={field.endpoint} // Ensure 'endpoint' is part of field config
+              endpoint={field.endpoint}
+              placeholder={`Select ${field.name}`}
+            />
+          ),
+          link: (
+            <DocLink
+              name={field.id1}
+              handleChange={(e) => {
+                handleInputChange(field.id1, e.value, "text");
+                console.log(field.id1, e.value, "text");
+              }}
+              doc={field.doc}
+              placeholder={`Select ${field.name}`}
+            />
+          ),
+          table: (
+            <LinkSelect
+              name={field.id1}
+              handleChange={handleInputChange}
+              endpoint={field.endpoint}
               placeholder={`Select ${field.name}`}
             />
           ),
