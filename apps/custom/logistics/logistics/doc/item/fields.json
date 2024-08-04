@@ -1,0 +1,22 @@
+[
+  {
+    "type": "CharField",
+    "id": "name",
+    "id1": "name"
+  },
+  {
+    "type": "SelectField",
+    "default": "Air",
+    "options": [
+      "Air",
+      "Sea"
+    ],
+    "id": "type",
+    "id1": "type"
+  },
+  {
+    "type": "NumberField",
+    "id": "amount",
+    "id1": "amount"
+  }
+]

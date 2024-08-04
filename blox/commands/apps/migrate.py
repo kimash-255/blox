@@ -145,6 +145,10 @@ def write_model_fields(module_file, model_file, folder_path):
             field_type_info["choices"] = options_var
             field_type_info["type"] = "models.CharField"  # Ensure correct field type
 
+        # Determine null and blank based on required
+        null = not required
+        blank = not required
+
         # Write the field definition
         if field_type in ["ForeignKey", "OneToOneField", "ManyToManyField"]:
             related_model = field.get("doc", "'self'")
@@ -153,14 +157,14 @@ def write_model_fields(module_file, model_file, folder_path):
             # Write the field with the related model as the first argument
             module_file.write(
                 f"    {field_id} = {field_type_str}('{related_model}', verbose_name='{field_name}', "
-                f"null={str(required).capitalize()}, blank={str(required).capitalize()}"
+                f"null={str(null).capitalize()}, blank={str(blank).capitalize()}"
             )
         else:
             # Write the field without the related model
             field_type_str = field_type_info.pop("type")
             module_file.write(
                 f"    {field_id} = {field_type_str}(verbose_name='{field_name}', "
-                f"null={str(required).capitalize()}, blank={str(required).capitalize()}"
+                f"null={str(null).capitalize()}, blank={str(blank).capitalize()}"
             )
 
         # Add default value if present
