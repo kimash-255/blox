@@ -29,7 +29,6 @@ import {
   faKey,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
-import DocSelect from "./DocSelect";
 import DocLink from "./DocLink";
 
 const fieldIcons = {
@@ -87,28 +86,30 @@ const fieldTypes = {
 };
 
 const DocumentForm = forwardRef(
-  ({ config, initialData = [], onSubmit }, ref) => {
+  ({ config, initialData = [], onSubmit, type = "new" }, ref) => {
     const [formData, setFormData] = useState({});
     const [activeTab, setActiveTab] = useState(config.fields[0]?.id || "");
     const formRef = useRef(null);
 
-    // useEffect(() => {
-    //   const initialFormData = {};
-    //   config.fields.forEach((tab) => {
-    //     tab.sections.forEach((section) => {
-    //       section.columns.forEach((column) => {
-    //         column.fields.forEach((field) => {
-    //           initialFormData[field.id1] = {
-    //             type: fieldTypes[field.type] || "text",
-    //             value: initialData?.[field.id1] || "",
-    //             key: field.id1,
-    //           };
-    //         });
-    //       });
-    //     });
-    //   });
-    //   setFormData(initialFormData);
-    // }, [config, initialData]);
+    if (type !== "new") {
+      useEffect(() => {
+        const initialFormData = {};
+        config.fields.forEach((tab) => {
+          tab.sections.forEach((section) => {
+            section.columns.forEach((column) => {
+              column.fields.forEach((field) => {
+                initialFormData[field.id1] = {
+                  type: fieldTypes[field.type] || "text",
+                  value: initialData?.[field.id1] || "",
+                  key: field.id1,
+                };
+              });
+            });
+          });
+        });
+        setFormData(initialFormData);
+      }, [initialData]);
+    }
 
     const handleInputChange = (name, value, type) => {
       let convertedValue = value;
@@ -170,6 +171,8 @@ const DocumentForm = forwardRef(
             "shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5",
           placeholder: field.name,
           required: field.required,
+          readOnly: field.readonly, // Add readOnly attribute
+          hidden: field.hidden, // Add hidden attribute
           onChange: (e) =>
             handleInputChange(e.target.name, e.target.value, fieldType),
           value: formData[field.id1]?.value || "",
@@ -204,6 +207,8 @@ const DocumentForm = forwardRef(
               handleChange={handleInputChange}
               endpoint={field.endpoint}
               placeholder={`Select ${field.name}`}
+              readOnly={field.readonly} // Add readOnly attribute
+              hidden={field.hidden} // Add hidden attribute
             />
           ),
           link: (
@@ -215,6 +220,8 @@ const DocumentForm = forwardRef(
               }}
               doc={field.doc}
               placeholder={`Select ${field.name}`}
+              readOnly={field.readonly} // Add readOnly attribute
+              hidden={field.hidden} // Add hidden attribute
             />
           ),
           table: (
@@ -223,6 +230,8 @@ const DocumentForm = forwardRef(
               handleChange={handleInputChange}
               endpoint={field.endpoint}
               placeholder={`Select ${field.name}`}
+              readOnly={field.readonly} // Add readOnly attribute
+              hidden={field.hidden} // Add hidden attribute
             />
           ),
           default: <input type={fieldType} {...commonProps} />,
@@ -240,6 +249,7 @@ const DocumentForm = forwardRef(
                   <FontAwesomeIcon icon={icon} className="h-4 w-4 text-white" />
                 </div>
                 <span>{field.name}</span>
+                {field.required && <span className="text-red-600">*</span>}
               </div>
             </label>
             {fieldConfig[fieldType] || fieldConfig.default}

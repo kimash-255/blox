@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { postData } from "@/utils/Api";
 import PrimaryButton from "../buttons/Primary";
 import DocumentForm from "./DocumentForm";
+import useKeySave from "@/hooks/useKeySave";
 
 const NewDocument = ({ config, initialData }) => {
   const router = useRouter();
@@ -92,7 +93,7 @@ const NewDocument = ({ config, initialData }) => {
       formRef.current.submit(); // Trigger form submission from DocumentForm
     }
   };
-
+  useKeySave(handleSaveClick);
   return (
     <div className="mx-4 -mt-28">
       <div

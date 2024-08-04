@@ -8,10 +8,13 @@ import Footer from "@/components/common/Footer";
 import { DataProvider } from "@/contexts/DataContext";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import { NavbarProvider } from "@/contexts/NavbarContext";
+import useKeyEvents from "@/hooks/useKeyEvents";
 
 export default function App({ Component, pageProps }) {
   const [isClient, setIsClient] = useState(false);
   const router = useRouter();
+
+  useKeyEvents();
 
   useEffect(() => {
     setIsClient(true);

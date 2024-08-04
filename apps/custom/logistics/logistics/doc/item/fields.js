@@ -88,7 +88,9 @@ export const fields = [
                 "id1": "amount",
                 "type": "NumberField",
                 "list": true,
-                "filter": false
+                "filter": false,
+                "readonly": true,
+                "required": false
               }
             ],
             "id1": "column_2",

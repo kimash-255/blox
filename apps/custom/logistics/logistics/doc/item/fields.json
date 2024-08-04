@@ -26,6 +26,8 @@
     "type": "NumberField",
     "list": true,
     "filter": false,
+    "readonly": true,
+    "required": false,
     "id": "amount",
     "id1": "amount",
     "name": "Amount"

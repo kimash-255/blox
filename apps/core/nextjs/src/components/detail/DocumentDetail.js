@@ -13,6 +13,7 @@ import DocHeader from "./DocHeader";
 import DocFooter from "./DocFooter";
 import DocumentFieldList from "./DocumentFieldList";
 import DocumentForm from "../new/DocumentForm";
+import useKeySave from "@/hooks/useKeySave";
 
 const DocumentDetail = ({ config }) => {
   const { data, setData } = useData();
@@ -165,6 +166,8 @@ const DocumentDetail = ({ config }) => {
     { name: "Settings", icon: faCog, label: "Settings" },
   ];
 
+  useKeySave(handleSaveClick);
+
   return (
     <div className="mx-4 -mt-28">
       <ConfirmationModal
@@ -190,6 +193,7 @@ const DocumentDetail = ({ config }) => {
           config={config}
           initialData={data}
           onSubmit={handleFormSubmitSuccess}
+          type="detail"
         />
       ) : (
         <DocumentFieldList fields={config.fields} data={data} />

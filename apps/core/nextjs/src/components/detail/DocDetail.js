@@ -18,6 +18,7 @@ import DocMessages from "./DocMessages"; // New import for Messages tab
 import DocSettings from "./DocSettings"; // New import for Settings tab
 import DocFooter from "./DocFooter";
 import DocEditFields from "./DocEditFields";
+import useKeySave from "@/hooks/useKeySave";
 
 const DocDetail = ({ config }) => {
   const { data, setData } = useData();
@@ -74,6 +75,8 @@ const DocDetail = ({ config }) => {
       formRef.current.submit();
     }
   };
+
+  useKeySave(handleSaveClick);
 
   const handleUpdate = async (formData) => {
     try {
@@ -157,6 +160,7 @@ const DocDetail = ({ config }) => {
           config={config}
           initialData={data}
           onSubmit={handleFormSubmitSuccess}
+          type="detail"
         />
       ) : selectedTab === "Details" ? (
         <DocFields config={config} data={data} />
