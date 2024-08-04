@@ -12,14 +12,15 @@ def create_folder_structure(app_path, module_name, doc_name):
         os.makedirs(module_path)
 
         # Define file names and their default content
-        files = {
-            f"fields.js": """// Description: List all document fields including types, config, etc. for Next.js.\n\n""",
-            f"fields.json": """[]\n\n""",
-            f"list.js": """// Description: Override document list in Next.js.\n\n""",
-            f"detail.js": """// Description: View document details in Next.js.\n\n""",
-            f"document.py": """# Description: Backend code for handling data operations.\n\n""",
-        }
 
+        files = {
+            "fields.js": """// Description: List all document fields including types, config, etc. for Next.js.\n\n""",
+            "fields.json": """[]\n\n""",
+            "settings.json": """{}\n\n""",  # Correctly initialized as {}
+            "list.js": """// Description: Override document list in Next.js.\n\n""",
+            "detail.js": """// Description: View document details in Next.js.\n\n""",
+            "document.py": """# Description: Backend code for handling data operations.\n\n""",
+        }
         for file_name, content in files.items():
             file_path = os.path.join(module_path, file_name)
             with open(file_path, "w") as file:

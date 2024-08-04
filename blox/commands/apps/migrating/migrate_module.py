@@ -49,7 +49,7 @@ def migrate_module(app_name, module):
             if os.path.exists(doc_folder_path):
                 if folder == "models":
                     module_file.write(
-                        f"from django.db import models\nfrom core.models import BaseModel\n\n"
+                        f"from django.db import models\nfrom core.models import BaseModel\nimport uuid\n\n"
                     )
                     for folder_name in os.listdir(doc_folder_path):
                         folder_path = os.path.join(doc_folder_path, folder_name)

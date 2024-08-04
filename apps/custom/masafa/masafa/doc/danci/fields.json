@@ -1,0 +1,20 @@
+[
+  {
+    "type": "DateField",
+    "id": "datefield",
+    "id1": "datefield",
+    "name": "DateField 1"
+  },
+  {
+    "type": "CharField",
+    "id": "charfield_1",
+    "id1": "charfield_1",
+    "name": "CharField 1"
+  },
+  {
+    "type": "DecimalField",
+    "id": "decimalfield_1",
+    "id1": "decimalfield_1",
+    "name": "DecimalField 1"
+  }
+]

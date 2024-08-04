@@ -20,5 +20,5 @@ def write_model_fields(module_file, model_file, folder_path):
         click.echo(f"Error: settings.json not found in {folder_path}.")
         return
 
-    write_id_field(module_file, settings)
     write_model(module_file, field_list)
+    write_id_field(module_file, settings)

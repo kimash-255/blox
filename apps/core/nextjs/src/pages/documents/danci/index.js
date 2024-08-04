@@ -1,3 +1,6 @@
+import { fields } from "../../../../../../custom/masafa/masafa/doc/danci/fields.js";
+import settings from "../../../../../../custom/masafa/masafa/doc/danci/settings.json";
+
 import { documentDetailConfig } from "@/modules/core/documents";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
