@@ -1,37 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SettingsPermissionTable from "./SettingsPermissionTable";
 import { faIdCard } from "@fortawesome/free-solid-svg-icons";
 import TableTooltip from "../tooltip/TableTooltip";
 
-const DocSettings = ({ config, data, onChange, setting, saveSettings }) => {
+const DocSettings = ({ config, onChange, saveSettings }) => {
   const [settings, setSettings] = useState({
     idNamingRule: config.idNamingRule || "",
-    idNamingMethod: config.idNamingMethod || "field",
+    idNamingMethod: config.idNamingMethod || "fieldNaming",
     fieldForIdNaming: config.fieldForIdNaming || "",
     functionForIdNaming: config.functionForIdNaming || "",
+    lengthForIncrementalNaming: config.lengthForIncrementalNaming || "",
     enableFeature: config.enableFeature || false,
     thresholdValue: config.thresholdValue || "",
     notificationEmail: config.notificationEmail || "",
+    permissions: config.permissions || [],
     ...config.otherSettings,
   });
 
-  const [permissions, setPermissions] = useState(config.permissions || []);
-  console.log(config);
+  useEffect(() => {
+    if (onChange) {
+      onChange(settings);
+    }
+  }, [settings, onChange]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const newSettings = {
-      ...settings,
+    setSettings((prevSettings) => ({
+      ...prevSettings,
       [name]: type === "checkbox" ? checked : value,
-    };
-    setSettings(newSettings);
-    onChange && onChange({ ...newSettings, permissions });
+    }));
   };
 
   const handlePermissionsChange = (newPermissions) => {
-    setPermissions(newPermissions);
-    onChange && onChange({ ...settings, permissions: newPermissions });
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      permissions: newPermissions.permissions,
+    }));
+  };
+
+  const handleSave = () => {
+    if (saveSettings) {
+      saveSettings(settings);
+    }
   };
 
   return (
@@ -55,9 +66,11 @@ const DocSettings = ({ config, data, onChange, setting, saveSettings }) => {
                         onChange={handleChange}
                         className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                       >
-                        <option value="field">Use Field</option>
-                        <option value="function">Use Function</option>
-                        <option value="custom">Custom Naming</option>
+                        <option value="fieldNaming">Use Field</option>
+                        <option value="functionNaming">Use Function</option>
+                        <option value="incrementalNaming">Incremental</option>
+                        <option value="randomNaming">Random</option>
+                        <option value="customNaming">Custom Naming</option>
                       </select>
                     </TableTooltip>
                     <div className="text-right flex justify-end">
@@ -73,24 +86,61 @@ const DocSettings = ({ config, data, onChange, setting, saveSettings }) => {
               </div>
             </div>
           </div>
-          {settings.idNamingMethod === "field" && (
+
+          {/* ID Naming Rule */}
+          {(settings.idNamingMethod === "fieldNaming" ||
+            settings.idNamingMethod === "functionNaming" ||
+            settings.idNamingMethod === "incrementalNaming" ||
+            settings.idNamingMethod === "customNaming") && (
             <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border mb-4">
               <div className="flex-auto p-4">
                 <div className="flex flex-row justify-between -mx-3">
                   <div className="flex-none w-full px-2">
                     <div>
                       <p className="mb-1 font-sans text-xs font-semibold leading-normal">
-                        Field for ID Naming
+                        Naming Rule
                       </p>
-                      <TableTooltip content="Enter the field name for ID naming">
-                        <input
-                          type="text"
-                          name="fieldForIdNaming"
-                          value={settings.fieldForIdNaming}
-                          onChange={handleChange}
-                          className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Enter field name"
-                        />
+                      <TableTooltip content="Enter the naming rule here">
+                        {settings.idNamingMethod === "fieldNaming" && (
+                          <input
+                            type="text"
+                            name="fieldForIdNaming"
+                            value={settings.fieldForIdNaming}
+                            onChange={handleChange}
+                            className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Enter field name"
+                          />
+                        )}
+                        {settings.idNamingMethod === "functionNaming" && (
+                          <input
+                            type="text"
+                            name="functionForIdNaming"
+                            value={settings.functionForIdNaming}
+                            onChange={handleChange}
+                            className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Enter function name"
+                          />
+                        )}
+                        {settings.idNamingMethod === "incrementalNaming" && (
+                          <input
+                            type="text"
+                            name="lengthForIncrementalNaming"
+                            value={settings.lengthForIncrementalNaming}
+                            onChange={handleChange}
+                            className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Enter length (e.g., 5)"
+                          />
+                        )}
+                        {settings.idNamingMethod === "customNaming" && (
+                          <input
+                            type="text"
+                            name="idNamingRule"
+                            value={settings.idNamingRule}
+                            onChange={handleChange}
+                            className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Enter custom naming rule"
+                          />
+                        )}
                       </TableTooltip>
                     </div>
                   </div>
@@ -98,62 +148,22 @@ const DocSettings = ({ config, data, onChange, setting, saveSettings }) => {
               </div>
             </div>
           )}
-          {settings.idNamingMethod === "function" && (
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border mb-4">
-              <div className="flex-auto p-4">
-                <div className="flex flex-row justify-between -mx-3">
-                  <div className="flex-none w-full px-2">
-                    <div>
-                      <p className="mb-1 font-sans text-xs font-semibold leading-normal">
-                        Function for ID Naming
-                      </p>
-                      <TableTooltip content="Enter the function name for ID naming">
-                        <input
-                          type="text"
-                          name="functionForIdNaming"
-                          value={settings.functionForIdNaming}
-                          onChange={handleChange}
-                          className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Enter function name"
-                        />
-                      </TableTooltip>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {settings.idNamingMethod === "custom" && (
-            <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border mb-4">
-              <div className="flex-auto p-4">
-                <div className="flex flex-row justify-between -mx-3">
-                  <div className="flex-none w-full px-2">
-                    <div>
-                      <p className="mb-1 font-sans text-xs font-semibold leading-normal">
-                        Custom Naming Rule
-                      </p>
-                      <TableTooltip content="Enter your custom naming rule here">
-                        <input
-                          type="text"
-                          name="idNamingRule"
-                          value={settings.idNamingRule}
-                          onChange={handleChange}
-                          className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          placeholder="Enter custom naming rule"
-                        />
-                      </TableTooltip>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+
           {/* Permissions */}
+          <div className="col-span-2">
+            <SettingsPermissionTable
+              settings={settings}
+              onPermissionsChange={handlePermissionsChange}
+            />
+          </div>
         </div>
-        <SettingsPermissionTable
-          permissions={permissions}
-          onPermissionsChange={handlePermissionsChange}
-        />
+        <button
+          type="button"
+          onClick={handleSave}
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        >
+          Save Settings
+        </button>
       </div>
     </div>
   );

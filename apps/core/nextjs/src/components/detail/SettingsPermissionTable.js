@@ -5,7 +5,7 @@ import TableTooltip from "../tooltip/TableTooltip";
 
 const PERMISSIONS = ["read", "write", "create", "update", "delete"];
 
-const SettingsPermissionTable = ({ permissions, onPermissionsChange }) => {
+const SettingsPermissionTable = ({ settings = {}, onPermissionsChange }) => {
   const [newPermission, setNewPermission] = useState({
     name: "",
     role: "",
@@ -20,6 +20,11 @@ const SettingsPermissionTable = ({ permissions, onPermissionsChange }) => {
   });
 
   const [editingIndex, setEditingIndex] = useState(null);
+
+  // Ensure permissions is an array
+  const permissions = Array.isArray(settings.permissions)
+    ? settings.permissions
+    : [];
 
   const handleNewPermissionChange = (e) => {
     const { name, value } = e.target;
@@ -41,20 +46,29 @@ const SettingsPermissionTable = ({ permissions, onPermissionsChange }) => {
   };
 
   const handleAddPermission = () => {
+    if (!newPermission.name || !newPermission.role) {
+      alert("Name and role are required.");
+      return;
+    }
+
+    console.log(newPermission, settings, permissions);
+
     const updatedPermissions = [
       ...permissions,
       {
         ...newPermission,
-        permissions: Object.keys(newPermission.permissions)
-          .filter((key) => newPermission.permissions[key])
-          .map((key) => key),
-        groups:
-          typeof newPermission.groups === "string"
-            ? newPermission.groups.split(",").map((group) => group.trim())
-            : [],
+        permissions: Object.keys(newPermission.permissions).filter(
+          (key) => newPermission.permissions[key]
+        ),
+        groups: newPermission.groups
+          .split(",")
+          .map((group) => group.trim())
+          .filter(Boolean),
       },
     ];
-    onPermissionsChange(updatedPermissions);
+    console.log(567, updatedPermissions);
+
+    onPermissionsChange({ ...settings, permissions: updatedPermissions });
     setNewPermission({
       name: "",
       role: "",
@@ -89,17 +103,17 @@ const SettingsPermissionTable = ({ permissions, onPermissionsChange }) => {
       i === index
         ? {
             ...newPermission,
-            permissions: Object.keys(newPermission.permissions)
-              .filter((key) => newPermission.permissions[key])
-              .map((key) => key),
-            groups:
-              typeof newPermission.groups === "string"
-                ? newPermission.groups.split(",").map((group) => group.trim())
-                : [],
+            permissions: Object.keys(newPermission.permissions).filter(
+              (key) => newPermission.permissions[key]
+            ),
+            groups: newPermission.groups
+              .split(",")
+              .map((group) => group.trim())
+              .filter(Boolean),
           }
         : perm
     );
-    onPermissionsChange(updatedPermissions);
+    onPermissionsChange({ ...settings, permissions: updatedPermissions });
     setEditingIndex(null);
     setNewPermission({
       name: "",
@@ -117,7 +131,7 @@ const SettingsPermissionTable = ({ permissions, onPermissionsChange }) => {
 
   const handleDeletePermission = (index) => {
     const updatedPermissions = permissions.filter((_, i) => i !== index);
-    onPermissionsChange(updatedPermissions);
+    onPermissionsChange({ ...settings, permissions: updatedPermissions });
   };
 
   return (

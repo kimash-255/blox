@@ -27,6 +27,7 @@ const DocDetail = ({ config, setting, saveSettings }) => {
   const [selectedTab, setSelectedTab] = useState("Details");
   const [isEditing, setIsEditing] = useState(false);
   const formRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const currentPath = router.pathname;
   const getId = (path) => {
@@ -51,7 +52,7 @@ const DocDetail = ({ config, setting, saveSettings }) => {
           setData(response.data);
         }
       } catch (error) {
-        toast.error(`Failed to fetch data, ${error.message || error}`);
+        toast.error(`Failed to fetch data: ${error.message || error}`);
       }
     };
 
@@ -60,14 +61,14 @@ const DocDetail = ({ config, setting, saveSettings }) => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [endpoint]);
+  }, [endpoint, setData]);
 
   const handleTabClick = (tabName) => {
     setSelectedTab(tabName);
   };
 
   const handleEditClick = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
   const handleSaveClick = () => {
@@ -90,7 +91,7 @@ const DocDetail = ({ config, setting, saveSettings }) => {
         }
       }
     } catch (error) {
-      toast.error(`Failed to update document, ${error.message || error}`);
+      toast.error(`Failed to update document: ${error.message || error}`);
     }
   };
 
@@ -109,8 +110,6 @@ const DocDetail = ({ config, setting, saveSettings }) => {
     handleUpdate(formData);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleDelete = async () => {
     setIsModalOpen(true);
   };
@@ -122,7 +121,7 @@ const DocDetail = ({ config, setting, saveSettings }) => {
       toast.success("Document deleted successfully!");
       router.back();
     } catch (error) {
-      toast.error(`Failed to delete document, ${error.message || error}`);
+      toast.error(`Failed to delete document: ${error.message || error}`);
     }
   };
 
