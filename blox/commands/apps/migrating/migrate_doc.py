@@ -1,8 +1,8 @@
 import os
 import click
 from ...config import BASE_PATH, CUSTOM_APPS_PATH
-from ...utils.write_models import write_model_fields
-from ...utils.write_filters import write_filter_fields
+from .write_models import write_model_fields
+from .write_filters import write_filter_fields
 from .update_urls import underscore_to_titlecase
 
 MODULES_FOLDER = {

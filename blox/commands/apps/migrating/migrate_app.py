@@ -5,8 +5,8 @@ import platform
 import re
 import json
 from ...config import PROJECT_ROOT, BASE_PATH, APPS_TXT_PATH, CUSTOM_APPS_PATH
-from ...utils.write_models import write_model_fields
-from ...utils.write_filters import write_filter_fields
+from .write_models import write_model_fields
+from .write_filters import write_filter_fields
 from .update_urls import underscore_to_titlecase
 from .migrate_doc import write_serializer_fields, write_viewset
 from .migrate_doc import MODULES_FOLDER
