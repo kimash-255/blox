@@ -1,4 +1,5 @@
 import { fields } from "../../../../../../custom/logistics/logistics/doc/item/fields.js";
+import settings from "../../../../../../custom/logistics/logistics/doc/item/settings.json";
 
 import { useNavbar } from "@/contexts/NavbarContext";
 import React, { useEffect } from "react";

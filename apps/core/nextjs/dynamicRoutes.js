@@ -13,15 +13,15 @@ const watcher = chokidar.watch(customFolder, {
 });
 
 // Function to generate the page files from templates
-const generatePageFiles = (routePath, importPath) => {
+const generatePageFiles = (routePath, importPath, importSettingsPath) => {
   const files = ["edit.js", "index.js"];
   files.forEach((file) => {
     const src = path.join(templatesFolder, file);
     const dest = path.join(pagesFolder, routePath, file);
     try {
       let content = fs.readFileSync(src, "utf8");
-      const importStatement = `import { fields } from "${importPath}";\n\n`;
-      content = importStatement + content;
+      const importStatements = `import { fields } from "${importPath}";\nimport settings from "${importSettingsPath}";\n\n`;
+      content = importStatements + content;
       fs.outputFileSync(dest, content);
     } catch (error) {
       console.error(`Error processing ${file} for ${dest}:`, error);
@@ -29,27 +29,27 @@ const generatePageFiles = (routePath, importPath) => {
   });
 };
 
-const generatePageFiles1 = (routePath, importPath, importPath2) => {
+const generatePageFiles1 = (routePath, importPath, importSettingsPath) => {
   const files = ["new.js", "list.js", "[id].js"];
   files.forEach((file) => {
-    if (file == "list.js") {
+    if (file === "list.js") {
       const src = path.join(templatesFolder, "list.js");
       const dest = path.join(pagesFolder, routePath, "index.js");
       try {
         let content = fs.readFileSync(src, "utf8");
-        const importStatement = `import fields from "${importPath2}";\n\n`;
-        content = importStatement + content;
+        const importStatements = `import fields from "${importPath}";\nimport settings from "${importSettingsPath}";\n\n`;
+        content = importStatements + content;
         fs.outputFileSync(dest, content);
       } catch (error) {
-        console.error(`Error processing ${"index.js"} for ${dest}:`, error);
+        console.error(`Error processing index.js for ${dest}:`, error);
       }
     } else {
       const src = path.join(templatesFolder, file);
       const dest = path.join(pagesFolder, routePath, file);
       try {
         let content = fs.readFileSync(src, "utf8");
-        const importStatement = `import { fields } from "${importPath}";\n\n`;
-        content = importStatement + content;
+        const importStatements = `import { fields } from "${importPath}";\nimport settings from "${importSettingsPath}";\n\n`;
+        content = importStatements + content;
         fs.outputFileSync(dest, content);
       } catch (error) {
         console.error(`Error processing ${file} for ${dest}:`, error);
@@ -74,7 +74,14 @@ const updateRoutes = () => {
                 path.join(itemPath, docName, "fields.js")
               )
               .replace(/\\/g, "/");
-            generatePageFiles(docRoutePath, importPath);
+            const importSettingsPath = path
+              .relative(
+                path.join(pagesFolder, docRoutePath),
+                path.join(itemPath, docName, "settings.json")
+              )
+              .replace(/\\/g, "/");
+            generatePageFiles(docRoutePath, importPath, importSettingsPath);
+
             const docRoutePath1 = path.join(relativePath, "..", docName);
             const importPath1 = path
               .relative(
@@ -82,13 +89,13 @@ const updateRoutes = () => {
                 path.join(itemPath, docName, "fields.js")
               )
               .replace(/\\/g, "/");
-            const importPath2 = path
+            const importSettingsPath1 = path
               .relative(
                 path.join(pagesFolder, docRoutePath1),
-                path.join(itemPath, docName, "fields.json")
+                path.join(itemPath, docName, "settings.json")
               )
               .replace(/\\/g, "/");
-            generatePageFiles1(docRoutePath1, importPath1, importPath2);
+            generatePageFiles1(docRoutePath1, importPath1, importSettingsPath1);
           });
         } else {
           processDirectory(itemPath, itemRelativePath);

@@ -1,1 +1,24 @@
-[]
+{
+  "idNamingRule": "",
+  "idNamingMethod": "randomNaming",
+  "fieldForIdNaming": "",
+  "functionForIdNaming": "",
+  "lengthForIncrementalNaming": "",
+  "enableFeature": false,
+  "thresholdValue": "",
+  "notificationEmail": "",
+  "permissions": [
+    {
+      "name": "Core",
+      "role": "edd",
+      "groups": [
+        "uuu"
+      ],
+      "permissions": [
+        "read",
+        "write",
+        "update"
+      ]
+    }
+  ]
+}

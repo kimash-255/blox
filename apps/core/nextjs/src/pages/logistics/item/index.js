@@ -1,4 +1,5 @@
-import fields from "../../../../../../custom/logistics/logistics/doc/item/fields.json";
+import fields from "../../../../../../custom/logistics/logistics/doc/item/fields.js";
+import settings from "../../../../../../custom/logistics/logistics/doc/item/settings.json";
 
 import React, { useEffect } from "react";
 import ListTable from "@/components/list/Table";

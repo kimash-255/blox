@@ -4,19 +4,21 @@ import SettingsPermissionTable from "./SettingsPermissionTable";
 import { faIdCard } from "@fortawesome/free-solid-svg-icons";
 import TableTooltip from "../tooltip/TableTooltip";
 
-const DocSettings = ({ config, onChange, saveSettings }) => {
-  const [settings, setSettings] = useState({
-    idNamingRule: config.idNamingRule || "",
-    idNamingMethod: config.idNamingMethod || "fieldNaming",
-    fieldForIdNaming: config.fieldForIdNaming || "",
-    functionForIdNaming: config.functionForIdNaming || "",
-    lengthForIncrementalNaming: config.lengthForIncrementalNaming || "",
-    enableFeature: config.enableFeature || false,
-    thresholdValue: config.thresholdValue || "",
-    notificationEmail: config.notificationEmail || "",
-    permissions: config.permissions || [],
-    ...config.otherSettings,
-  });
+const DocSettings = ({ config, onChange, saveSettings, setting }) => {
+  const [settings, setSettings] = useState(
+    setting || {
+      idNamingRule: config.idNamingRule || "",
+      idNamingMethod: config.idNamingMethod || "fieldNaming",
+      fieldForIdNaming: config.fieldForIdNaming || "",
+      functionForIdNaming: config.functionForIdNaming || "",
+      lengthForIncrementalNaming: config.lengthForIncrementalNaming || "",
+      enableFeature: config.enableFeature || false,
+      thresholdValue: config.thresholdValue || "",
+      notificationEmail: config.notificationEmail || "",
+      permissions: config.permissions || [],
+      ...config.otherSettings,
+    }
+  );
 
   useEffect(() => {
     if (onChange) {
