@@ -54,6 +54,7 @@ export default async function handler(req, res) {
                     ...rest,
                     id: newId,
                     id1: newId1,
+                    name,
                   };
                 })
               );

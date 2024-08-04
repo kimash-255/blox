@@ -27,7 +27,12 @@ export const fields = [
                   ]
                 },
                 "id1": "name",
-                "type": "CharField"
+                "type": "CharField",
+                "required": true,
+                "list": true,
+                "filter": true,
+                "search": true,
+                "default": "Name"
               },
               {
                 "id": "type",
@@ -50,7 +55,8 @@ export const fields = [
                 "default": "Air",
                 "options": [
                   "Air",
-                  "Sea"
+                  "Sea",
+                  "Road"
                 ]
               }
             ],

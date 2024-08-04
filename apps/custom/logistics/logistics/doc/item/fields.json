@@ -1,22 +1,31 @@
 [
   {
     "type": "CharField",
+    "required": true,
+    "list": true,
+    "filter": true,
+    "search": true,
+    "default": "Name",
     "id": "name",
-    "id1": "name"
+    "id1": "name",
+    "name": "Name"
   },
   {
     "type": "SelectField",
     "default": "Air",
     "options": [
       "Air",
-      "Sea"
+      "Sea",
+      "Road"
     ],
     "id": "type",
-    "id1": "type"
+    "id1": "type",
+    "name": "Type"
   },
   {
     "type": "NumberField",
     "id": "amount",
-    "id1": "amount"
+    "id1": "amount",
+    "name": "Amount"
   }
 ]

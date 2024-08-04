@@ -192,8 +192,8 @@ const DocumentForm = forwardRef(
                 Select {field.name}
               </option>
               {field.options?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+                <option key={option} value={option}>
+                  {option}
                 </option>
               ))}
             </select>
@@ -250,10 +250,7 @@ const DocumentForm = forwardRef(
 
     const renderColumns = (columns) => {
       return columns.map((column, index) => (
-        <div
-          key={index}
-          className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-        >
+        <div key={index} className="w-full grid grid-cols-1 gap-4">
           {renderFields(column.fields)}
         </div>
       ));
@@ -261,10 +258,12 @@ const DocumentForm = forwardRef(
 
     const renderSections = (sections) => {
       return sections.map((section) => (
-        <div key={section.id} className="w-full flex flex-col gap-y-4 mb-4">
+        <>
           <h3 className="text-xl font-semibold mb-2">{section.name}</h3>
-          {renderColumns(section.columns)}
-        </div>
+          <div key={section.id} className="w-full flex flex-row gap-x-2 mb-2">
+            {renderColumns(section.columns)}
+          </div>
+        </>
       ));
     };
 
