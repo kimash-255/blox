@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useDrop } from "react-dnd";
-import DraggableItem from "./DraggableItem";
 import PrimaryButton from "../buttons/Primary";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { addTab } from "./AddFields";
+import { deleteItemById } from "./utils";
+import StudioTabs from "./StudioTabs";
 
 const ItemType = "FIELD";
 
@@ -14,9 +16,8 @@ const Canvas = ({
   moveItem,
   setCanvasItems,
 }) => {
-  const [selectedFieldId, setSelectedFieldId] = useState(null);
-  const [tabs, setTabs] = useState(items); // Initialize tabs state
-  const [selectedTab, setSelectedTab] = useState(tabs[0]?.name || ""); // Set default selected tab
+  const [tabs, setTabs] = useState(items);
+  const [selectedTab, setSelectedTab] = useState(tabs[0]?.name || "");
 
   const [{ isOver }, drop] = useDrop({
     accept: ItemType,
@@ -31,255 +32,13 @@ const Canvas = ({
     }),
   });
 
-  const generateUniqueName = (prefix, items) => {
-    let index = 1;
-    while (items.some((item) => item.name === `${prefix} ${index}`)) {
-      index++;
-    }
-    return `${prefix} ${index}`;
-  };
-
-  const handleInputChange = (key, value, item, type) => {
-    // Find and update the item
-    const updatedItems = updateItemById(items, item.id, type, key, value);
-
-    if (updatedItems) {
-      // Set the updated items state to trigger a re-render
-      setCanvasItems([...updatedItems]);
-    }
-  };
-
-  const updateItemById = (items, id, type, key, value) => {
-    const updateInNestedStructures = (items, id, key, value) => {
-      if (!Array.isArray(items)) {
-        console.error("Expected items to be an array but got:", items);
-        return null;
-      }
-
-      for (const tab of items) {
-        if (type === "section") {
-          const section = tab.sections.find((item) => item.id === id);
-          if (section) {
-            section[key] = value;
-            return items;
-          }
-        } else if (type === "column") {
-          for (const section of tab.sections) {
-            const column = section.columns.find((item) => item.id === id);
-            if (column) {
-              column[key] = value;
-              return items;
-            }
-          }
-        } else if (type === "field") {
-          for (const section of tab.sections) {
-            for (const column of section.columns) {
-              const field = column.fields.find((item) => item.id === id);
-              if (field) {
-                field[key] = value;
-                return items;
-              }
-            }
-          }
-        }
-      }
-      return null;
-    };
-
-    // Search and update the item based on the type
-    if (type === "tab") {
-      const tab = items.find((item) => item.id === id);
-      if (tab) {
-        tab[key] = value;
-        return items;
-      }
-    } else if (type === "section" || type === "column" || type === "field") {
-      return updateInNestedStructures(items, id, key, value);
-    }
-
-    console.error(`Invalid type specified: ${type}`);
-    return null;
-  };
-
-  const handleFocus = (id) => {
-    setSelectedFieldId(id);
-  };
-
-  const handleBlur = () => {
-    setSelectedFieldId("");
-  };
-
-  const handleMoveItem = (draggedItem, targetItem, parent1Id, parent2Id) => {
-    moveItem(draggedItem, targetItem, parent1Id, parent2Id);
-  };
-
-  const addColumn = (sectionId) => {
-    setCanvasItems((prevItems) => {
-      const currentTime = Date.now();
-      const newItems = [...prevItems];
-      const section = findItemById(newItems, sectionId, "section");
-      const lastColumn = section.columns[section.columns.length - 1];
-
-      if (lastColumn && currentTime - lastColumn.id < 200) {
-        return prevItems;
-      }
-
-      const newColumn = {
-        id: currentTime,
-        name: `Column ${
-          newItems.reduce(
-            (acc, tab) =>
-              acc +
-              tab.sections.reduce(
-                (sAcc, section) => sAcc + section.columns.length,
-                0
-              ),
-            0
-          ) + 1
-        }`,
-        type: "column",
-        fields: [],
-      };
-
-      section.columns.push(newColumn);
-      return newItems;
-    });
-  };
-
-  const addSection = (tabId, position, sectionId) => {
-    let lastSection = "";
-    setCanvasItems((prevItems) => {
-      const currentTime = Date.now();
-      const newItems = [...prevItems];
-      const tab = findItemById(newItems, tabId, "tab");
-      if (lastSection == "") {
-        lastSection = tab.sections[tab.sections.length - 1];
-      }
-
-      if (lastSection && currentTime - lastSection.id < 200) {
-        return prevItems;
-      }
-
-      const newSection = {
-        id: currentTime,
-        name: `Section ${
-          newItems.reduce((acc, tab) => acc + tab.sections.length, 0) + 1
-        }`,
-        type: "section",
-        columns: [
-          {
-            id: Date.now(),
-            name: "Column 1",
-            type: "column",
-            fields: [],
-          },
-        ],
-      };
-      lastSection = newSection;
-
-      const sectionIndex = tab.sections.findIndex(
-        (section) => section.id === sectionId
-      );
-      if (position === "above" && sectionIndex !== -1) {
-        tab.sections.splice(sectionIndex, 0, newSection);
-      } else if (position === "below" && sectionIndex !== -1) {
-        tab.sections.splice(sectionIndex + 1, 0, newSection);
-      } else {
-        tab.sections.push(newSection);
-      }
-      return newItems;
-    });
-  };
-
-  const addTab = () => {
-    const newTab = {
-      id: Date.now(),
-      name: generateUniqueName("Tab", tabs),
-      type: "tab",
-      sections: [
-        {
-          id: Date.now(),
-          name: generateUniqueName("Section", []),
-          type: "section",
-          columns: [
-            {
-              id: Date.now(),
-              name: generateUniqueName("Column", []),
-              type: "column",
-              fields: [],
-            },
-          ],
-        },
-      ],
-    };
-    setTabs((prevTabs) => [...prevTabs, newTab]);
-    setCanvasItems((prevItems) => [...prevItems, newTab]);
-  };
-
   const handleTabClick = (tabName) => {
     setSelectedTab(tabName);
-  };
-
-  const deleteItemById = (items, id, type) => {
-    const deleteInNestedStructures = (items, id, type) => {
-      if (!Array.isArray(items)) {
-        console.error("Expected items to be an array but got:", items);
-        return null;
-      }
-
-      for (const tab of items) {
-        if (type === "section") {
-          tab.sections = tab.sections.filter((item) => item.id !== id);
-          return items;
-        } else if (type === "column") {
-          for (const section of tab.sections) {
-            section.columns = section.columns.filter((item) => item.id !== id);
-            return items;
-          }
-        } else if (type === "field") {
-          for (const section of tab.sections) {
-            for (const column of section.columns) {
-              column.fields = column.fields.filter((item) => item.id !== id);
-              return items;
-            }
-          }
-        }
-      }
-      return null;
-    };
-
-    if (type === "tab") {
-      return items.filter((item) => item.id !== id);
-    } else if (type === "section" || type === "column" || type === "field") {
-      return deleteInNestedStructures(items, id, type);
-    }
-
-    console.error(`Invalid type specified: ${type}`);
-    return null;
   };
 
   const deleteField = (item, type) => {
     const updatedItems = deleteItemById(items, item.id, type);
     setCanvasItems([...updatedItems]);
-  };
-
-  const findItemById = (items, id, type) => {
-    if (type === "tab") {
-      return items.find((item) => item.id === id);
-    }
-    for (const tab of items) {
-      if (type === "section") {
-        const section = tab.sections.find((item) => item.id === id);
-        if (section) return section;
-      } else if (type === "column") {
-        for (const section of tab.sections) {
-          const column = section.columns.find((item) => item.id === id);
-          if (column) return column;
-        }
-      }
-    }
-    console.error(`Item not found: ${id} of type ${type}`);
-    return null;
   };
 
   return (
@@ -310,7 +69,10 @@ const Canvas = ({
             </li>
           ))}
           <li className="z-30 ml-4 flex-auto text-center">
-            <div onClick={addTab} className="">
+            <div
+              onClick={() => addTab(tabs, setTabs, setCanvasItems)}
+              className=""
+            >
               <PrimaryButton
                 text="+ Add Tab"
                 className="flex items-center justify-center p-1"
@@ -319,131 +81,15 @@ const Canvas = ({
           </li>
         </ul>
       </div>
-      {tabs.map(
-        (tab) =>
-          selectedTab === tab.name && (
-            <div key={tab.id} className="mb-4">
-              {/* <h3 className="text-lg font-semibold mb-2">{tab.name}</h3> */}
-              {tab.sections.map((section) => (
-                <div key={section.id} className="mb-4">
-                  <div className="flex items-center justify-between my-2">
-                    <div className="flex items-center justify-start">
-                      <h4 className="text-md font-semibold">{section.name}</h4>
-
-                      <button
-                        onClick={() => deleteField(section, "section")}
-                        className="flex items-center justify-center z-40 -mt-2 shadow shadow-lg bg-white rounded-full h-4 w-4 shadow-black text-red-500 hover:text-red-700"
-                      >
-                        <FontAwesomeIcon icon={faTimes} className="w-3 h-3 " />
-                      </button>
-                    </div>
-                    <div>
-                      <button
-                        className="text-xs px-2 py-1 align-middle transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in text-xs bg-150 active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25 border-fuchsia-500 text-fuchsia-500 hover:opacity-75 mr-2"
-                        onClick={() => addColumn(section.id)}
-                      >
-                        + Column
-                      </button>
-                      <button
-                        className="text-xs px-2 py-1 align-middle transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in text-xs bg-150 active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25 border-purple-700 text-purple-700 hover:opacity-75"
-                        onClick={() => addSection(tab.id, "below", section.id)}
-                      >
-                        + Section Below
-                      </button>
-                      <button
-                        className="text-xs px-2 py-1 ml-2 align-middle transition-all bg-transparent border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in text-xs bg-150 active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25 border-purple-700 text-purple-700 hover:opacity-75"
-                        onClick={() => addSection(tab.id, "above", section.id)}
-                      >
-                        + Section Above
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex space-x-2">
-                    {section.columns.map((column) => (
-                      <>
-                        <ColumnDropZone
-                          key={column.id}
-                          column={column}
-                          sectionId={section.id}
-                          selectedFieldId={selectedFieldId}
-                          handleFocus={handleFocus}
-                          handleBlur={handleBlur}
-                          handleInputChange={handleInputChange}
-                          handleMoveItem={handleMoveItem}
-                          deleteField={deleteField}
-                        />
-
-                        <button
-                          onClick={() => deleteField(column, "column")}
-                          className="flex items-center justify-center z-40 -ml-12 shadow shadow-lg bg-white rounded-full h-4 w-4 shadow-black text-red-500 hover:text-red-700"
-                        >
-                          <FontAwesomeIcon
-                            icon={faTimes}
-                            className="w-3 h-3 "
-                          />
-                        </button>
-                      </>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )
-      )}
-    </div>
-  );
-};
-
-const ColumnDropZone = ({
-  column,
-  sectionId,
-  selectedFieldId,
-  handleFocus,
-  handleBlur,
-  handleInputChange,
-  handleMoveItem,
-  deleteField,
-}) => {
-  const [, drop] = useDrop({
-    accept: ItemType,
-    drop: () => ({ id: column.id, type: "column" }),
-  });
-
-  return (
-    <div ref={drop} className="flex-1 bg-slate-50 p-3 rounded-lg">
-      {column.fields.length === 0 ? (
-        <div>
-          <DraggableItem
-            key={0}
-            item={{}}
-            index={0}
-            column={{}}
-            selectedFieldId={selectedFieldId}
-            handleFocus={handleFocus}
-            handleBlur={handleBlur}
-            handleInputChange={handleInputChange}
-            moveItem={handleMoveItem}
-            parentId={column.id}
-            placeholder={true}
-          />
-        </div>
-      ) : (
-        column.fields.map((field, index) => (
-          <DraggableItem
-            key={field.id}
-            item={field}
-            index={index}
-            column={column}
-            selectedFieldId={selectedFieldId}
-            handleFocus={handleFocus}
-            handleBlur={handleBlur}
-            handleInputChange={handleInputChange}
-            moveItem={handleMoveItem}
-            parentId={column.id}
-            deleteField={deleteField}
-          />
-        ))
-      )}
+      <StudioTabs
+        tabs={tabs}
+        selectedTab={selectedTab}
+        deleteField={deleteField}
+        setCanvasItems={setCanvasItems}
+        ItemType={ItemType}
+        items={items}
+        moveItem={moveItem}
+      />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-# logistics.py
 from rest_framework import serializers
 from logistics.models.logistics import *
 

@@ -1,4 +1,3 @@
-# logistics.py
 from rest_framework import viewsets
 from core.views.template import GenericViewSet
 from logistics.models.logistics import *

@@ -4,7 +4,7 @@ export const fields = [
     "sections": [
       {
         "id": "section_1",
-        "name": "Section 1",
+        "name": "Se",
         "type": "section",
         "columns": [
           {
@@ -86,7 +86,9 @@ export const fields = [
                   ]
                 },
                 "id1": "amount",
-                "type": "NumberField"
+                "type": "NumberField",
+                "list": true,
+                "filter": false
               }
             ],
             "id1": "column_2",

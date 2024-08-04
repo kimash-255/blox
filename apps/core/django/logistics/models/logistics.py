@@ -1,7 +1,5 @@
-# logistics.py
 from django.db import models
 from core.models import BaseModel
-
 
 class Item(BaseModel):
     name = models.CharField(verbose_name='Name', null=False, blank=False, default="Name", max_length=255)

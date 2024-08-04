@@ -5,32 +5,49 @@ import { useSidebar } from "@/contexts/SidebarContext";
 import { useRouter } from "next/router";
 import { toTitleCase } from "@/utils/textConvert";
 
+const transformFields = (fields) => {
+  const filters = {
+    id: {
+      type: "text",
+      default: "",
+    },
+  };
+  const listFields = [];
+
+  fields.forEach((field) => {
+    if (field.filter) {
+      filters[field.id] = {
+        type: field.type === "SelectField" ? "select" : "text",
+        default: field.default || "",
+      };
+    }
+
+    if (field.list) {
+      listFields.push({
+        id: field.id,
+        name: field.name,
+        type: field.type,
+        default: field.default || "",
+      });
+    }
+  });
+
+  return { filters, listFields };
+};
+
 const documentList = () => {
   const { updateDashboardText, updatePagesText, updateTextColor } = useNavbar();
   const { setSidebarHidden } = useSidebar();
   const router = useRouter();
 
+  const { filters: documentFilters, listFields } = transformFields(fields);
+
   const documentListConfig = {
     title: "documents",
     customize: true,
     isList: true,
-    fields: fields,
+    fields: listFields,
     data: [],
-  };
-
-  const documentFilters = {
-    name: {
-      type: "text",
-    },
-    app: {
-      type: "text",
-    },
-    module: {
-      type: "text",
-    },
-    id: {
-      type: "text",
-    },
   };
 
   useEffect(() => {

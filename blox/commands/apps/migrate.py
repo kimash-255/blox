@@ -6,6 +6,7 @@ import re
 import json
 from ..config import PROJECT_ROOT, BASE_PATH, APPS_TXT_PATH, CUSTOM_APPS_PATH
 from ..utils.write_models import write_model_fields
+from ..utils.write_filters import write_filter_fields
 
 MODULES_FOLDER = {
     "views": "views",
@@ -70,14 +71,6 @@ def write_serializer_fields(serializer_file, model_name, fields):
     serializer_file.write(f"    class Meta:\n")
     serializer_file.write(f"        model = {model_name}\n")
     serializer_file.write(f"        fields = '__all__'\n\n")
-
-
-def write_filter_fields(filter_file, model_name, fields):
-    """Write filter fields for a given model."""
-    filter_file.write(f"class {model_name}Filter(filters.FilterSet):\n")
-    filter_file.write(f"    class Meta:\n")
-    filter_file.write(f"        model = {model_name}\n")
-    filter_file.write(f"        fields = '__all__'\n\n")
 
 
 def write_viewset(view_file, model_name, module_name):
@@ -201,7 +194,9 @@ def migrate_app(app_name):
                             folder_path = os.path.join(doc_folder_path, folder_name)
                             if os.path.isdir(folder_path):
                                 model_name = underscore_to_titlecase(folder_name)
-                                write_filter_fields(module_file, model_name, [])
+                                write_filter_fields(
+                                    module_file, model_name, folder_path
+                                )
                     elif folder == "views":
                         module_file.write(
                             f"from rest_framework import viewsets\nfrom core.views.template import GenericViewSet\nfrom {app_name}.models.{module} import *\nfrom {app_name}.filters.{module} import *\nfrom {app_name}.serializers.{module} import *\n\n"
@@ -244,7 +239,6 @@ def migrate_module(app_name, module):
 
         module_file_path = os.path.join(module_folder_path, f"{module}.py")
         with open(module_file_path, "w") as module_file:
-            module_file.write(f"# {module}.py\n")
             doc_folder_path = os.path.join(custom_app_path, module, "doc")
             if os.path.exists(doc_folder_path):
                 if folder == "models":
@@ -277,7 +271,7 @@ def migrate_module(app_name, module):
                         folder_path = os.path.join(doc_folder_path, folder_name)
                         if os.path.isdir(folder_path):
                             model_name = underscore_to_titlecase(folder_name)
-                            write_filter_fields(module_file, model_name, [])
+                            write_filter_fields(module_file, model_name, folder_path)
                 elif folder == "views":
                     module_file.write(
                         f"from rest_framework import viewsets\nfrom core.views.template import GenericViewSet\nfrom {app_name}.models.{module} import *\nfrom {app_name}.filters.{module} import *\nfrom {app_name}.serializers.{module} import *\n\n"
@@ -338,7 +332,7 @@ def migrate_doc(app_name, module, doc):
                     elif folder == "serializers":
                         write_serializer_fields(module_file, model_name, module)
                     if folder == "filters":
-                        write_filter_fields(module_file, model_name, module)
+                        write_filter_fields(module_file, model_name, folder_path)
 
 
 def update_urls(app_name, module):

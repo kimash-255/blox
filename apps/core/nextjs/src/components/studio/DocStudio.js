@@ -19,6 +19,20 @@ const DocStudio = ({ initialData, handleSave }) => {
     }
   }, [initialData]);
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        saveCanvas();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [canvasItems]);
+
   const addToCanvas = (field, parentId, parentType, from) => {
     const fieldType = field.name;
     fieldCountsRef.current[fieldType] =

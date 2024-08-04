@@ -24,6 +24,8 @@
   },
   {
     "type": "NumberField",
+    "list": true,
+    "filter": false,
     "id": "amount",
     "id1": "amount",
     "name": "Amount"

@@ -25,7 +25,7 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
         const extendedFilters = {
           ...Object.fromEntries(
             Object.entries(activeFilters).map(([key, value]) => [
-              `${key}_icontains`,
+              typeof value === "string" ? `${key}_icontains` : key,
               value,
             ])
           ),
@@ -55,9 +55,15 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
     const filtered = contextData.filter((item) => {
       return Object.keys(activeFilters).every((key) => {
         if (!activeFilters[key]) return true;
-        return item[key]
-          ?.toLowerCase()
-          .includes(activeFilters[key]?.toLowerCase());
+
+        const itemValue = item[key];
+        const filterValue = activeFilters[key];
+
+        if (typeof itemValue === "string" && typeof filterValue === "string") {
+          return itemValue.toLowerCase().includes(filterValue.toLowerCase());
+        }
+
+        return itemValue === filterValue;
       });
     });
 
