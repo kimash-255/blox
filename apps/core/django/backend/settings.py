@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     "django_filters",
     "django_crontab",
     "core",
-    'my_app',
 ]
 
 MIDDLEWARE = [

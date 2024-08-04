@@ -1,4 +1,5 @@
 // pages/api/saveFields.js
+import { toUnderscoreLowercase } from "@/utils/textConvert";
 import fs from "fs";
 import path from "path";
 
@@ -22,14 +23,12 @@ export default async function handler(req, res) {
       const fieldsJsPath = path.join(basePath, "fields.js");
       const fieldsJsonPath = path.join(basePath, "fields.json");
 
-      // Prepare the data to be written to the fields.js file
-      const fieldsJsData = `export const fields = ${JSON.stringify(
-        canvasItems,
-        null,
-        2
-      )};\n`;
+      // Function to convert name to underscore-separated string
+      const convertToUnderscore = (name) => {
+        return name.toLowerCase().replace(/\s+/g, "_");
+      };
 
-      // Extract fields ignoring tabs and sections
+      // Function to extract fields ignoring tabs and sections
       const extractFields = (obj) => {
         let fieldsList = [];
 
@@ -40,11 +39,23 @@ export default async function handler(req, res) {
           } else if (typeof item === "object") {
             if (item.fields) {
               fieldsList = fieldsList.concat(
-                item.fields.map(({ id, id1, icon, ...rest }) => ({
-                  ...rest,
-                  id: id1 !== undefined ? id1 : id, // Ensure id has the same value as id1, if id1 exists
-                  id1: id1, // Include id1 if it exists
-                }))
+                item.fields.map(({ id, id1, name, icon, ...rest }) => {
+                  let newId = id;
+                  let newId1 = id1;
+
+                  if (!id1) {
+                    newId = convertToUnderscore(name);
+                    newId1 = newId;
+                  } else {
+                    newId = id1;
+                  }
+
+                  return {
+                    ...rest,
+                    id: newId,
+                    id1: newId1,
+                  };
+                })
               );
             }
             Object.values(item).forEach(extract);
@@ -55,7 +66,35 @@ export default async function handler(req, res) {
         return fieldsList;
       };
 
-      const fieldsJsonData = extractFields(canvasItems);
+      // Prepare the data to be written to the fields.js file
+      const transformedCanvasItems = canvasItems.map(
+        ({ id, id1, name, ...rest }) => {
+          let newId = id;
+          let newId1 = id1;
+
+          if (!id1) {
+            newId = convertToUnderscore(name);
+            newId1 = newId;
+          } else {
+            newId = id1;
+          }
+
+          return {
+            ...rest,
+            id: newId,
+            id1: newId1,
+            name,
+          };
+        }
+      );
+
+      const fieldsJsData = `export const fields = ${JSON.stringify(
+        transformedCanvasItems,
+        null,
+        2
+      )};\n`;
+
+      const fieldsJsonData = extractFields(transformedCanvasItems);
 
       // Ensure the directory exists
       fs.mkdirSync(basePath, { recursive: true });

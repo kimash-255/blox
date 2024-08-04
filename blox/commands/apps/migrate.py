@@ -107,6 +107,11 @@ def write_model_fields(module_file, model_file, folder_path):
         "PhoneField": {"type": "models.CharField", "max_length": 15},
         "NameField": {"type": "models.CharField", "max_length": 255},
         "AddressField": {"type": "models.TextField"},
+        "SelectField": {
+            "type": "models.CharField",
+            "max_length": 255,
+        },  # Handle select fields
+        "SmallTextField": {"type": "models.CharField", "max_length": 100},
         "ForeignKey": {
             "type": "models.ForeignKey",
             "on_delete": "models.CASCADE",
@@ -121,29 +126,54 @@ def write_model_fields(module_file, model_file, folder_path):
     for field in field_list:
         field_id = field.get("id", "")
         field_name = field.get("name", "")
-        type = field["type"]
-        field_type_info = FIELD_TYPE_MAP[type].copy()
+        field_type = field.get("type", "")
+        field_type_info = FIELD_TYPE_MAP.get(field_type, {}).copy()
 
-        if type in ["ForeignKey", "OneToOneField", "ManyToManyField"]:
+        # Check for required and default values
+        required = field.get("required", False)
+        default = field.get("default", None)
+
+        # Handle SelectField separately for choices
+        if field_type == "SelectField":
+            choices = field.get("options", [])
+            choices_str = ", ".join([f"('{choice}', '{choice}')" for choice in choices])
+            options_var = f"CHOICES_{field_id.upper()}"
+            module_file.write(f"\n    {options_var} = [\n")
+            for choice in choices:
+                module_file.write(f"    ('{choice}', '{choice}'),\n")
+            module_file.write("    ]\n\n")
+            field_type_info["choices"] = options_var
+            field_type_info["type"] = "models.CharField"  # Ensure correct field type
+
+        # Write the field definition
+        if field_type in ["ForeignKey", "OneToOneField", "ManyToManyField"]:
             related_model = field.get("doc", "'self'")
-            field_type = field_type_info.pop("type")
+            field_type_str = field_type_info.pop("type")
 
             # Write the field with the related model as the first argument
             module_file.write(
-                f"    {field_id} = {field_type}('{related_model}', verbose_name='{field_name}', null=True, blank=True"
+                f"    {field_id} = {field_type_str}('{related_model}', verbose_name='{field_name}', "
+                f"null={str(required).capitalize()}, blank={str(required).capitalize()}"
             )
         else:
-            # Write the field without the related model as the first argument
-            field_type = field_type_info.pop("type")
+            # Write the field without the related model
+            field_type_str = field_type_info.pop("type")
             module_file.write(
-                f"    {field_id} = {field_type}(verbose_name='{field_name}', null=True, blank=True"
+                f"    {field_id} = {field_type_str}(verbose_name='{field_name}', "
+                f"null={str(required).capitalize()}, blank={str(required).capitalize()}"
             )
 
+        # Add default value if present
+        if default is not None:
+            module_file.write(f", default='{default}'")
+
+        # Add other field parameters
         field_params = ", ".join(
             [f"{key}={value}" for key, value in field_type_info.items()]
         )
         if field_params:
             module_file.write(f", {field_params}")
+
         module_file.write(")\n")
 
 

@@ -59,29 +59,31 @@ const fieldIcons = {
 };
 
 const fieldTypes = {
-  TextField: "text",
-  CharField: "text",
-  NumberField: "number",
-  FloatField: "number",
-  DecimalField: "number",
+  AddressField: "textarea",
   BooleanField: "checkbox",
+  CharField: "text",
   DateField: "date",
   DateTimeField: "datetime-local",
-  TimeField: "time",
+  DecimalField: "number",
   EmailField: "email",
-  URLField: "url",
-  SlugField: "text",
-  UUIDField: "text",
-  IPAddressField: "text",
   FileField: "file",
+  FloatField: "number",
+  ForeignKey: "link",
   ImageField: "file",
+  IPAddressField: "text",
+  ManyToManyField: "table",
+  NameField: "text",
+  NumberField: "number",
+  OneToOneField: "link",
   PasswordField: "password",
   PhoneField: "tel",
-  NameField: "text",
-  AddressField: "textarea",
-  ForeignKey: "link",
-  OneToOneField: "link",
-  ManyToManyField: "table",
+  SelectField: "select",
+  SmallTextField: "text",
+  SlugField: "text",
+  TextareaField: "textarea",
+  TimeField: "time",
+  URLField: "url",
+  UUIDField: "text",
 };
 
 const DocumentForm = forwardRef(
@@ -110,7 +112,6 @@ const DocumentForm = forwardRef(
 
     const handleInputChange = (name, value, type) => {
       let convertedValue = value;
-      console.log(name, value, type);
 
       switch (type) {
         case "number":

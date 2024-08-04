@@ -1,15 +1,45 @@
 [
   {
-    "name": "FloatField 1",
-    "type": "FloatField",
-    "id": "floatfield_1",
-    "id1": "floatfield_1"
+    "type": "IPAddressField",
+    "search": false,
+    "list": true,
+    "filter": true,
+    "hidden": true,
+    "readonly": true,
+    "default": "",
+    "id": "floatf",
+    "id1": "floatf"
   },
   {
-    "name": "ForeignKey 1",
     "type": "ForeignKey",
     "doc": "Try",
+    "search": true,
+    "list": true,
+    "hidden": false,
+    "filter": true,
     "id": "foreignkey_1",
     "id1": "foreignkey_1"
+  },
+  {
+    "type": "NumberField",
+    "required": true,
+    "hidden": true,
+    "list": true,
+    "search": true,
+    "filter": true,
+    "readonly": false,
+    "id": "first_name",
+    "id1": "first_name"
+  },
+  {
+    "type": "SelectField",
+    "options": [
+      "Option 1",
+      "Option 2",
+      "Option 3"
+    ],
+    "default": "Option 1",
+    "id": "selectfield_1",
+    "id1": "selectfield_1"
   }
 ]

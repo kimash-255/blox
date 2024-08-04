@@ -1,7 +1,5 @@
 export const fields = [
   {
-    "id": "tab-1",
-    "name": "Details",
     "type": "tab",
     "sections": [
       {
@@ -16,7 +14,7 @@ export const fields = [
             "fields": [
               {
                 "id": "floatfield_1",
-                "name": "FloatField 1",
+                "name": "",
                 "icon": {
                   "prefix": "fas",
                   "iconName": "hashtag",
@@ -30,12 +28,18 @@ export const fields = [
                     "M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128l95.1 0 11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128l58.2 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-68.9 0L325.8 320l58.2 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-68.9 0-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7-95.1 0-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384 32 384c-17.7 0-32-14.3-32-32s14.3-32 32-32l68.9 0 21.3-128L64 192c-17.7 0-32-14.3-32-32s14.3-32 32-32l68.9 0 11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320l95.1 0 21.3-128-95.1 0z"
                   ]
                 },
-                "id1": "floatfield_1",
-                "type": "FloatField"
+                "id1": "floatf",
+                "type": "IPAddressField",
+                "search": false,
+                "list": true,
+                "filter": true,
+                "hidden": true,
+                "readonly": true,
+                "default": ""
               },
               {
                 "id": "foreignkey_1",
-                "name": "ForeignKey 1",
+                "name": "ForeignKe",
                 "icon": {
                   "prefix": "fas",
                   "iconName": "key",
@@ -51,12 +55,75 @@ export const fields = [
                 },
                 "id1": "foreignkey_1",
                 "type": "ForeignKey",
-                "doc": "Try"
+                "doc": "Try",
+                "search": true,
+                "list": true,
+                "hidden": false,
+                "filter": true
+              },
+              {
+                "id": "first_name",
+                "name": "First Name",
+                "icon": {
+                  "prefix": "fas",
+                  "iconName": "hashtag",
+                  "icon": [
+                    448,
+                    512,
+                    [
+                      62098
+                    ],
+                    "23",
+                    "M181.3 32.4c17.4 2.9 29.2 19.4 26.3 36.8L197.8 128l95.1 0 11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3s29.2 19.4 26.3 36.8L357.8 128l58.2 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-68.9 0L325.8 320l58.2 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-68.9 0-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8l9.8-58.7-95.1 0-11.5 69.3c-2.9 17.4-19.4 29.2-36.8 26.3s-29.2-19.4-26.3-36.8L90.2 384 32 384c-17.7 0-32-14.3-32-32s14.3-32 32-32l68.9 0 21.3-128L64 192c-17.7 0-32-14.3-32-32s14.3-32 32-32l68.9 0 11.5-69.3c2.9-17.4 19.4-29.2 36.8-26.3zM187.1 192L165.8 320l95.1 0 21.3-128-95.1 0z"
+                  ]
+                },
+                "id1": "first_name",
+                "type": "NumberField",
+                "required": true,
+                "hidden": true,
+                "list": true,
+                "search": true,
+                "filter": true,
+                "readonly": false
+              },
+              {
+                "id": "selectfield_1",
+                "name": "SelectField 1",
+                "icon": {
+                  "prefix": "fas",
+                  "iconName": "list",
+                  "icon": [
+                    512,
+                    512,
+                    [
+                      "list-squares"
+                    ],
+                    "f03a",
+                    "M40 48C26.7 48 16 58.7 16 72l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24L40 48zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L192 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l288 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-288 0zM16 232l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24l0 48c0 13.3 10.7 24 24 24l48 0c13.3 0 24-10.7 24-24l0-48c0-13.3-10.7-24-24-24l-48 0z"
+                  ]
+                },
+                "id1": "selectfield_1",
+                "type": "SelectField",
+                "options": [
+                  "Option 1",
+                  "Option 2",
+                  "Option 3"
+                ],
+                "default": "Option 1"
               }
-            ]
+            ],
+            "columns": [],
+            "sections": [],
+            "id1": "column-1"
           }
-        ]
+        ],
+        "sections": [],
+        "id1": "section-1",
+        "fields": []
       }
-    ]
+    ],
+    "id": "details",
+    "id1": "details",
+    "name": "Details"
   }
 ];

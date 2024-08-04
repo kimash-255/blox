@@ -5,6 +5,7 @@ import Field from "./Field";
 import Canvas from "./Canvas";
 import fieldsData from "@/data/fields";
 import SecondaryButton from "../buttons/Secondary";
+import { toUnderscoreLowercase } from "@/utils/textConvert";
 
 const DocStudio = ({ initialData, handleSave }) => {
   const [fields] = useState(fieldsData);
@@ -34,7 +35,7 @@ const DocStudio = ({ initialData, handleSave }) => {
     const newField = {
       ...field,
       id: `${toUnderscoreFormat(newFieldName)}`,
-      id1: `${toUnderscoreFormat(newFieldName)}`,
+      id1: ``,
       name: newFieldName,
       type: fieldType,
     };
@@ -67,8 +68,6 @@ const DocStudio = ({ initialData, handleSave }) => {
   };
 
   const updateCanvasItem = (updatedItem) => {
-    console.log(updatedItem);
-
     setCanvasItems(updatedItem);
   };
 
@@ -120,7 +119,48 @@ const DocStudio = ({ initialData, handleSave }) => {
   };
 
   const saveCanvas = () => {
-    handleSave(canvasItems);
+    const transformItem = (item) => {
+      let newId = item.id;
+      let newId1 = item.id1;
+
+      if (!item.id || item.id === "") {
+        newId = toUnderscoreLowercase(item.name);
+      }
+
+      if (!item.id1 || item.id1 === "") {
+        newId = toUnderscoreLowercase(item.name);
+        newId1 = newId;
+      }
+
+      const transformedItem = {
+        ...item,
+        id: newId,
+        id1: newId1,
+      };
+
+      if (item.type === "section" || item.type === "column") {
+        return {
+          ...transformedItem,
+          columns: item.columns ? item.columns.map(transformItem) : [],
+          sections: item.sections ? item.sections.map(transformItem) : [],
+          fields: item.fields ? item.fields.map(transformItem) : [],
+        };
+      } else if (item.type === "tab") {
+        return {
+          ...transformedItem,
+          sections: item.sections.map(transformItem),
+        };
+      } else if (item.type === "field") {
+        return transformedItem;
+      }
+
+      return transformedItem;
+    };
+
+    const transformedCanvasItems = canvasItems.map(transformItem);
+    setCanvasItems(transformedCanvasItems);
+
+    handleSave(transformedCanvasItems);
   };
 
   return (

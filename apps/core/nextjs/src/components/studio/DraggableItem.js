@@ -1,10 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import fields from "@/data/fields";
-import { faTimes } from "@fortawesome/free-solid-svg-icons"; // Import the "x" icon
+import { faTimes, faEdit } from "@fortawesome/free-solid-svg-icons"; // Import the "x" and "edit" icons
 import LinkSelect from "../new/LinkSelect";
 import DocSelect from "../new/DocSelect";
+import FieldSettingsModal from "./FieldSettingsModal"; // Import the FieldSettingsModal component
 
 const ItemType = "FIELD";
 
@@ -22,8 +23,7 @@ const DraggableItem = ({
   deleteField,
 }) => {
   const ref = useRef(null);
-
-  // console.log(item);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const [{ isDragging }, drag] = useDrag({
     type: ItemType,
@@ -51,7 +51,8 @@ const DraggableItem = ({
     return null;
   }
 
-  const isLayout = item.type === "layout";
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
 
   return (
     <div
@@ -86,12 +87,20 @@ const DraggableItem = ({
               />
             </div>
             {selectedFieldId === item && (
-              <button
-                onClick={() => deleteField(item, "field")}
-                className="ml-2 text-red-500 hover:text-red-700"
-              >
-                <FontAwesomeIcon icon={faTimes} />
-              </button>
+              <>
+                <button
+                  onClick={openModal}
+                  className="ml-2 text-blue-500 hover:text-blue-700"
+                >
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button
+                  onClick={() => deleteField(item, "field")}
+                  className="ml-2 text-red-500 hover:text-red-700"
+                >
+                  <FontAwesomeIcon icon={faTimes} />
+                </button>
+              </>
             )}
           </div>
           {selectedFieldId === item && (
@@ -139,6 +148,14 @@ const DraggableItem = ({
             </div>
           )}
         </>
+      )}
+      {isModalOpen && (
+        <FieldSettingsModal
+          item={item}
+          handleInputChange={handleInputChange}
+          closeModal={closeModal}
+          fields={fields}
+        />
       )}
     </div>
   );
