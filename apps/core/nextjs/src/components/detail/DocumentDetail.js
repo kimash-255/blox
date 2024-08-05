@@ -44,7 +44,6 @@ const DocumentDetail = ({ config }) => {
         const response = await fetchData({}, endpoint);
         if (response?.data) {
           setData(response.data);
-          console.log(response.data);
         }
       } catch (error) {
         toast.error(`Failed to fetch data, ${error.message || error}`);

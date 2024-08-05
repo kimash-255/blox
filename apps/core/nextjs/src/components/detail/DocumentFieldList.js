@@ -1,5 +1,84 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
+import DataTableView from "./DataTableView";
+
+// Define field types and their corresponding render types
+const fieldTypes = {
+  AddressField: "textarea",
+  BooleanField: "checkbox",
+  CharField: "text",
+  DateField: "date",
+  DateTimeField: "datetime-local",
+  DecimalField: "number",
+  EmailField: "email",
+  FileField: "file",
+  FloatField: "number",
+  ForeignKey: "link",
+  ImageField: "file",
+  IPAddressField: "text",
+  ManyToManyField: "table",
+  NameField: "text",
+  NumberField: "number",
+  OneToOneField: "link",
+  PasswordField: "password",
+  PhoneField: "tel",
+  SelectField: "select",
+  SmallTextField: "text",
+  SlugField: "text",
+  TextareaField: "textarea",
+  TimeField: "time",
+  URLField: "url",
+  UUIDField: "text",
+};
+
+// Render field based on its type with custom styles
+const renderField = (field, data) => {
+  const fieldType = fieldTypes[field.type] || "text"; // Default to text if type is unknown
+
+  const baseStyle = "w-full p-2 border rounded";
+
+  switch (fieldType) {
+    case "textarea":
+      return (
+        <textarea
+          className={`${baseStyle} h-32 resize-none`}
+          value={data[field.id]}
+          readOnly
+        />
+      );
+    case "checkbox":
+      return (
+        <input
+          type="checkbox"
+          checked={data[field.id]}
+          readOnly
+          className="form-checkbox h-5 w-5 text-indigo-600"
+        />
+      );
+    case "link":
+      return (
+        <a
+          href={data[field.id]}
+          className="text-blue-500 underline hover:text-blue-700"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {data[field.id]}
+        </a>
+      );
+    case "table":
+      return <DataTableView fieldData={data} field={field} />;
+    default:
+      return (
+        <input
+          type={fieldType}
+          className={`${baseStyle} text-gray-900`}
+          value={data[field.id]}
+          readOnly
+        />
+      );
+  }
+};
 
 const DocumentFieldList = ({ fields, data }) => {
   const [selectedTab, setSelectedTab] = useState(fields[0].id);
@@ -22,9 +101,9 @@ const DocumentFieldList = ({ fields, data }) => {
         <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-md bg-clip-border">
           <div className="flex-auto p-3">
             <div className="flex flex-row justify-between -mx-3">
-              <div className="flex-none w-2/3 max-w-full px-2">
+              <div className="flex-none w-full px-2">
                 <div>
-                  <h5 className="mb-0 font-bold">{data[field.id1]}</h5>
+                  <h5 className="mb-0 font-bold">{renderField(field, data)}</h5>
                 </div>
               </div>
             </div>

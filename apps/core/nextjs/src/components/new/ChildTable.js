@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import DocLink from "./DocLink";
-import { FaTrash } from "react-icons/fa";
-import { timeAgo } from "@/utils/DateFormat";
+import DataTable from "./DataTable";
 
 const ChildTable = ({
   name,
@@ -58,6 +57,10 @@ const ChildTable = ({
     });
   };
 
+  const handleDelete = (item) => {
+    setSelected(selected.filter((i) => i !== item));
+  };
+
   return (
     <div className={`relative ${hidden ? "hidden" : ""}`}>
       {/* Multi-select Dropdown */}
@@ -74,69 +77,13 @@ const ChildTable = ({
       </div>
 
       {/* Selected Items Table */}
-      <div className="border border-slate-300 rounded-lg p-4 bg-white shadow-sm mt-4 overflow-x-auto">
-        <table className="w-full border-collapse text-xs">
-          <thead>
-            <tr className="bg-fuchsia-50 border-b">
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className="py-2 px-4 text-left text-purple-900"
-                >
-                  {col.label}
-                </th>
-              ))}
-              <th className="py-2 px-4 text-left text-purple-900">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selected.map((item, index) => (
-              <tr
-                key={index}
-                className={`border-b ${
-                  index % 2 === 0 ? "bg-slate-50" : "bg-pink-50"
-                } hover:bg-pink-100`}
-              >
-                {columns.map((col) => (
-                  <td key={col.key} className="py-2 px-4 text-slate-700">
-                    {col.key === "id" ? (
-                      <a
-                        href={`/${linkResponse.data.app}/${
-                          linkResponse.data.id
-                        }/${item[col.key]}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-pink-500 hover:underline"
-                      >
-                        {item[col.key]}
-                      </a>
-                    ) : col.key === "created_at" ||
-                      col.key === "modified_at" ? (
-                      timeAgo(new Date(item[col.key]))
-                    ) : item[col.key] !== undefined ? (
-                      item[col.key]
-                    ) : (
-                      "N/A"
-                    )}
-                  </td>
-                ))}
-                <td className="py-2 px-4 text-right">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setSelected(selected.filter((i) => i !== item))
-                    }
-                    className="text-red-600 hover:text-red-800"
-                    disabled={readOnly}
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        data={selected}
+        columns={columns}
+        linkResponse={linkResponse}
+        onDelete={handleDelete}
+        readOnly={readOnly}
+      />
     </div>
   );
 };

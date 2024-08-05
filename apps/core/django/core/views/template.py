@@ -22,14 +22,14 @@ def handle_errors(func):
 
 def custom_list(self, request):
     # Get the initial queryset
-    queryset = self.get_queryset().order_by(
-        "-modified_at"
-    )  # Sort by id in descending order
+    queryset = self.get_queryset().order_by("-modified_at")
 
-    # Extract and remove 'page' and 'page_length' from request query params
+    # Extract 'page', 'page_length', 'filter_key', and 'filter_value' from request query params
     query_params = request.GET.copy()
     page = query_params.pop("page", [1])[0]
     page_length = query_params.pop("page_length", [5])[0]
+    filter_key = query_params.pop("filter_key", [None])[0]
+    filter_value = query_params.pop("filter_value", [None])[0]
 
     # Create the filterset instance, without the page and page_length filters
     filter_class = self.filterset_class
@@ -38,6 +38,15 @@ def custom_list(self, request):
         filtered_queryset = filterset.qs
     except:
         filtered_queryset = queryset
+
+    # Apply additional filtering if filter_key and filter_value are provided
+    if filter_key and filter_value:
+        try:
+            # Apply the filter to the queryset
+            filtered_queryset = filtered_queryset.filter(**{filter_key: filter_value})
+        except Exception as e:
+            # Handle exceptions related to invalid filter key or value
+            return {"error": str(e)}
 
     # Calculate the total length of the filtered data
     total = filtered_queryset.count()
@@ -54,8 +63,9 @@ def custom_list(self, request):
         total + page_length - 1
     ) // page_length  # Calculate the total number of pages
 
-    # if page > total_pages or page < 1:
-    #     return {"error": "Page out of range"}
+    # Handle pagination boundaries
+    if page > total_pages or page < 1:
+        return {"error": "Page out of range"}
 
     start_index = (page - 1) * page_length
     end_index = start_index + page_length
