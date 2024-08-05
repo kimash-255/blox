@@ -88,7 +88,7 @@ const Sidebar = () => {
       {isCollapsed && (
         <button
           onClick={toggleSidebar}
-          className="w-fit z-1 text-slate-700 bg-white py-4 px-2 rounded shadow-lg"
+          className="w-fit fixed top-8 z-100 text-slate-700 bg-white py-4 px-2 rounded shadow-lg"
         >
           <FontAwesomeIcon icon={faAngleDoubleRight} size="sm" />
         </button>

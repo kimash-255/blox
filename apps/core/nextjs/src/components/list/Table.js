@@ -101,7 +101,7 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
   const currentItems = filteredData;
 
   return (
-    <div className="px-8 w-full">
+    <div className="px-4 md:px-8 w-full">
       <div className="flex flex-wrap justify-between items-center mb-2">
         <Filters
           filters={Object.keys(filters).reduce((acc, key) => {
@@ -111,18 +111,14 @@ const ListTable = ({ tableConfig, filters, endpoint }) => {
           onFilterChange={handleFilterChange}
           handleClearFilters={handleClearFilters}
         />
-        {/* <button
-          className="bg-red-500 text-white font-semibold py-2 px-2 rounded md:ml-2 align-middle transition-all border border-solid rounded-lg shadow-none cursor-pointer leading-pro ease-soft-in text-xs bg-150 active:opacity-85 hover:scale-102 tracking-tight-soft bg-x-25 bg-fuchsia-500 text-white hover:opacity-75"
-          onClick={handleClearFilters}
-        >
-          Clear Filters
-        </button> */}
       </div>
-      <TableTemplate
-        tableConfig={tableConfig}
-        data={currentItems}
-        onEdit={handleEdit}
-      />
+      <div className="w-[98%]">
+        <TableTemplate
+          tableConfig={tableConfig}
+          data={currentItems}
+          onEdit={handleEdit}
+        />
+      </div>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

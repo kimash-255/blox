@@ -27,7 +27,7 @@ const TableTemplate = ({ tableConfig, onEdit, data }) => {
           </div>
           <div className="flex-auto px-0 pt-0 pb-2">
             <div className="p-4 overflow-x-auto">
-              <table className="items-center w-full mb-2 px-4 align-top border-gray-200 text-slate-500">
+              <table className="items-center w-full mb-2 align-top border-gray-200 text-slate-500">
                 <thead className="align-bottom">
                   <tr>
                     {updatedFields.map((field, index) => (

@@ -41,7 +41,7 @@ export default function App({ Component, pageProps }) {
               <div className="relative flex flex-col w-full">
                 {!isAuthPage && <Navbar />}
                 <div className="flex-grow">
-                  <div className="relative flex-grow mb-[4000px]">
+                  <div className="relative flex-grow">
                     <Component {...pageProps} />
                   </div>
                 </div>

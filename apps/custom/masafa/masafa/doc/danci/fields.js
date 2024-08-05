@@ -29,7 +29,10 @@ export const fields = [
                   ]
                 },
                 "id1": "datefield",
-                "type": "DateField"
+                "type": "DateField",
+                "search": true,
+                "filter": true,
+                "list": true
               }
             ],
             "id1": "column_1",
@@ -56,7 +59,10 @@ export const fields = [
                   ]
                 },
                 "id1": "charfield_1",
-                "type": "CharField"
+                "type": "CharField",
+                "list": true,
+                "filter": true,
+                "search": true
               }
             ],
             "id1": "column_2",
@@ -95,7 +101,10 @@ export const fields = [
                   ]
                 },
                 "id1": "decimalfield_1",
-                "type": "DecimalField"
+                "type": "DecimalField",
+                "list": true,
+                "filter": true,
+                "search": true
               }
             ],
             "id1": "column_1",
