@@ -184,6 +184,15 @@ CORS_ALLOW_HEADERS = ["Content-Type", "Authorization"]
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
+
+# ----------------------------------------------------------------------
+# Auth and user
+# ----------------------------------------------------------------------
+
+
+AUTH_USER_MODEL = "core.User"
+
+
 REST_USE_JWT = True
 
 # ----------------------------------------------------------------------

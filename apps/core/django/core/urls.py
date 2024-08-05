@@ -9,6 +9,9 @@ from .views import (
     DocumentViewSet,
     MigrateAPIView,
     ChangeLogViewSet,
+    LoginView,
+    OTPActivationView,
+    LogoutView,
 )
 
 router = DefaultRouter()
@@ -23,4 +26,7 @@ urlpatterns = [
     path("startapp/", CreateAppAPIView.as_view(), name="create-app"),
     path("newdoc/", CreateDocumentAPIView.as_view(), name="create-document"),
     path("migrate/", MigrateAPIView.as_view(), name="migrate"),
+    path("login/", LoginView.as_view(), name="login"),
+    path("otp/activate/", OTPActivationView.as_view(), name="otp_activate"),
+    path("logout/", LogoutView.as_view(), name="logout"),
 ]

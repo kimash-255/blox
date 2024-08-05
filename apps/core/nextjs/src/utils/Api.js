@@ -19,7 +19,7 @@ const handle401Error = () => {
 };
 
 // Function to fetch data from the API
-const fetchData = async (params = {}, endpoint) => {
+export const fetchData = async (params = {}, endpoint) => {
   const { token } = parseCookies();
   const getUrl = formatUrl(`${apiUrl}/${endpoint}`);
   // if (!token) {
@@ -58,7 +58,7 @@ const fetchData = async (params = {}, endpoint) => {
   }
 };
 
-const postData = async (formData = {}, endpoint) => {
+export const postData = async (formData = {}, endpoint) => {
   const { token } = parseCookies();
   const postUrl = formatUrl(`${apiUrl}/${endpoint}`);
 
@@ -99,7 +99,7 @@ const postData = async (formData = {}, endpoint) => {
 };
 
 // Function to update data in the API
-const updateData = async (formData = {}, endpoint) => {
+export const updateData = async (formData = {}, endpoint) => {
   const { token } = parseCookies();
   const updateUrl = formatUrl(`${apiUrl}/${endpoint}`);
   try {
@@ -136,7 +136,7 @@ const updateData = async (formData = {}, endpoint) => {
 };
 
 // Function to delete data from the API
-const deleteData = async (endpoint) => {
+export const deleteData = async (endpoint) => {
   const { token } = parseCookies();
   const deleteUrl = formatUrl(`${apiUrl}/${endpoint}`);
   try {
@@ -171,24 +171,60 @@ const deleteData = async (endpoint) => {
   }
 };
 
-// services/notificationService.js
-export async function fetchNotifications() {
-  // Mock API call to fetch notifications
-  const response = await fetchData({ is_read: false }, "notifications");
-  if (!response.data) {
-    throw new Error("Failed to fetch notifications");
-  }
-  return response?.data?.list;
-}
+const handleApiRequest = async (endpoint, formData = {}, headers = {}) => {
+  const postUrl = formatUrl(`${apiUrl}/${endpoint}`);
 
-export async function fetchMessages() {
-  // Mock API call to fetch messages
-  const response = await fetchData({ is_read: false }, "messages");
-  if (!response.data) {
-    throw new Error("Failed to fetch messages");
-  }
-  return response?.data?.list;
-}
+  try {
+    const response = await axios.post(postUrl, formData, { headers });
 
-// Export the functions
-export { deleteData, fetchData, postData, updateData };
+    if (response.status === 200 || response.status === 201) {
+      return {
+        success: "Operation successful",
+        data: response.data,
+      };
+    } else {
+      return {
+        error: `Unexpected status code: ${response.status}`,
+      };
+    }
+  } catch (error) {
+    return {
+      error: error,
+      message: error?.response?.data?.error || "An error occurred",
+    };
+  }
+};
+
+// Login function
+export const login = async (formData = {}) => {
+  return handleApiRequest("login", formData, {
+    "Content-Type": "application/json",
+  });
+};
+
+// Validate OTP function
+export const validateOtp = async (formData = {}) => {
+  return handleApiRequest("validate-otp", formData, {
+    "Content-Type": "application/json",
+  });
+};
+
+// Resend OTP function
+export const resendOtp = async (formData = {}) => {
+  return handleApiRequest("resend-otp", formData, {
+    "Content-Type": "application/json",
+  });
+};
+
+// Logout function
+export const logout = async () => {
+  const { token } = parseCookies(); // Get token from cookies
+  return handleApiRequest(
+    "logout",
+    {},
+    {
+      "Content-Type": "application/json",
+      Authorization: `Token ${token}`,
+    }
+  );
+};
