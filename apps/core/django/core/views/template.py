@@ -5,6 +5,7 @@ from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.response import Response
+from .utils import log_changes, log_create
 
 
 def handle_errors(func):
@@ -65,7 +66,7 @@ def custom_list(self, request):
 
     # Handle pagination boundaries
     if page > total_pages or page < 1:
-        return {"error": "Page out of range"}
+        pass
 
     start_index = (page - 1) * page_length
     end_index = start_index + page_length
@@ -97,7 +98,6 @@ class GenericViewSet(viewsets.ModelViewSet):
 
     @handle_errors
     def create(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
@@ -107,9 +107,16 @@ class GenericViewSet(viewsets.ModelViewSet):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop("partial", False)
         instance = self.get_object()
+        old_instance = (
+            self.get_object()
+        )  # Retrieve a copy of the old instance for comparison
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
+        # Log changes after the instance is updated
+        log_changes(instance, old_instance, request.user)
+
         return Response(serializer.data)
 
     @handle_errors

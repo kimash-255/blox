@@ -13,6 +13,7 @@ import DocHeader from "./DocHeader";
 import DocFooter from "./DocFooter";
 import DocumentFieldList from "./DocumentFieldList";
 import DocumentForm from "../new/DocumentForm";
+import DocumentLogs from "./DocumentLogs"; // Import the new DocumentLogs component
 import useKeySave from "@/hooks/useKeySave";
 
 const DocumentDetail = ({ config }) => {
@@ -154,7 +155,7 @@ const DocumentDetail = ({ config }) => {
 
   const tabs = [
     { name: "Details", icon: faInfoCircle, label: "Details" },
-    { name: "Messages", icon: faEnvelope, label: "Messages" },
+    { name: "Logs", icon: faEnvelope, label: "Logs" },
     { name: "Settings", icon: faCog, label: "Settings" },
   ];
 
@@ -179,16 +180,23 @@ const DocumentDetail = ({ config }) => {
         handleSaveClick={handleSaveClick}
         handleTabClick={handleTabClick}
       />
-      {isEditing ? (
-        <DocumentForm
-          ref={formRef} // Pass the ref to DocumentForm
-          config={config}
-          initialData={data}
-          onSubmit={handleFormSubmitSuccess}
-          type="detail"
-        />
-      ) : (
-        <DocumentFieldList fields={config.fields} data={data} />
+      {selectedTab === "Details" &&
+        (isEditing ? (
+          <DocumentForm
+            ref={formRef} // Pass the ref to DocumentForm
+            config={config}
+            initialData={data}
+            onSubmit={handleFormSubmitSuccess}
+            type="detail"
+          />
+        ) : (
+          <DocumentFieldList fields={config.fields} data={data} />
+        ))}
+      {selectedTab === "Logs" && (
+        <DocumentLogs endpoint={endpoint} config={config} id={id} />
+      )}
+      {selectedTab === "Settings" && (
+        <div>{/* Settings component or content goes here */}</div>
       )}
       <DocFooter data={data} />
     </div>

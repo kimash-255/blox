@@ -7,9 +7,14 @@ from django.db import models
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from core.models import App, Module, Document
-from core.filters import AppFilter, ModuleFilter, DocumentFilter
-from core.serializers import AppSerializer, ModuleSerializer, DocumentSerializer
+from core.models import App, Module, Document, ChangeLog
+from core.filters import AppFilter, ModuleFilter, DocumentFilter, ChangeLogFilter
+from core.serializers import (
+    AppSerializer,
+    ModuleSerializer,
+    DocumentSerializer,
+    ChangeLogSerializer,
+)
 from .template import GenericViewSet
 
 APPS_TXT_PATH = os.path.join(settings.PROJECT_PATH, "config", "apps.txt")
@@ -37,6 +42,12 @@ def run_subprocess(command, success_message, error_message):
         return Response(
             {"error": error_message}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+class ChangeLogViewSet(GenericViewSet):
+    queryset = ChangeLog.objects.all()
+    serializer_class = ChangeLogSerializer
+    filterset_class = ChangeLogFilter
 
 
 class CreateAppAPIView(APIView):
