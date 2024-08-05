@@ -1,5 +1,5 @@
-import fields from "../../../../../../custom/masafa/masafa/doc/danci/fields.js";
 import settings from "../../../../../../custom/masafa/masafa/doc/danci/settings.json";
+import list from "/home/david/Projects/framework/blox/apps/custom/masafa/masafa/doc/danci/fields.json";
 
 import React, { useEffect } from "react";
 import ListTable from "@/components/list/Table";
@@ -43,7 +43,7 @@ const documentList = () => {
   const { setSidebarHidden } = useSidebar();
   const router = useRouter();
 
-  const { filters: documentFilters, listFields } = transformFields(fields);
+  const { filters: documentFilters, listFields } = transformFields(list);
 
   const documentListConfig = {
     title: "documents",

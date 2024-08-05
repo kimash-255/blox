@@ -1,0 +1,18 @@
+[
+  {
+    "type": "DecimalField",
+    "list": true,
+    "filter": true,
+    "id": "decimalfield_1",
+    "id1": "decimalfield_1",
+    "name": "DecimalField 1"
+  },
+  {
+    "type": "EmailField",
+    "list": true,
+    "filter": true,
+    "id": "emailfield_1",
+    "id1": "emailfield_1",
+    "name": "EmailField "
+  }
+]

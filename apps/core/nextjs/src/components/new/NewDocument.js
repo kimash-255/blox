@@ -19,7 +19,6 @@ const NewDocument = ({ config, initialData }) => {
 
   const handleSubmit = async (formData) => {
     setLoading(true);
-    const formDataToSubmit = new FormData();
 
     // Parsing field data from formData
     const parsedData = {};
@@ -57,9 +56,10 @@ const NewDocument = ({ config, initialData }) => {
           parsedData[key] = value === "" ? null : value; // Handle time inputs, set to null if empty
           break;
         case "file":
-          // Append file to FormData for upload
+          // Handle files separately as a property to be sent
           if (value instanceof File) {
-            formDataToSubmit.append(key, value);
+            // If files need to be handled, use a separate upload function or process them accordingly
+            parsedData[key] = value; // Set as file object (process separately if needed)
           }
           break;
         default:
@@ -67,15 +67,10 @@ const NewDocument = ({ config, initialData }) => {
       }
     });
 
-    // Append non-file fields to FormData
-    Object.keys(parsedData).forEach((key) => {
-      if (parsedData[key] !== null) {
-        formDataToSubmit.append(key, parsedData[key]);
-      }
-    });
-
     try {
-      const response = await postData(formDataToSubmit, config.endpoint, true); // Pass FormData and a flag to indicate it's a FormData request
+      // Convert parsedData to JSON string for transmission
+      const response = await postData(parsedData, config.endpoint, true);
+
       if (response.data) {
         const docid = response.data.id;
         router.push(`${router.pathname.replace("/new", "")}/${docid}`);

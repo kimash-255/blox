@@ -3,14 +3,15 @@ import Select from "react-select";
 import { fetchData } from "@/utils/Api";
 import { toast } from "react-toastify";
 import { toUnderscoreLowercase } from "@/utils/textConvert";
-// import toast from "react-hot-toast"; // Ensure this import aligns with your toast setup
 
 const DocLink = ({
   name,
   handleChange,
   placeholder = "Select",
   doc,
+  exclude = [],
   isMulti = false, // Optional: allow multi-select
+  onLinkResponse, // New prop to handle linkresponse
 }) => {
   const [selected, setSelected] = useState(null);
   const [options, setOptions] = useState([]);
@@ -30,14 +31,22 @@ const DocLink = ({
             `${linkresponse.data.app}/${linkresponse.data.id}`
           );
           if (response?.data?.list) {
-            setOptions(
-              response.data.list.map((option) => ({
-                value: option.id, // Adjust based on your API response
-                label: option.name || option.id, // Adjust based on your API response
-              }))
-            );
+            const fetchedOptions = response.data.list.map((option) => ({
+              value: option, // Adjust based on your API response
+              label: option.name || option.id, // Adjust based on your API response
+            }));
+            // Exclude already selected options
+            const filteredOptions = exclude.length
+              ? fetchedOptions.filter(
+                  (option) =>
+                    !exclude.some((excluded) => excluded.id === option.value.id)
+                )
+              : fetchedOptions;
+            setOptions(filteredOptions);
           }
         }
+        // Pass linkresponse to the parent component
+        onLinkResponse(linkresponse);
       } catch (error) {
         setError(error.message || error);
         toast.error(`Failed to fetch data: ${error.message || error}`);
@@ -47,20 +56,12 @@ const DocLink = ({
     };
 
     fetchOptions();
-  }, [endpoint]);
+  }, [onLinkResponse]);
 
   const handleSelectionChange = (selectedOption) => {
-    setSelected(selectedOption.value);
+    setSelected(selectedOption);
     handleChange(selectedOption);
   };
-
-  if (loading) {
-    // return <div>Loading...</div>;
-  }
-
-  if (error) {
-    // return <div>Error: {error}</div>;
-  }
 
   return (
     <Select
@@ -68,7 +69,7 @@ const DocLink = ({
       onChange={handleSelectionChange}
       options={options}
       isSearchable
-      placeholder={selected || placeholder}
+      placeholder={placeholder}
       isMulti={isMulti}
       className="text-xs text-gray-800 dark:text-gray-200"
     />

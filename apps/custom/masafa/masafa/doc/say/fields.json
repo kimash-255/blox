@@ -1,0 +1,32 @@
+[
+  {
+    "type": "BooleanField",
+    "id": "booleanfield_1",
+    "id1": "booleanfield_1",
+    "name": "BooleanField 1"
+  },
+  {
+    "type": "SelectField",
+    "list": true,
+    "filter": true,
+    "id": "selectfield_1",
+    "id1": "selectfield_1",
+    "name": "SelectField 1"
+  },
+  {
+    "type": "ForeignKey",
+    "doc": "Cold",
+    "filter": true,
+    "list": true,
+    "id": "foreignkey_1",
+    "id1": "foreignkey_1",
+    "name": "ForeignKey 1"
+  },
+  {
+    "type": "ManyToManyField",
+    "doc": "Danci",
+    "id": "manytomanyfield_1",
+    "id1": "manytomanyfield_1",
+    "name": "ManyToManyField 1"
+  }
+]

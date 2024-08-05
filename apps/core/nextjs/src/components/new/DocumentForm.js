@@ -30,6 +30,7 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import DocLink from "./DocLink";
+import ChildTable from "./ChildTable";
 
 const fieldIcons = {
   TextField: faFont,
@@ -215,8 +216,7 @@ const DocumentForm = forwardRef(
             <DocLink
               name={field.id1}
               handleChange={(e) => {
-                handleInputChange(field.id1, e.value, "text");
-                console.log(field.id1, e.value, "text");
+                handleInputChange(field.id1, e.value.id, "text");
               }}
               doc={field.doc}
               placeholder={`Select ${field.name}`}
@@ -225,10 +225,12 @@ const DocumentForm = forwardRef(
             />
           ),
           table: (
-            <LinkSelect
+            <ChildTable
               name={field.id1}
-              handleChange={handleInputChange}
-              endpoint={field.endpoint}
+              handleChange={(e) => {
+                handleInputChange(field.id1, e, "list");
+              }}
+              doc={field.doc}
               placeholder={`Select ${field.name}`}
               readOnly={field.readonly} // Add readOnly attribute
               hidden={field.hidden} // Add hidden attribute
@@ -285,7 +287,7 @@ const DocumentForm = forwardRef(
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 m-2 rounded ${
+              className={`px-4 py-2 m-2 text-xs rounded ${
                 activeTab === tab.id
                   ? "bg-gradient-to-tl from-gray-900 to-slate-800 text-white"
                   : "bg-gradient-to-tl from-gray-200 to-slate-200 text-gray-900"
@@ -302,7 +304,7 @@ const DocumentForm = forwardRef(
       <form
         ref={formRef}
         onSubmit={handleSubmit}
-        className="py-4 mx-4 space-y-4"
+        className="py-4 mx-4 space-y-2"
       >
         {renderTabs()}
         <div className="bg-white border border-4 my-8 rounded-lg shadow relative">

@@ -5,5 +5,7 @@ from masafa.views import *
 router = DefaultRouter()
 
 router.register(r'danci', DanciViewSet)
+router.register(r'cold', ColdViewSet)
+router.register(r'say', SayViewSet)
 
 urlpatterns = [path('', include(router.urls)),]

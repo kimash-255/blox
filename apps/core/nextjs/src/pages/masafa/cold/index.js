@@ -1,3 +1,6 @@
+import settings from "../../../../../../custom/masafa/masafa/doc/cold/settings.json";
+import list from "/home/david/Projects/framework/blox/apps/custom/masafa/masafa/doc/cold/fields.json";
+
 import React, { useEffect } from "react";
 import ListTable from "@/components/list/Table";
 import { useNavbar } from "@/contexts/NavbarContext";

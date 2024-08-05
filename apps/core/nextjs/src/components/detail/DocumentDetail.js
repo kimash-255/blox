@@ -44,6 +44,7 @@ const DocumentDetail = ({ config }) => {
         const response = await fetchData({}, endpoint);
         if (response?.data) {
           setData(response.data);
+          console.log(response.data);
         }
       } catch (error) {
         toast.error(`Failed to fetch data, ${error.message || error}`);
@@ -73,8 +74,6 @@ const DocumentDetail = ({ config }) => {
 
   const handleUpdate = async (formData) => {
     try {
-      const formDataToSubmit = new FormData();
-
       // Parsing field data from formData
       const parsedData = {};
 
@@ -111,9 +110,9 @@ const DocumentDetail = ({ config }) => {
             parsedData[key] = value === "" ? null : value; // Handle time inputs, set to null if empty
             break;
           case "file":
-            // Append file to FormData for upload
+            // Handle file inputs if needed
             if (value instanceof File) {
-              formDataToSubmit.append(key, value);
+              parsedData[key] = value; // Store the file object directly in parsedData
             }
             break;
           default:
@@ -121,13 +120,7 @@ const DocumentDetail = ({ config }) => {
         }
       });
 
-      // Append non-file fields to FormData
-      Object.keys(parsedData).forEach((key) => {
-        if (parsedData[key] !== null) {
-          formDataToSubmit.append(key, parsedData[key]);
-        }
-      });
-      const response = await updateData(formDataToSubmit, endpoint);
+      const response = await updateData(parsedData, endpoint); // Assuming updateData accepts an object
       if (response?.data) {
         toast.success("Document updated successfully!");
         setData(response.data);
