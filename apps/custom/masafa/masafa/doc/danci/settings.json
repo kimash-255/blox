@@ -1,4 +1,6 @@
 {
-  "idNamingMethod": "randomNaming",
-  "lengthForIncrementalNaming": "6"
+  "idNamingMethod": "customNaming",
+  "lengthForIncrementalNaming": "61",
+  "fieldForIdNaming": "charfield_1",
+  "idNamingRule": "#### {{charfield_1}}"
 }

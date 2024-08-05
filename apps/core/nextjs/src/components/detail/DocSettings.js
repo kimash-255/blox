@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SettingsPermissionTable from "./SettingsPermissionTable";
 import { faIdCard } from "@fortawesome/free-solid-svg-icons";
 import TableTooltip from "../tooltip/TableTooltip";
+import { extractFields } from "@/utils/fields";
 
-const DocSettings = ({ config, onChange, saveSettings, setting }) => {
+const DocSettings = ({ config, onChange, saveSettings, setting, data }) => {
   const [settings, setSettings] = useState(
     setting || {
       idNamingRule: config.idNamingRule || "",
@@ -19,6 +20,7 @@ const DocSettings = ({ config, onChange, saveSettings, setting }) => {
       ...config.otherSettings,
     }
   );
+  const [initialData, setInitialData] = useState(null);
 
   useEffect(() => {
     if (onChange) {
@@ -46,7 +48,28 @@ const DocSettings = ({ config, onChange, saveSettings, setting }) => {
       saveSettings(settings);
     }
   };
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        // Dynamically import JSON data
+        const fieldsModule = await import(
+          `../../../../../custom/${data.app}/${data.module}/doc/${data.id}/fields.json`
+        );
 
+        if (fieldsModule) {
+          setInitialData(fieldsModule.default); // Use .default for dynamic import
+        }
+      } catch (error) {
+        console.error(
+          `Failed to load fields module, ${error.message || error}`
+        );
+      }
+    };
+
+    if (data) {
+      fetchInitialData();
+    }
+  }, [data]);
   return (
     <div className="py-2 px-2 flex items-center justify-center">
       <div className="w-full bg-white shadow-soft-xl rounded-2xl p-6">
@@ -104,14 +127,20 @@ const DocSettings = ({ config, onChange, saveSettings, setting }) => {
                       </p>
                       <TableTooltip content="Enter the naming rule here">
                         {settings.idNamingMethod === "fieldNaming" && (
-                          <input
-                            type="text"
+                          <select
                             name="fieldForIdNaming"
                             value={settings.fieldForIdNaming}
                             onChange={handleChange}
                             className="w-full px-2 py-2 border text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Enter field name"
-                          />
+                          >
+                            <option value="">Select Field</option>
+                            {initialData &&
+                              initialData.map((field) => (
+                                <option key={field.id} value={field.id}>
+                                  {field.name}
+                                </option>
+                              ))}
+                          </select>
                         )}
                         {settings.idNamingMethod === "functionNaming" && (
                           <input

@@ -35,8 +35,6 @@ const DocEditFields = () => {
           `../../../../../custom/${data.app}/${data.module}/doc/${data.id}/fields.js`
         );
         if (fieldsModule && fieldsModule.fields) {
-          console.log(fieldsModule.fields);
-
           setInitialData(fieldsModule.fields);
         }
       } catch (error) {

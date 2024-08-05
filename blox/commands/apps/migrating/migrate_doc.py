@@ -52,9 +52,9 @@ def migrate_doc(app_name, module, doc):
             for line in existing_lines:
                 if line.startswith(f"class {underscore_to_titlecase(doc)}"):
                     skip_block = True
-                if skip_block and line.strip() == "":
+                elif skip_block and line.startswith("class "):
                     skip_block = False
-                    continue
+
                 if not skip_block:
                     new_lines.append(line)
 
@@ -69,10 +69,12 @@ def migrate_doc(app_name, module, doc):
                     model_name = underscore_to_titlecase(doc)
                     if folder == "models":
                         module_file.write(f"class {model_name}(BaseModel):\n")
-                        write_model_fields(module_file, module_file_path, folder_path)
+                        write_model_fields(
+                            module_file, module_file_path, folder_path, model_name
+                        )
                     elif folder == "views":
                         write_viewset(module_file, model_name, module)
                     elif folder == "serializers":
                         write_serializer_fields(module_file, model_name, module)
-                    if folder == "filters":
+                    elif folder == "filters":
                         write_filter_fields(module_file, model_name, folder_path)

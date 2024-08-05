@@ -17,7 +17,7 @@ const transformFields = (fields) => {
   };
   const listFields = [];
 
-  fields.forEach((field) => {
+  fields?.forEach((field) => {
     if (field.filter) {
       filters[field.id] = {
         type: field.type === "SelectField" ? "select" : "text",

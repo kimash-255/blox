@@ -5,7 +5,7 @@ from .models.id_naming import write_id_field
 from .models.model_fields_writer import write_model
 
 
-def write_model_fields(module_file, model_file, folder_path):
+def write_model_fields(module_file, model_file, folder_path, model_name):
     """Write model fields based on fields.json and settings.json in the given folder path."""
     fields_file_path = os.path.join(folder_path, "fields.json")
     settings_file_path = os.path.join(folder_path, "settings.json")
@@ -21,4 +21,4 @@ def write_model_fields(module_file, model_file, folder_path):
         return
 
     write_model(module_file, field_list)
-    write_id_field(module_file, settings)
+    write_id_field(module_file, settings, model_name)

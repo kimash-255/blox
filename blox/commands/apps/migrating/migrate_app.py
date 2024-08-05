@@ -87,7 +87,10 @@ def migrate_app(app_name):
                                 model_name = underscore_to_titlecase(folder_name)
                                 module_file.write(f"class {model_name}(BaseModel):\n")
                                 write_model_fields(
-                                    module_file, module_file_path, folder_path
+                                    module_file,
+                                    module_file_path,
+                                    folder_path,
+                                    model_name,
                                 )
 
                     elif folder == "serializers":
