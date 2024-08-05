@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import DataTableView from "./DataTableView";
+import LinkView from "./LinkView";
 
 // Define field types and their corresponding render types
 const fieldTypes = {
@@ -39,43 +40,24 @@ const renderField = (field, data) => {
 
   switch (fieldType) {
     case "textarea":
-      return (
-        <textarea
-          className={`${baseStyle} h-32 resize-none`}
-          value={data[field.id]}
-          readOnly
-        />
-      );
+      return <div className={`${baseStyle} h-32`}>{data[field.id]}</div>;
     case "checkbox":
       return (
-        <input
-          type="checkbox"
-          checked={data[field.id]}
-          readOnly
-          className="form-checkbox h-5 w-5 text-indigo-600"
-        />
+        <div className="form-checkbox h-5 w-5 text-indigo-600">
+          {data[field.id] ? (
+            <FontAwesomeIcon icon="check" />
+          ) : (
+            <FontAwesomeIcon icon="times" />
+          )}
+        </div>
       );
     case "link":
-      return (
-        <a
-          href={data[field.id]}
-          className="text-blue-500 underline hover:text-blue-700"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {data[field.id]}
-        </a>
-      );
+      return <LinkView field={field} data={data} />;
     case "table":
       return <DataTableView fieldData={data} field={field} />;
     default:
       return (
-        <input
-          type={fieldType}
-          className={`${baseStyle} text-gray-900`}
-          value={data[field.id]}
-          readOnly
-        />
+        <div className={`${baseStyle} text-gray-900`}>{data[field.id]}</div>
       );
   }
 };
@@ -98,10 +80,10 @@ const DocumentFieldList = ({ fields, data }) => {
             {field.name}
           </p>
         </div>
-        <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-md bg-clip-border">
-          <div className="flex-auto p-3">
-            <div className="flex flex-row justify-between -mx-3">
-              <div className="flex-none w-full px-2">
+        <div className="relative flex flex-col min-w-0 break-words">
+          <div className="flex-auto">
+            <div className="flex flex-row justify-between">
+              <div className="flex-none w-full">
                 <div>
                   <h5 className="mb-0 font-bold">{renderField(field, data)}</h5>
                 </div>
