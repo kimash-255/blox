@@ -48,6 +48,7 @@ const DocSettings = ({ config, onChange, saveSettings, setting, data }) => {
       saveSettings(settings);
     }
   };
+
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -70,10 +71,11 @@ const DocSettings = ({ config, onChange, saveSettings, setting, data }) => {
       fetchInitialData();
     }
   }, [data]);
+
   return (
     <div className="py-2 px-2 flex items-center justify-center">
       <div className="w-full bg-white shadow-soft-xl rounded-2xl p-6">
-        <h2 className="text-xl font-semibold mb-6">Settings</h2>
+        <h2 className="text-xl font-semibold mb-6">Document Settings</h2>
         <div className="grid grid-cols-2 gap-4">
           {/* ID Naming Method */}
           <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border mb-4">
@@ -84,7 +86,7 @@ const DocSettings = ({ config, onChange, saveSettings, setting, data }) => {
                     ID Naming Method
                   </p>
                   <div className="flex flex-row gap-x-2 w-full">
-                    <TableTooltip content="Select the method for naming IDs">
+                    <TableTooltip content="Select the method to generate IDs for documents.">
                       <select
                         name="idNamingMethod"
                         value={settings.idNamingMethod}
@@ -123,9 +125,15 @@ const DocSettings = ({ config, onChange, saveSettings, setting, data }) => {
                   <div className="flex-none w-full px-2">
                     <div>
                       <p className="mb-1 font-sans text-xs font-semibold leading-normal">
-                        Naming Rule
+                        {settings.idNamingMethod === "fieldNaming"
+                          ? "Field for ID Naming"
+                          : settings.idNamingMethod === "functionNaming"
+                          ? "Function for ID Naming"
+                          : settings.idNamingMethod === "incrementalNaming"
+                          ? "Length for Incremental Naming"
+                          : "Custom Naming Rule"}
                       </p>
-                      <TableTooltip content="Enter the naming rule here">
+                      <TableTooltip content="Select the field to use for naming IDs.">
                         {settings.idNamingMethod === "fieldNaming" && (
                           <select
                             name="fieldForIdNaming"
@@ -142,6 +150,9 @@ const DocSettings = ({ config, onChange, saveSettings, setting, data }) => {
                               ))}
                           </select>
                         )}
+                      </TableTooltip>
+
+                      <TableTooltip content="Enter the function name for generating IDs.">
                         {settings.idNamingMethod === "functionNaming" && (
                           <input
                             type="text"
@@ -152,6 +163,9 @@ const DocSettings = ({ config, onChange, saveSettings, setting, data }) => {
                             placeholder="Enter function name"
                           />
                         )}
+                      </TableTooltip>
+
+                      <TableTooltip content="Specify the length of the numeric part for incremental ID generation (e.g., 5 for IDs like 00001, 00002).">
                         {settings.idNamingMethod === "incrementalNaming" && (
                           <input
                             type="text"
@@ -162,6 +176,9 @@ const DocSettings = ({ config, onChange, saveSettings, setting, data }) => {
                             placeholder="Enter length (e.g., 5)"
                           />
                         )}
+                      </TableTooltip>
+
+                      <TableTooltip content="Enter the custom naming rule. Use {{field_name}} to insert field values and # for auto-increment. For example, {{charfield_1}}-### will generate IDs like ABC-001, ABC-002.">
                         {settings.idNamingMethod === "customNaming" && (
                           <input
                             type="text"

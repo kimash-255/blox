@@ -37,11 +37,11 @@ export default function App({ Component, pageProps }) {
               } flex flex-row relative rounded-xl transition-all duration-200`}
             >
               {!isAuthPage && <Sidebar />}
-              <div className="relative flex flex-col h-full min-h-screen "></div>
-              <div className="relative flex flex-col h-full min-h-screen w-full">
+              <div className="relative flex flex-col"></div>
+              <div className="relative flex flex-col w-full">
                 {!isAuthPage && <Navbar />}
-                <div className="flex flex-col h-full min-h-screen">
-                  <div className="relative flex-grow">
+                <div className="flex-grow">
+                  <div className="relative flex-grow mb-[4000px]">
                     <Component {...pageProps} />
                   </div>
                 </div>
