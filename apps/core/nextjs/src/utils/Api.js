@@ -204,7 +204,7 @@ export const login = async (formData = {}) => {
 
 // Validate OTP function
 export const validateOtp = async (formData = {}) => {
-  return handleApiRequest("validate-otp", formData, {
+  return handleApiRequest("otp/activate", formData, {
     "Content-Type": "application/json",
   });
 };

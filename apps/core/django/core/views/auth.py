@@ -8,55 +8,45 @@ from core.models import OTP
 from core.serializers import UserSerializer, OTPSerializer
 from django.conf import settings
 import requests
+import json
 
 
 class LoginView(APIView):
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            username = serializer.validated_data["username"]
-            password = serializer.validated_data["password"]
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                otp_code = get_random_string(length=6, allowed_chars="0123456789")
-                OTP.objects.update_or_create(
-                    user=user, defaults={"otp_code": otp_code, "is_active": False}
-                )
-                # Replace with your SMS sending function
-                send_sms(user.phone, otp_code)
-                return Response(
-                    {"detail": "OTP sent to registered phone number."},
-                    status=status.HTTP_200_OK,
-                )
-            return Response(
-                {"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED
+        username = request.data["username"]
+        password = request.data["password"]
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            otp_code = get_random_string(length=6, allowed_chars="0123456789")
+            OTP.objects.update_or_create(
+                user=user, defaults={"otp_code": otp_code, "is_active": False}
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            send_sms(user.phone, otp_code)
+            return Response(
+                {"detail": "OTP sent to registered phone number."},
+                status=status.HTTP_200_OK,
+            )
 
 
 class OTPActivationView(APIView):
     def post(self, request):
-        serializer = OTPSerializer(data=request.data)
-        if serializer.is_valid():
-            otp_code = serializer.validated_data["otp_code"]
-            try:
-                otp = OTP.objects.get(otp_code=otp_code, is_active=False)
-                otp.is_active = True
-                otp.save()
-                user = otp.user
+        otp_code = request.data["otp"]
+        try:
+            otp = OTP.objects.get(otp_code=otp_code, is_active=False)
+            otp.is_active = True
+            otp.save()
+            user = otp.user
 
-                # Generate or retrieve the token
-                token, created = AuthToken.objects.get_or_create(user=user)
+            token, created = AuthToken.objects.get_or_create(user=user)
 
-                # Log the user in
-                login(request, user)
+            login(request, user)
 
-                return Response({"token": token.key}, status=status.HTTP_200_OK)
-            except OTP.DoesNotExist:
-                return Response(
-                    {"detail": "Invalid OTP."}, status=status.HTTP_400_BAD_REQUEST
-                )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"token": token.key}, status=status.HTTP_200_OK)
+        except OTP.DoesNotExist:
+            return Response(
+                {"detail": "Invalid OTP."}, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class LogoutView(APIView):
@@ -68,14 +58,26 @@ class LogoutView(APIView):
 
 
 def send_sms(phone_number, otp_code):
-    # Example implementation of sending an SMS
-    # Replace with your SMS gateway integration
-    api_url = "https://example-sms-gateway.com/send"
-    api_key = settings.SMS_API_KEY
-    message = f"Your OTP code is {otp_code}"
 
-    payload = {"to": phone_number, "message": message, "api_key": api_key}
+    api_url = "https://api.softleek.com/sms/send"
 
-    response = requests.post(api_url, data=payload)
+    message = f"Hi there! Your OTP code for verification is {otp_code}. Please use this code to complete your login process."
+
+    payload = {"phone": phone_number, "message": message, "sender_id": "SOFTLEEK"}
+
+    json_payload = json.dumps(payload)
+
+    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+
+    response = requests.post(api_url, data=json_payload, headers=headers)
+
     if response.status_code != 200:
-        raise Exception("Failed to send SMS")
+
+        try:
+            response_data = response.json()
+        except ValueError:
+            response_data = response.text
+
+        raise Exception(
+            f"Failed to send SMS. Status code: {response.status_code}, Response: {response_data}"
+        )

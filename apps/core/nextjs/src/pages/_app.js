@@ -9,20 +9,37 @@ import { DataProvider } from "@/contexts/DataContext";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import { NavbarProvider } from "@/contexts/NavbarContext";
 import useKeyEvents from "@/hooks/useKeyEvents";
+import { getFromDB } from "@/utils/indexedDB"; // Import getFromDB
+import Loading from "@/components/account/Loading";
 
 export default function App({ Component, pageProps }) {
   const [isClient, setIsClient] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
   useKeyEvents();
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const token = await getFromDB("authToken");
+      if (token) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+        if (router.pathname !== "/login" && router.pathname !== "/signup") {
+          router.push("/login");
+        }
+      }
+    };
+
+    checkAuth();
     setIsClient(true);
-  }, []);
+  }, [router.pathname]);
 
   if (!isClient) {
-    return null;
+    return <Loading />; // or a loading spinner
   }
+
   const isAuthPage =
     router.pathname === "/login" || router.pathname === "/signup";
 

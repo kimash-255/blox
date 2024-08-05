@@ -4,7 +4,6 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/flowbite/**/*.js",
   ],
   theme: {
     screens: {
@@ -448,6 +447,8 @@ module.exports = {
       pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       bounce: "bounce 1s infinite",
       "fade-up": "fade-up 1.5s both",
+      underline: "underline 0.25s ease-out forwards",
+      blink: "blink 1.0s infinite both",
     },
     aspectRatio: {
       auto: "auto",
@@ -980,6 +981,11 @@ module.exports = {
           opacity: "1",
         },
       },
+
+      blink: {
+        "0%, 100%": { opacity: 0 },
+        "50%": { opacity: 1 },
+      },
       spin: {
         to: {
           transform: "rotate(360deg)",
@@ -1421,5 +1427,5 @@ module.exports = {
     "active",
     "disabled",
   ],
-  plugins: [require("flowbite/plugin")],
+  plugins: [],
 };

@@ -1,4 +1,3 @@
-// utils/indexedDB.js
 import { encryptData, decryptData } from "./encryption";
 
 const dbName = "myAppDB";
